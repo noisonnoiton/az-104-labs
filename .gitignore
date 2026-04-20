@@ -1,0 +1,70 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform crash log
+crash.log
+
+# Ignore backup files
+*.backup
+*.tfvars.lock
+
+# Ignore plan output files
+*.tfplan
+
+# Ignore .tfvars files
+# *.tfvars
+
+# Local .terraform directories
+**/.terraform/*
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .terraform.lock.hcl 은 무시하지 않음 — Lab 템플릿 등은 그대로 커밋해 provider 버전을 맞춤
+
+# MkDocs 빌드 산출물 (labs/mkdocs.yml → ../site)
+/site/
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore any .pem files (SSH keys)
+*.pem
+
+# Ignore any .log files
+*.log
+
+# Ignore .DS_Store files on macOS
+.DS_Store
+
+# Ignore any backup files
+*.bak
+
+# Ignore any .env files that might contain sensitive information
+*.env
+
+# Log files
+*.log
+
+# Ignore MacOS specific files
+.DS_Store
+
+# Ignore editor specific files
+.idea/
+*.swp
+*.swo
+*.bak
+
+# For local data
+.ghsecrets
+.ghvars
+.kubeconfig
