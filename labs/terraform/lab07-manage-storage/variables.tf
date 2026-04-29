@@ -57,12 +57,6 @@ variable "account_replication_type" {
   default     = "LRS"
 }
 
-variable "blob_container_name" {
-  type        = string
-  description = "Blob container 이름."
-  default     = "data"
-}
-
 variable "file_share_name" {
   type        = string
   description = "Azure Files share 이름."
@@ -85,6 +79,31 @@ variable "vnet_address_space" {
 
 variable "subnet_prefix" {
   type        = string
-  description = "Storage subnet CIDR."
+  description = "VM subnet CIDR."
   default     = "10.30.0.0/24"
+}
+
+variable "network_default_action" {
+  type        = string
+  description = "Storage network rules default action: Allow or Deny."
+  default     = "Allow"
+
+  validation {
+    condition     = contains(["Allow", "Deny"], var.network_default_action)
+    error_message = "network_default_action must be 'Allow' or 'Deny'."
+  }
+}
+
+# --- VM ---
+
+variable "vm_size" {
+  type        = string
+  description = "VM SKU."
+  default     = "Standard_D2s_v3"
+}
+
+variable "admin_username" {
+  type        = string
+  description = "VM admin username."
+  default     = "azureuser"
 }

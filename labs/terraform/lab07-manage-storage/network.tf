@@ -6,8 +6,8 @@ resource "azurerm_virtual_network" "this" {
   tags                = local.tags
 }
 
-resource "azurerm_subnet" "storage" {
-  name                 = "snet-storage"
+resource "azurerm_subnet" "vm" {
+  name                 = "snet-vm"
   resource_group_name  = data.azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = [var.subnet_prefix]

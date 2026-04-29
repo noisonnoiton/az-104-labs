@@ -17,32 +17,48 @@ output "storage_account_id" {
   value = azurerm_storage_account.this.id
 }
 
-output "blob_container_name" {
-  value = azurerm_storage_container.blob.name
+output "web_container_name" {
+  value = azurerm_storage_container.web.name
 }
 
-output "file_share_name" {
-  value = azurerm_storage_share.files.name
+output "index_html_url" {
+  description = "Public URL for index.html in web container."
+  value       = "${azurerm_storage_account.this.primary_blob_endpoint}${azurerm_storage_container.web.name}/${azurerm_storage_blob.index_html.name}"
 }
 
-output "primary_blob_endpoint" {
-  value = azurerm_storage_account.this.primary_blob_endpoint
-}
-
-output "primary_file_endpoint" {
-  value = azurerm_storage_account.this.primary_file_endpoint
-}
-
-output "primary_access_key" {
-  description = "Storage Account primary key. `terraform output -raw primary_access_key` 로 조회."
-  value       = azurerm_storage_account.this.primary_access_key
-  sensitive   = true
+output "network_default_action" {
+  description = "Current network rules default action."
+  value       = var.network_default_action
 }
 
 output "vnet_name" {
   value = azurerm_virtual_network.this.name
 }
 
-output "subnet_name" {
-  value = azurerm_subnet.storage.name
+output "primary_blob_endpoint" {
+  value = azurerm_storage_account.this.primary_blob_endpoint
+}
+
+output "file_share_name" {
+  value = azurerm_storage_share.files.name
+}
+
+output "primary_access_key" {
+  description = "Storage Account primary key."
+  value       = azurerm_storage_account.this.primary_access_key
+  sensitive   = true
+}
+
+output "vm_public_ip" {
+  description = "VM public IP address for SSH access."
+  value       = azurerm_public_ip.vm.ip_address
+}
+
+output "vm_admin_username" {
+  value = var.admin_username
+}
+
+output "vm_admin_password" {
+  value     = random_password.vm.result
+  sensitive = true
 }
