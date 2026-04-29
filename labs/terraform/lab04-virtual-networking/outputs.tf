@@ -25,6 +25,16 @@ output "private_dns_zone" {
   value = azurerm_private_dns_zone.internal.name
 }
 
+output "nsg_hub_name" {
+  description = "Hub workload NSG 이름."
+  value       = azurerm_network_security_group.hub_workload.name
+}
+
+output "nsg_spoke_name" {
+  description = "Spoke workload NSG 이름."
+  value       = azurerm_network_security_group.spoke_workload.name
+}
+
 output "hub_vm_private_ip" {
   value = azurerm_network_interface.hub_vm.private_ip_address
 }

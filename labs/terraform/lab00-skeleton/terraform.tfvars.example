@@ -1,0 +1,9 @@
+# 복사: cp terraform.tfvars.example terraform.tfvars
+# terraform.tfvars 는 개인 환경 값이므로 공개 저장소에는 커밋하지 마세요.
+
+resource_group_name = "rg-your-assigned-name"   # 강사가 알려준 본인 RG (필수) — 값만 본인 것으로 바꿉니다.
+
+# 권장: subscription GUID. CLI 기본 구독과 달라도 이 구독으로 고정 (토큰 만료 오류는 `az login`으로 해결).
+# subscription_id     = "00000000-0000-0000-0000-000000000000"
+
+# tenant_id           = ""   # 보통 비움

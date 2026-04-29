@@ -1,0 +1,26 @@
+#==============================================================================
+# Lab AKS — ACR + AKS Deployment (Terraform)
+# 복사: cp terraform.tfvars.example terraform.tfvars
+# terraform.tfvars 는 민감 정보가 담길 수 있어 공개 저장소에 커밋하지 마세요.
+#==============================================================================
+
+# 필수: 강사가 알려준 본인 RG 이름
+resource_group_name = "rg-az104-user-01"
+
+# 필수: 강사가 알려준 공유 ACR 이름
+acr_name = "az104acrXXXXXX"
+
+# 선택
+# subscription_id         = ""
+# tenant_id               = ""
+# prefix                  = "az104-aks"
+# location                = ""                  # 비우면 RG location 사용
+# acr_resource_group_name = "rg-az104-shared"   # 기본값 사용 가능
+# vm_size                 = "Standard_D2s_v3"
+# system_node_count       = 1
+# user_node_count         = 1
+# kubernetes_version      = null                # null = 최신 stable
+
+# CIDR (기본값 그대로 써도 됨)
+# vnet_address_space      = "10.50.0.0/16"
+# aks_subnet_cidr         = "10.50.0.0/22"

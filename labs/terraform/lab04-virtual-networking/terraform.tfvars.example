@@ -5,7 +5,7 @@
 #==============================================================================
 
 # 필수: 강사가 알려준 본인 RG 이름
-resource_group_name = "rg-az104-student01"
+resource_group_name = "rg-az104-user-01"
 
 # 선택
 # subscription_id       = ""          # 비우면 az CLI 현재 구독
@@ -13,7 +13,7 @@ resource_group_name = "rg-az104-student01"
 # prefix                = "az104-lab04"
 # location              = ""          # 비우면 RG location 사용
 # admin_username        = "azureuser"
-# vm_size               = "Standard_B2s"
+# vm_size               = "Standard_D2s_v3"
 # private_dns_zone_name = "lab04.internal"
 
 # CIDR (기본값 그대로 써도 됨)
@@ -22,10 +22,3 @@ resource_group_name = "rg-az104-student01"
 # hub_workload_subnet   = "10.10.1.0/24"
 # hub_bastion_subnet    = "10.10.100.0/26"
 # spoke_workload_subnet = "10.20.1.0/24"
-
-# tags = {
-#   course  = "AZ-104"
-#   lab     = "04"
-#   managed = "terraform"
-#   student = "student01"
-# }

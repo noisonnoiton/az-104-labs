@@ -1,28 +1,30 @@
 # AZ-104 Lab — Terraform
 
-!!! abstract "이 디렉터리의 역할"
-    Terraform 기반 **커스텀 Lab**과 **온보딩 검증 skeleton**을 모아 둔 폴더입니다. 각 하위 디렉터리가 독립된 **root module**입니다. 필요한 것만 골라서 `terraform init` 하세요.
+This directory contains Terraform-based custom labs and an onboarding verification skeleton. Each subdirectory is an independent Terraform root module; run `terraform init` only in the module you intend to use.
 
-## 구성
+## Structure
 
-| 디렉터리 | 목적 | 실행 주체 |
+| Directory | Purpose | Intended user |
 | --- | --- | --- |
-| [`00-skeleton/`](./00-skeleton/) | 할당된 **Resource Group** 연결·권한 검증 (`data` only) | 수강생 (**온보딩 첫 적용**) |
-| [`lab04-virtual-networking/`](./lab04-virtual-networking/) | Lab 04 대응: VNet·Subnet·NSG·ASG·Private DNS·Peering·Bastion·Ubuntu VM | 수강생 (1일차 오후) |
-| `instructor-bootstrap/` | **강사 전용**: 수강생별 RG 일괄 생성 | 강사 (구독 권한 필요) |
+| [`lab00-skeleton/`](../lab00-skeleton/index.md) | Verify connection to assigned Resource Group (data only) | Students (onboarding)
+| [`lab04-virtual-networking/`](../lab04-virtual-networking/index.md) | Lab 04: VNet, Subnet, NSG, ASG, Private DNS, Peering, Bastion, Ubuntu VM | Students (Day 1 afternoon)
+| [`lab07-manage-storage/`](../lab07-manage-storage/index.md) | Lab 07: Storage Account, Blob, Azure Files, Service Endpoint | Students (Day 1)
+| [`lab08-manage-vms/`](../lab08-manage-vms/index.md) | Lab 08: Linux VM, Data Disk, Custom Script Extension, Public IP | Students (Day 2)
+| [`lab90-aks/`](../lab90-aks/index.md) | Lab AKS: AKS Cluster (system + user pool), ACR attach, kubectl | Students (Day 2)
+| `99-instructor-bootstrap/` | Instructor-only: bulk-create per-student Resource Groups, shared ACR | Instructor (requires subscription permissions)
 
-!!! note "강사 전용 디렉터리"
-    `instructor-bootstrap/`는 **구독 수준 권한**이 필요하므로 수강생 사이트(MkDocs)에는 노출하지 않습니다. **public 미러 저장소(`az-104-labs` 등)**에도 넣지 않는 것을 권장합니다.
+> Note: `99-instructor-bootstrap/` requires subscription-level permissions and should not be exposed in the student-facing MkDocs site or included in public mirrors (e.g., `az-104-labs`).
 
-!!! tip "수강생 clone 출처"
-    공개 과정이면 **`az-104-labs`** 한 저장소에 문서 소스와 이 `labs/terraform/` 트리를 같이 두고 clone 하게 할 수 있습니다. 강사 내부 저장소와 동기화·제외 경로는 과정 소스 저장소의 `docs/AZ-104-LABS-PUBLIC-REPO.md`를 참고합니다.
+> Tip: For public offerings you can maintain a public `az-104-labs` repository that contains the documentation and a trimmed `labs/terraform/` tree for students to clone. See `docs/AZ-104-LABS-PUBLIC-REPO.md` for sync/exclude guidance.
 
-## 사용 순서 (수강생)
+## Usage (students)
 
-1. **`00-skeleton/`** — `terraform init` / `plan` / `apply`로 본인 RG 연결만 검증  
-2. **`lab04-virtual-networking/`** — Lab 04 시나리오 배포 (소요·비용 주의)  
+1. **`lab00-skeleton/`** — Run `terraform init`, `plan`, `apply` to verify your assigned RG connection.
+2. **`lab04-virtual-networking/`** — Deploy the Lab 04 scenario (VNet, Peering, Bastion, VMs).
+3. **`lab07-manage-storage/`** — Deploy Storage Account with Blob, Azure Files, and service endpoint.
+4. **`lab08-manage-vms/`** — Deploy a Linux VM with data disk and Custom Script Extension.
+5. **`lab90-aks/`** — Deploy AKS cluster with ACR attachment. Requires shared ACR name from instructor.
 
-각 폴더의 `README.md`에 **사전 조건 · apply · 검증 · destroy** 순서가 적혀 있습니다.
+Each module contains a `README.md` describing prerequisites, apply/verify/destroy steps.
 
-!!! warning "state 파일"
-    각 하위 모듈은 **독립된 state**(`terraform.tfstate`)를 갖습니다. 한 폴더에서 `init`한 뒤 다른 폴더로 이동해 쓰면 안 됩니다.
+**Warning (state files):** Each submodule uses an independent Terraform state (`terraform.tfstate`). Do not reuse state across folders — initialize and operate in the module directory you intend to manage.

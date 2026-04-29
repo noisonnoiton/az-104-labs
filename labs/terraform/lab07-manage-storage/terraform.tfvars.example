@@ -1,0 +1,18 @@
+#==============================================================================
+# Lab 07 — Manage Azure Storage (Terraform)
+# 복사: cp terraform.tfvars.example terraform.tfvars
+# terraform.tfvars 는 민감 정보가 담길 수 있어 공개 저장소에 커밋하지 마세요.
+#==============================================================================
+
+# 필수: 강사가 알려준 본인 RG 이름
+resource_group_name = "rg-az104-user-01"
+
+# 선택
+# subscription_id          = ""
+# tenant_id                = ""
+# prefix                   = "az104-lab07"
+# location                 = ""
+# account_replication_type = "LRS"
+# blob_container_name      = "data"
+# file_share_name          = "share01"
+# file_share_quota         = 5

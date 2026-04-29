@@ -75,8 +75,8 @@ variable "spoke_workload_subnet" {
 
 variable "vm_size" {
   type        = string
-  description = "Ubuntu VM size. 기본 Standard_B2s (burstable, gen2)."
-  default     = "Standard_B2s"
+  description = "Ubuntu VM size. 기본 Standard_D2s_v3 (burstable, gen2)."
+  default     = "Standard_D2s_v3"
 }
 
 variable "private_dns_zone_name" {

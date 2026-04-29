@@ -14,7 +14,7 @@ resource "azurerm_subnet" "hub_workload" {
 }
 
 resource "azurerm_subnet" "hub_bastion" {
-  # Azure Bastion 전용 subnet 이름은 반드시 "AzureBastionSubnet" 여야 함.
+  # Azure Bastion 전용 subnet 이름은 반드시 "AzureBastionSubnet" 이어야 함.
   name                 = "AzureBastionSubnet"
   resource_group_name  = data.azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.hub.name
@@ -45,6 +45,12 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke" {
   allow_forwarded_traffic      = false
   allow_gateway_transit        = false
   use_remote_gateways          = false
+  # Bastion 생성이 hub VNet 을 Updating 상태로 잡아두므로,
+  # Bastion 완료 후 peering 을 만들어야 ReferencedResourceNotProvisioned 방지.
+  depends_on = [
+    azurerm_bastion_host.this,
+    azurerm_subnet.spoke_workload,
+  ]
 }
 
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
@@ -56,4 +62,8 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
   allow_forwarded_traffic      = false
   allow_gateway_transit        = false
   use_remote_gateways          = false
+  depends_on = [
+    azurerm_bastion_host.this,
+    azurerm_subnet.spoke_workload,
+  ]
 }

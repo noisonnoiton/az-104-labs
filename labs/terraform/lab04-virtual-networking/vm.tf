@@ -24,7 +24,7 @@ resource "azurerm_network_interface" "hub_vm" {
 
 resource "azurerm_network_interface_application_security_group_association" "hub_vm" {
   network_interface_id          = azurerm_network_interface.hub_vm.id
-  application_security_group_id = azurerm_application_security_group.app.id
+  application_security_group_id = azurerm_application_security_group.app_hub.id
 }
 
 resource "azurerm_linux_virtual_machine" "hub" {
@@ -72,7 +72,7 @@ resource "azurerm_network_interface" "spoke_vm" {
 
 resource "azurerm_network_interface_application_security_group_association" "spoke_vm" {
   network_interface_id          = azurerm_network_interface.spoke_vm.id
-  application_security_group_id = azurerm_application_security_group.app.id
+  application_security_group_id = azurerm_application_security_group.app_spoke.id
 }
 
 resource "azurerm_linux_virtual_machine" "spoke" {

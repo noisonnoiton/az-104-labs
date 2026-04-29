@@ -1,6 +1,0 @@
-# 복사: cp terraform.tfvars.example terraform.tfvars
-# terraform.tfvars 는 개인 환경 값이므로 공개 저장소에는 커밋하지 마세요.
-
-# resource_group_name = "rg-az104-lab01"   # 강사가 알려준 본인 RG 이름
-# subscription_id     = ""                 # 비우면 az CLI 현재 구독 사용
-# tenant_id           = ""                 # 보통 비움
