@@ -37,6 +37,11 @@ resource "azurerm_kubernetes_cluster" "this" {
   identity {
     type = "SystemAssigned"
   }
+
+  # Web App Routing — Ingress Controller (NGINX 기반) 자동 프로비저닝
+  web_app_routing {
+    dns_zone_ids = []
+  }
 }
 
 # ---------- User node pool ----------
