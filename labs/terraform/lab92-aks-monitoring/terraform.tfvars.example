@@ -1,7 +1,7 @@
 #==============================================================================
-# Lab 11 — Monitoring (Terraform)
+# Lab AKS Monitoring (Terraform)
 # 복사: cp terraform.tfvars.example terraform.tfvars
-# terraform.tfvars 는 민감 정보가 담길 수 있어 공개 저장소에 커밋하지 마세요.
+# terraform.tfvars 는 민감 정보가 담일 수 있어 공개 저장소에 커밋하지 마세요.
 #==============================================================================
 
 # 필수: 강사가 알려준 본인 RG 이름
@@ -10,6 +10,6 @@ resource_group_name = "rg-az104-user-01"
 # 선택
 # subscription_id   = ""
 # tenant_id         = ""
-# prefix            = "az104-lab11"
+# prefix            = "az104-lab92"
 # location          = ""
 # retention_in_days = 30

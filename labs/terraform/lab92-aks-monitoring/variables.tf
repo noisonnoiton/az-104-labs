@@ -23,7 +23,7 @@ variable "resource_group_name" {
 variable "prefix" {
   type        = string
   description = "리소스 이름 prefix."
-  default     = "az104-lab11"
+  default     = "az104-lab92"
 
   validation {
     condition     = can(regex("^[a-z0-9-]+$", var.prefix)) && length(var.prefix) <= 20
