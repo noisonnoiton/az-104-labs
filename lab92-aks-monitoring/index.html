@@ -1,0 +1,2937 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AZ-104 Terraform Lab - onboarding docs">
+      
+      
+      
+        <link rel="canonical" href="https://noisonnoiton.github.io/az-104-labs/lab92-aks-monitoring/">
+      
+      
+        <link rel="prev" href="../lab91-aks-app/">
+      
+      
+        <link rel="next" href="../lab99-aks-cleanup/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Lab 92 - AKS Monitoring - AZ-104 Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-92-aks-monitoring-terraform-otel" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="AZ-104 Labs" class="md-header__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AZ-104 Labs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 92 - AKS Monitoring
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../foundations/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../prerequisite/" class="md-tabs__link">
+          
+  
+  
+  Prerequisite
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../lab00-skeleton/" class="md-tabs__link">
+          
+  
+  
+  Terraform Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AZ-104 Labs" class="md-nav__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AZ-104 Labs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/01-iac-paradigms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC paradigms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02-terraform-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02b-terraform-hcl-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL block samples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/03-terraform-auth-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth & syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/04-kubernetes-essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisite
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prerequisite
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/01-azure-access-terraform-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure & Terraform auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/02-setup-windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/03-setup-macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/04-clone-repository/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clone repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Terraform Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-skeleton/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skeleton (RG verify)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 - Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-network-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 - Network Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-manage-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-manage-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 - Manage VMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09a-paas-webapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab90-aks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 90 - ACR + AKS Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab91-aks-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created (Terraform)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-1-azure-monitor-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: Azure Monitor 백엔드 생성 (Terraform)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: Azure Monitor 백엔드 생성 (Terraform)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#0-container-insights-aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) Container Insights 활성화 (AKS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-connection-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Connection String 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-2-otel-collector-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: OTel Collector 배포 (Kubernetes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: OTel Collector 배포 (Kubernetes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#0-gitops-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) gitops-manifests 저장소 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Secret 생성
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) OTel Collector 배포
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Collector 상태 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3: 텔레메트리 확인 (Portal)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3: 텔레메트리 확인 (Portal)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) 트래픽 생성
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Application Map — 서비스 의존 관계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Performance — 응답 시간 분석
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Failures — 실패 분석
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Search — 개별 텔레메트리 검색
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-live-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Live Metrics (참고)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-4-logs-kql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4: Logs (KQL) 쿼리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4: Logs (KQL) 쿼리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서비스별 요청 수
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#p95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서비스별 평균 응답 시간 (P95 포함)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실패 요청 조회
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-mysql-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency 호출 분석 (MySQL, Redis 등)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        분산 추적 — 특정 요청의 호출 체인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-5-alert-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5: Alert Rule 생성 (선택)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTel Collector 설정 설명
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel-collector-azure-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: OTel Collector 없이 Azure Monitor로 직접 전송
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="참고: OTel Collector 없이 Azure Monitor로 직접 전송">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-application-sdk-exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1 — Application SDK 직접 Exporter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-aks-autoinstrumentation-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2 — AKS Autoinstrumentation (Preview)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collector 방식과의 비교
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab99-aks-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Lab Cleanup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created (Terraform)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-1-azure-monitor-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: Azure Monitor 백엔드 생성 (Terraform)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: Azure Monitor 백엔드 생성 (Terraform)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#0-container-insights-aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) Container Insights 활성화 (AKS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-connection-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Connection String 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-2-otel-collector-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: OTel Collector 배포 (Kubernetes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: OTel Collector 배포 (Kubernetes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#0-gitops-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) gitops-manifests 저장소 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Secret 생성
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) OTel Collector 배포
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Collector 상태 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3: 텔레메트리 확인 (Portal)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3: 텔레메트리 확인 (Portal)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) 트래픽 생성
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Application Map — 서비스 의존 관계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Performance — 응답 시간 분석
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Failures — 실패 분석
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Search — 개별 텔레메트리 검색
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-live-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Live Metrics (참고)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-4-logs-kql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4: Logs (KQL) 쿼리
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4: Logs (KQL) 쿼리">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서비스별 요청 수
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#p95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서비스별 평균 응답 시간 (P95 포함)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        실패 요청 조회
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-mysql-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency 호출 분석 (MySQL, Redis 등)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        분산 추적 — 특정 요청의 호출 체인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-5-alert-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5: Alert Rule 생성 (선택)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTel Collector 설정 설명
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel-collector-azure-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: OTel Collector 없이 Azure Monitor로 직접 전송
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="참고: OTel Collector 없이 Azure Monitor로 직접 전송">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-application-sdk-exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1 — Application SDK 직접 Exporter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-aks-autoinstrumentation-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2 — AKS Autoinstrumentation (Preview)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collector 방식과의 비교
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../lab00-skeleton/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Terraform Lab
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-92-aks-monitoring-terraform-otel">Lab 92 - AKS Monitoring (Terraform + OTel)<a class="headerlink" href="#lab-92-aks-monitoring-terraform-otel" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">목표</p>
+<p>AKS에 배포된 마이크로서비스의 <strong>Traces, Metrics, Logs</strong>를 <strong>OpenTelemetry Collector</strong>를 통해 <strong>Azure Monitor (Application Insights)</strong>로 전송하고, Portal에서 분산 추적과 메트릭을 확인합니다.</p>
+<p>핵심 체험:</p>
+<ol>
+<li><strong>Azure Monitor 백엔드 생성</strong> — Log Analytics Workspace + Application Insights (Terraform)</li>
+<li><strong>OTel Collector 배포</strong> — Kubernetes에 Collector 배포, Azure Monitor exporter 연동</li>
+<li><strong>분산 추적 (Distributed Tracing)</strong> — Application Insights Transaction Search에서 end-to-end trace 확인</li>
+<li><strong>메트릭 &amp; 로그</strong> — Live Metrics, Log Analytics 쿼리 (KQL)</li>
+<li><strong>Alert 생성</strong> — 에러율 기반 Alert Rule 설정</li>
+</ol>
+</div>
+<hr />
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjUwMHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6OTYzcHg7aGVpZ2h0OjUwMHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDk2MyA1MDAiIHdpZHRoPSI5NjNweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgYWtzLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcyIgZGF0YS1zb3VyY2UtbGluZT0iMTkiIGlkPSJlbnQwMDAyIj48cmVjdCBmaWxsPSIjRUZGNkZGIiBoZWlnaHQ9IjExOS44OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNTk2IiB4PSI3IiB5PSI3Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iOTMuMTA1NSIgeD0iMjU4LjQ0NzMiIHk9IjIxLjk5NTEiPkFLUyBDbHVzdGVyPC90ZXh0PjwvZz48IS0tY2x1c3RlciBhenVyZS0tPjxnIGNsYXNzPSJjbHVzdGVyIiBkYXRhLXF1YWxpZmllZC1uYW1lPSJhenVyZSIgZGF0YS1zb3VyY2UtbGluZT0iMjQiIGlkPSJlbnQwMDA1Ij48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjI1My4zNCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjI4IiB4PSI3MjEiIHk9IjE1LjE0Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTExLjc1MzkiIHg9Ijc3OS4xMjMiIHk9IjMwLjEzNTEiPkF6dXJlIE1vbml0b3I8L3RleHQ+PC9nPjwhLS1lbnRpdHkgYXBwcy0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcy5hcHBzIiBkYXRhLXNvdXJjZS1saW5lPSIyMCIgaWQ9ImVudDAwMDMiPjxyZWN0IGZpbGw9IiNDNEI1RkQiIGhlaWdodD0iNTIuNTkzOCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTQ3Ljk5NzEiIHg9IjIzIiB5PSI1MC4xNCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEyNy45OTcxIiB4PSIzMyIgeT0iNzMuMTM1MSI+QXBwIFNlcnZpY2VzICg4JiM0NDA2MDspPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEyMi45MTAyIiB4PSIzMyIgeT0iODkuNDMyIj4oT1RlbCBKYXZhIEFnZW50KTwvdGV4dD48L2c+PCEtLWVudGl0eSBvdGVsLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYWtzLm90ZWwiIGRhdGEtc291cmNlLWxpbmU9IjIxIiBpZD0iZW50MDAwNCI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSI2OC44OTA2IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIyMTIuNjM2NyIgeD0iMzc0LjY4IiB5PSI0MiIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExMS4xMTgyIiB4PSIzODQuNjgiIHk9IjY0Ljk5NTEiPk9UZWwgQ29sbGVjdG9yPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjY1LjI1NTkiIHg9IjM4NC42OCIgeT0iODEuMjkyIj5vdGVsLWFwcHM8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTkyLjYzNjciIHg9IjM4NC42OCIgeT0iOTcuNTg4OSI+KG5hbWVzcGFjZTogb3RlbC1jb2xsZWN0b3IpPC90ZXh0PjwvZz48IS0tZW50aXR5IGFwcGktLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJhenVyZS5hcHBpIiBkYXRhLXNvdXJjZS1saW5lPSIyNSIgaWQ9ImVudDAwMDYiPjxyZWN0IGZpbGw9IiNGMUYxRjEiIGhlaWdodD0iNTIuNTkzOCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTU3LjQwMjMiIHg9IjczOS4zIiB5PSI1MC4xNCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEzNy40MDIzIiB4PSI3NDkuMyIgeT0iNzMuMTM1MSI+QXBwbGljYXRpb24gSW5zaWdodHM8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTMzLjA4ODkiIHg9Ijc0OS4zIiB5PSI4OS40MzIiPihhcHBpLWF6MTA0LWxhYjkyKTwvdGV4dD48L2c+PCEtLWVudGl0eSBsYXctLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJhenVyZS5sYXciIGRhdGEtc291cmNlLWxpbmU9IjI2IiBpZD0iZW50MDAwNyI+PHJlY3QgZmlsbD0iI0YxRjFGMSIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxOTUuMDY4NCIgeD0iNzM3LjQ3IiB5PSIxOTkuODkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNzUuMDY4NCIgeD0iNzQ3LjQ3IiB5PSIyMjIuODg1MSI+TG9nIEFuYWx5dGljcyBXb3Jrc3BhY2U8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTI2Ljc2NTYiIHg9Ijc0Ny40NyIgeT0iMjM5LjE4MiI+KGxhdy1hejEwNC1sYWI5Mik8L3RleHQ+PC9nPjwhLS1saW5rIGFwcHMgdG8gb3RlbC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDAzIiBkYXRhLWVudGl0eS0yPSJlbnQwMDA0IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iMjkiIGlkPSJsbms4Ij48cGF0aCBkPSJNMTcxLjQ5LDc2LjQ0IEMyMjkuMTgsNzYuNDQgMzAzLjg3LDc2LjQ0IDM2OC4zOSw3Ni40NCIgZmlsbD0ibm9uZSIgaWQ9ImFwcHMtdG8tb3RlbCIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiNEOTc3MDYiIHBvaW50cz0iMzc0LjM5LDc2LjQ0LDM2NS4zOSw3Mi40NCwzNjkuMzksNzYuNDQsMzY1LjM5LDgwLjQ0LDM3NC4zOSw3Ni40NCIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjMzLjI1NTQiIHg9IjI1Ni4zMjUxIiB5PSI1NC41MDY5Ij5PVExQPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE0Mi4yMjU2IiB4PSIyMDEuODQiIHk9IjY5LjYzOTciPih0cmFjZXMsIG1ldHJpY3MsIGxvZ3MpPC90ZXh0PjwvZz48IS0tbGluayBvdGVsIHRvIGFwcGktLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNCIgZGF0YS1lbnRpdHktMj0iZW50MDAwNiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjMwIiBpZD0ibG5rOSI+PHBhdGggZD0iTTU4Ny42Myw3Ni40NCBDNjM2LjcsNzYuNDQgNjg3LjkxLDc2LjQ0IDczMy4wNCw3Ni40NCIgZmlsbD0ibm9uZSIgaWQ9Im90ZWwtdG8tYXBwaSIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMwMDc4RDQiIHBvaW50cz0iNzM5LjA0LDc2LjQ0LDczMC4wNCw3Mi40NCw3MzQuMDQsNzYuNDQsNzMwLjA0LDgwLjQ0LDczOS4wNCw3Ni40NCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjkwLjg0NzciIHg9IjYxOC4zMSIgeT0iOTIuNTA2OSI+QXp1cmUgTW9uaXRvcjwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI1NS44OTc1IiB4PSI2MzUuNzg1MSIgeT0iMTA3LjYzOTciPkV4cG9ydGVyPC90ZXh0PjwvZz48IS0tbGluayBhcHBpIHRvIGxhdy0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA2IiBkYXRhLWVudGl0eS0yPSJlbnQwMDA3IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iMzEiIGlkPSJsbmsxMCI+PHBhdGggZD0iTTgyMC45NiwxMDMuMTggQzgyNC4wOCwxMzAuMjkgODI4LjI4NTYsMTY2Ljc3OTIgODMxLjM4NTYsMTkzLjc3OTIiIGZpbGw9Im5vbmUiIGlkPSJhcHBpLXRvLWxhdyIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMwNTk2NjkiIHBvaW50cz0iODMyLjA3LDE5OS43NCw4MzUuMDE3MywxOTAuMzQyNSw4MzEuNDk5NywxOTQuNzcyNiw4MjcuMDY5NSwxOTEuMjU1LDgzMi4wNywxOTkuNzQiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTMuNTI3OCIgeD0iODMwIiB5PSIxNTUuOTU2OSI+d29ya3NwYWNlLWJhc2VkPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQ5LjM4NDgiIHg9Ijg2Mi4wNzE1IiB5PSIxNzEuMDg5NyI+c3RvcmFnZTwvdGV4dD48L2c+PGcgY2xhc3M9ImxlZ2VuZCIgZGF0YS1zb3VyY2UtbGluZT0iMzMiPjxyZWN0IGZpbGw9IiNEREREREQiIGhlaWdodD0iMTkzLjI2NTYiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgd2lkdGg9IjI4MC42OTM2IiB4PSI2NjMuMzA2NCIgeT0iMjg4LjQ4Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjUuNzU5OSIgeD0iNjczLjE4MDQiIHk9IjMwOC40NzUxIj4mIzQ5MzUzOyYjNDkzNDU7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjY5LjI3MzciIHg9IjczOS4zMjIzIiB5PSIzMDguNDc1MSI+JiM0NzUzMjsmIzQ5NTQ4OyYjNDk4Mjg7ICYjNTA5NzY7JiM1NDgwNTs8L3RleHQ+PHJlY3QgZmlsbD0iI0M0QjVGRCIgaGVpZ2h0PSIxNi4yOTY5IiBzdHlsZT0ic3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjE7IiB3aWR0aD0iNjYuMTQxOCIgeD0iNjY4LjMwNjQiIHk9IjMxMS43NzY5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI2NjguMzA2NCIgeT0iMzI0Ljc3MiI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE1NC43MTA5IiB4PSI3MzguODk4NCIgeT0iMzI0Ljc3MiI+QXBwIChPVGVsIEphdmEgQWdlbnQpPC90ZXh0PjxyZWN0IGZpbGw9IiNGRUYzQzciIGhlaWdodD0iMTYuMjk2OSIgc3R5bGU9InN0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxOyIgd2lkdGg9IjY2LjE0MTgiIHg9IjY2OC4zMDY0IiB5PSIzMjguMDczOCIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iNjY4LjMwNjQiIHk9IjM0MS4wNjg5Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iOTguNzY1NiIgeD0iNzM4Ljg5ODQiIHk9IjM0MS4wNjg5Ij5PVGVsIENvbGxlY3RvcjwvdGV4dD48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSI2Ni4xNDE4IiB4PSI2NjguMzA2NCIgeT0iMzQ0LjM3MDYiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjY2OC4zMDY0IiB5PSIzNTcuMzY1NyI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE5NS42NTE0IiB4PSI3MzguODk4NCIgeT0iMzU3LjM2NTciPkF6dXJlIE1vbml0b3IgKEFQUEkgKyBMQVcpPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljc1OTkiIHg9IjY3My4xODA0IiB5PSIzNzMuNjYyNiI+JiM1NTEyMDsmIzQ3NDkyOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS43NTk5IiB4PSI3MzkuMzIyMyIgeT0iMzczLjY2MjYiPiYjNDk0NDQ7JiM0Nzc0OTs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI2NjguMzA2NCIgeT0iMzg5Ljk1OTUiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjRDk3NzA2IiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI2NzIuNzU2NiIgeT0iMzg5Ljk1OTUiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iNjg5LjYxNCIgeT0iMzg5Ljk1OTUiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjguODA5NiIgeD0iNzM4Ljg5ODQiIHk9IjM4OS45NTk1Ij5PVExQIChnUlBDL0hUVFApPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iNjY4LjMwNjQiIHk9IjQwNi4yNTY0Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwNzhENCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTYuODU3NCIgeD0iNjcyLjc1NjYiIHk9IjQwNi4yNTY0Ij4mIzk0NzM7JiM5NDczOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjY4OS42MTQiIHk9IjQwNi4yNTY0Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTYyLjQ4MzQiIHg9IjczOC44OTg0IiB5PSI0MDYuMjU2NCI+QXp1cmUgTW9uaXRvciBFeHBvcnRlcjwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjY2OC4zMDY0IiB5PSI0MjIuNTUzMiI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwNTk2NjkiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE2Ljg1NzQiIHg9IjY3Mi43NTY2IiB5PSI0MjIuNTUzMiI+JiM5NDczOyYjOTQ3Mzs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI2ODkuNjE0IiB5PSI0MjIuNTUzMiI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjYxLjQyOTgiIHg9IjczOC44OTg0IiB5PSI0MjIuNTUzMiI+TEFXICYjNTEyMDA7JiM1MTEwOTs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTYuMzkzOCIgeD0iNjczLjE4MDQiIHk9IjQzOC44NTAxIj4mIzQ5Njg4OyYjNDk4ODg7ICYjNTQyNTI7JiM1Mzk0NDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC44NzQiIHg9IjczNC40NDgyIiB5PSI0MzguODUwMSI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM1LjYyODkiIHg9IjY3Mi43NTY2IiB5PSI0NTUuMTQ3Ij40MzE3PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM2LjgzMiIgeD0iNzM4Ljg5ODQiIHk9IjQ1NS4xNDciPmdSUEM8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzUuNjI4OSIgeD0iNjcyLjc1NjYiIHk9IjQ3MS40NDM5Ij40MzE4PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM2LjA3MzIiIHg9IjczOC44OTg0IiB5PSI0NzEuNDQzOSI+SFRUUDwvdGV4dD48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI5MzkiIHkxPSIyOTUuNDgiIHkyPSIyOTUuNDgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI5MzkiIHkxPSIzMTEuNzc2OSIgeTI9IjMxMS43NzY5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjY2OC4zMDY0IiB4Mj0iOTM5IiB5MT0iMzI4LjA3MzgiIHkyPSIzMjguMDczOCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI2NjguMzA2NCIgeDI9IjkzOSIgeTE9IjM0NC4zNzA2IiB5Mj0iMzQ0LjM3MDYiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI5MzkiIHkxPSIzNjAuNjY3NSIgeTI9IjM2MC42Njc1Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjY2OC4zMDY0IiB4Mj0iOTM5IiB5MT0iMzc2Ljk2NDQiIHkyPSIzNzYuOTY0NCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI2NjguMzA2NCIgeDI9IjkzOSIgeTE9IjM5My4yNjEzIiB5Mj0iMzkzLjI2MTMiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI5MzkiIHkxPSI0MDkuNTU4MSIgeTI9IjQwOS41NTgxIi8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjY2OC4zMDY0IiB4Mj0iOTM5IiB5MT0iNDI1Ljg1NSIgeTI9IjQyNS44NTUiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI5MzkiIHkxPSI0NDIuMTUxOSIgeTI9IjQ0Mi4xNTE5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjY2OC4zMDY0IiB4Mj0iOTM5IiB5MT0iNDU4LjQ0ODgiIHkyPSI0NTguNDQ4OCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI2NjguMzA2NCIgeDI9IjkzOSIgeTE9IjQ3NC43NDU2IiB5Mj0iNDc0Ljc0NTYiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjY4LjMwNjQiIHgyPSI2NjguMzA2NCIgeTE9IjI5NS40OCIgeTI9IjQ3NC43NDU2Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjczNC40NDgyIiB4Mj0iNzM0LjQ0ODIiIHkxPSIyOTUuNDgiIHkyPSI0NzQuNzQ1NiIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI5MzkiIHgyPSI5MzkiIHkxPSIyOTUuNDgiIHkyPSI0NzQuNzQ1NiIvPjwvZz48P3BsYW50dW1sLXNyYyBSTERESm5EMTZCeEZodFdqN2pmOEd2NS1hajlhcy12NmpEZkRnSTdIU2ZYa1h4QmZDaEVQc085MEpJSVdLSkpIV29PU3E3MTAzZVEzSHQtRkh6ZC0xc1Rjc3pnMmNwdGlGRkMtcF9reTdvandCbEtubnpsRzhQa3V4bUtNZXk0Smw0clczTEVITjJGU3RLSFk0a0l2YjBIeEZXNlZVTmxnQzdON01QenM3Q09mdVAyVm1ZZGg0NDV5b0FRY1dwN2pBSjJKR2taRU5VRkg2Z1hkMU05cGZjTGJCSWljcU5oSmg4ckhveElNQVpjNTZpLVVEaW1ITVlzUlhjTGdyQk9kMmZMcUVNREw1TGdrRHdmYzhxOUpnTG8tY2V3WFFIRjQySjNqVVdHRUs5ZG4zazRMdlo0RTh6dThRc3d2SmV5SThVMC1LanM5T2tPTXBJS1pPdzZOMkZzSllITlI5TExCblVrQldGM1lHaGlLMG9tMHptSmU4Vy1jV210VjF6ZFc3VFNYMGtCdkZwX0Y0WXFRaHBVOTFtX24zV1FaSXNZR1kwSHlOb2RPemVyYUViV1F5WUpBVEJ1TVBHN25hZWVXblFZU2ZGMm5HdlAxbXl1dUQ5OUw2RVctX3dVRV9KdWR5OVhIVHdHUzZUN2VRMFd0Z181UzFtU2tleDFBWFRsVDJmRzNRU0hEdWx0NUwzaGZ1TlJYX2dHVVR2ZlNPcnFtQUZSczBqU0hpQ3Z1SnhrTVYwX2x0Z1BCSzFkTU5LYS1kd2lNU2hiS1RlRWhkQ2JJTERLb3I5aXJNbWU0TjBnOVVUV2MwUFZZeS0ybmhhV1c3SUl2cUxmQ2tDZ092Q3VLdHdCYzJ2em5FTDJhaG5LaEt5WGMybmlUamFpYklUZ0hkRHNud3NHUjJ6OWZLSTZ2azRpR3llWVNQMFRxM1pIT1dWM2VOTlhxMkZCaC1sOGdWRkNYRkJjMHlFbnlVRmU1MWNYRzcycm0yR1FXTGtKTUhhSDFxSC1YV2NRTjhCZ0RfV21qQ0xxQW5FS0VoUzh6ZzFkaE1jUzVYYnlfTkx5VUFwRlh5U05yWnpTQVhRQVpiZG52ckRkSXh5LTd5WXFrUTNIQU1SQ1h0Y3RPYk9LN3BRUVRjMjU1QlJyRGNkS294a2FpTFZWckRiTlFYVjN5TFZaalVzR3dWN2lRbFotN3VTVWh1U2FsdkxzOWY5U01TcDlNa0hnVnlfQWkzQ2dwY2EwcVlCeTA/PjwvZz48L3N2Zz4=" class="uml" alt="uml diagram" title="" /></p>
+<hr />
+<h2 id="resources-created-terraform">Resources Created (Terraform)<a class="headerlink" href="#resources-created-terraform" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>리소스</th>
+<th>이름</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Log Analytics Workspace</td>
+<td><code>law-{prefix}</code></td>
+<td>로그, 메트릭 저장소 (KQL 쿼리 대상)</td>
+</tr>
+<tr>
+<td>Application Insights</td>
+<td><code>appi-{prefix}</code></td>
+<td>분산 추적, Live Metrics, 성능 모니터링</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">비용</p>
+<p>Log Analytics는 <strong>수집 데이터량 기반</strong> 과금 (PerGB2018). 실습 규모에서는 거의 무료에 가깝습니다 (Free tier: 5GB/월).</p>
+</div>
+<hr />
+<h2 id="prerequisite">Prerequisite<a class="headerlink" href="#prerequisite" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AKS + App</td>
+<td><a href="../lab90-aks/">Lab 90</a> + <a href="../lab91-aks-app/">Lab 91</a> 완료</td>
+</tr>
+<tr>
+<td>kubectl</td>
+<td>AKS 자격 증명 설정 완료</td>
+</tr>
+<tr>
+<td>Terraform</td>
+<td>1.6+</td>
+</tr>
+<tr>
+<td>인증</td>
+<td><code>az login</code> 완료</td>
+</tr>
+<tr>
+<td>매니페스트</td>
+<td><code>gitops-manifests</code> 저장소 clone 완료 (<a href="../lab91-aks-app/">Lab 91</a> 참조)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-by-step">Step-by-Step<a class="headerlink" href="#step-by-step" title="Permanent link">&para;</a></h2>
+<h3 id="part-1-azure-monitor-terraform">Part 1: Azure Monitor 백엔드 생성 (Terraform)<a class="headerlink" href="#part-1-azure-monitor-terraform" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Terraform 환경에서 실행</p>
+<p>Part 1은 <strong>Terraform이 구성된 환경</strong> (로컬 터미널 또는 lab 환경)에서 실행합니다.<br />
+Cloud Shell에는 Terraform state가 없으므로 <code>terraform</code> 명령이 동작하지 않습니다.</p>
+</div>
+<h4 id="0-container-insights-aks">0) Container Insights 활성화 (AKS)<a class="headerlink" href="#0-container-insights-aks" title="Permanent link">&para;</a></h4>
+<p>AKS 클러스터에 <strong>Container Insights</strong>를 활성화하면 노드/Pod CPU, Memory, 컨테이너 로그를 Log Analytics로 자동 수집합니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">bash (Terraform 환경)</label><label for="__tabbed_1_2">bash (Cloud Shell — Terraform 없이)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nv">AKS_NAME</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span>../lab90-aks<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>aks_cluster_name<span class="k">)</span>
+<span class="nv">RG</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span>../lab90-aks<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>resource_group_name<span class="k">)</span>
+
+az<span class="w"> </span>aks<span class="w"> </span>enable-addons<span class="w"> </span>--addons<span class="w"> </span>monitoring<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RG</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AKS_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workspace-resource-id<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>log_analytics_workspace_id<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--no-wait
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># 본인 RG 이름과 AKS 이름을 직접 지정</span>
+<span class="nv">RG</span><span class="o">=</span><span class="s2">&quot;&lt;본인 RG 이름&gt;&quot;</span>
+<span class="nv">AKS_NAME</span><span class="o">=</span><span class="s2">&quot;&lt;AKS 클러스터 이름&gt;&quot;</span><span class="w">  </span><span class="c1"># 예: aks-az104-lab90</span>
+
+<span class="c1"># LAW 리소스 ID 조회</span>
+<span class="nv">LAW_ID</span><span class="o">=</span><span class="k">$(</span>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RG</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;law-az104-lab92&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+
+az<span class="w"> </span>aks<span class="w"> </span>enable-addons<span class="w"> </span>--addons<span class="w"> </span>monitoring<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RG</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AKS_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workspace-resource-id<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LAW_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--no-wait
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Container Insights vs OTel</p>
+<p><strong>Container Insights</strong>는 노드/Pod 수준 인프라 메트릭을 수집합니다 (CPU, Memory, Network, Disk).<br />
+<strong>OTel Collector</strong>는 애플리케이션 수준 텔레메트리 (Traces, 앱 Metrics, Logs)를 수집합니다.<br />
+둘 다 활성화하면 <strong>인프라 + 앱</strong> 양쪽을 한 곳에서 확인할 수 있습니다.</p>
+</div>
+<h4 id="1-prepare-variables">1) Prepare variables<a class="headerlink" href="#1-prepare-variables" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>labs/terraform/lab92-aks-monitoring
+cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
+</code></pre></div>
+<p><code>terraform.tfvars</code>에서 <strong><code>resource_group_name</code></strong>을 본인 RG로 설정합니다.</p>
+<h4 id="2-deploy">2) Deploy<a class="headerlink" href="#2-deploy" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init
+terraform<span class="w"> </span>plan
+terraform<span class="w"> </span>apply
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Outputs:
+application_insights_connection_string = &lt;sensitive&gt;
+application_insights_name              = &quot;appi-az104-lab92&quot;
+log_analytics_workspace_name           = &quot;law-az104-lab92&quot;
+...
+</code></pre></div>
+</details>
+<h4 id="3-connection-string">3) Connection String 확인<a class="headerlink" href="#3-connection-string" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Terraform 환경</label><label for="__tabbed_2_2">Azure Portal</label><label for="__tabbed_2_3">az CLI</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>application_insights_connection_string
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><strong>Application Insights</strong> (<code>appi-az104-lab92</code>) → <strong>Overview</strong> → <strong>Connection String</strong> 복사</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>monitor<span class="w"> </span>app-insights<span class="w"> </span>component<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span><span class="s2">&quot;&lt;본인 RG 이름&gt;&quot;</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;appi-az104-lab92&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span>connectionString<span class="w"> </span>-o<span class="w"> </span>tsv
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>이 값을 다음 단계에서 OTel Collector Secret에 주입합니다.</p>
+<hr />
+<h3 id="part-2-otel-collector-kubernetes">Part 2: OTel Collector 배포 (Kubernetes)<a class="headerlink" href="#part-2-otel-collector-kubernetes" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Cloud Shell에서 실행</p>
+<p>Part 2 이후는 <strong>Cloud Shell</strong> (또는 <code>kubectl</code>이 연결된 터미널)에서 실행합니다.<br />
+Cloud Shell에는 Terraform이 없으므로, Connection String은 <strong>Portal</strong> 또는 <strong><code>az</code> CLI</strong>로 확인하세요.</p>
+</div>
+<h4 id="0-gitops-manifests">0) gitops-manifests 저장소 확인<a class="headerlink" href="#0-gitops-manifests" title="Permanent link">&para;</a></h4>
+<p>Lab 91에서 이미 clone한 저장소로 이동합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Lab 91에서 clone한 디렉토리로 이동</span>
+<span class="nb">cd</span><span class="w"> </span>~/gitops-manifests
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">clone하지 않았다면</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/noisonnoiton-shop/gitops-manifests.git
+<span class="nb">cd</span><span class="w"> </span>gitops-manifests
+</code></pre></div>
+</div>
+<h4 id="1-secret">1) Secret 생성<a class="headerlink" href="#1-secret" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">bash (Cloud Shell)</label><label for="__tabbed_3_2">bash (Terraform 환경)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># Connection String — Portal에서 복사하거나 az CLI로 조회</span>
+<span class="nv">CONN_STR</span><span class="o">=</span><span class="k">$(</span>az<span class="w"> </span>monitor<span class="w"> </span>app-insights<span class="w"> </span>component<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span><span class="s2">&quot;&lt;본인 RG 이름&gt;&quot;</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;appi-az104-lab92&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span>connectionString<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>otel-collector<span class="w"> </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+
+kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>azure-monitor-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>otel-collector<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>connection-string<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONN_STR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nv">CONN_STR</span><span class="o">=</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>application_insights_connection_string<span class="k">)</span>
+
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>otel-collector<span class="w"> </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+
+kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>azure-monitor-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>otel-collector<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>connection-string<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONN_STR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="2-otel-collector">2) OTel Collector 배포<a class="headerlink" href="#2-otel-collector" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>clusters/az104-aks/otel-collector/otel-collector.yaml
+</code></pre></div>
+<h4 id="3-collector">3) Collector 상태 확인<a class="headerlink" href="#3-collector" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-n<span class="w"> </span>otel-collector
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>otel-collector<span class="w"> </span>deployment/otel-apps<span class="w"> </span>--tail<span class="o">=</span><span class="m">20</span>
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>2026-04-30T... info  service@v0.151.0/service.go:... msg=&quot;Everything is ready.&quot;
+2026-04-30T... info  exporters/azuremonitor ... msg=&quot;Azure Monitor exporter initialized&quot;
+</code></pre></div>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">Collector 정상 확인</p>
+<p>로그에 <code>Everything is ready</code> 메시지가 보이면 정상입니다. <code>azuremonitor</code> exporter가 초기화되었는지 확인하세요.</p>
+</div>
+<hr />
+<h3 id="part-3-portal">Part 3: 텔레메트리 확인 (Portal)<a class="headerlink" href="#part-3-portal" title="Permanent link">&para;</a></h3>
+<p>앱 서비스들이 이미 <code>otel-apps.otel-collector:4318</code>로 데이터를 보내고 있으므로, Collector가 배포되면 즉시 데이터가 Azure Monitor로 흐릅니다.</p>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview#application-insights-experiences" target="_blank" rel="noopener">Application Insights Experiences</a></p>
+</blockquote>
+<h4 id="1">1) 트래픽 생성<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">bash</label><label for="__tabbed_4_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nv">INGRESS_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>app-routing-system<span class="w"> </span>nginx<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..20<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://apigateway.awesome.</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">.nip.io/api/products&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://apigateway.awesome.</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">.nip.io/api/accounts&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="k">done</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;요청 20회 완료 — 2~3분 후 Application Insights에서 확인 가능&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/f</span> <span class="s2">&quot;tokens=*&quot;</span> <span class="nv">%a in (&#39;kubectl get svc -n app-routing-system nginx -o jsonpath^=&quot;{.status.loadBalancer.ingress[0].ip}&quot;&#39;) do set INGRESS_IP=%</span>a
+
+for /L %i in (1,1,20<span class="p">)</span> <span class="k">do</span> <span class="p">(</span>
+  curl -s <span class="s2">&quot;http://apigateway.awesome.</span><span class="nv">%INGRESS_IP%</span><span class="s2">.nip.io/api/products&quot;</span> <span class="p">&gt;</span> NUL
+  curl -s <span class="s2">&quot;http://apigateway.awesome.</span><span class="nv">%INGRESS_IP%</span><span class="s2">.nip.io/api/accounts&quot;</span> <span class="p">&gt;</span> NUL
+<span class="p">)</span>
+
+<span class="k">echo</span> 요청 20회 완료
+</code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="2-application-map">2) Application Map — 서비스 의존 관계<a class="headerlink" href="#2-application-map" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Investigate</strong> → <strong>Application map</strong></li>
+<li>서비스 간 <strong>의존 관계 그래프</strong>가 자동 생성됩니다 (apigateway → product, account, cart 등).</li>
+<li>각 <strong>노드</strong>(서비스)를 클릭하면:<ul>
+<li><strong>Investigate failures</strong> — 해당 서비스의 실패 분석</li>
+<li><strong>Investigate performance</strong> — 응답 시간 분석</li>
+<li><strong>Go to details</strong> — End-to-end transaction details (Gantt chart)</li>
+</ul>
+</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Application Map</p>
+<p>Application Map은 분산 앱의 <strong>토폴로지를 시각화</strong>합니다. 각 노드에 평균 응답 시간, 실패율이 표시되어 병목이나 장애 서비스를 한눈에 파악할 수 있습니다.<br />
+→ <a href="https://learn.microsoft.com/azure/azure-monitor/app/app-map" target="_blank" rel="noopener">Application map: Triage distributed applications</a></p>
+</div>
+<h4 id="3-performance">3) Performance — 응답 시간 분석<a class="headerlink" href="#3-performance" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Investigate</strong> → <strong>Performance</strong></li>
+<li><strong>Operations</strong> 탭에서 전체 요청 목록, 평균 응답 시간, 호출 횟수를 확인합니다.</li>
+<li>느린 요청을 클릭 → <strong>Drill into</strong> → 샘플 선택 → <strong>End-to-end transaction details</strong> 에서 호출 체인(Gantt chart) 확인</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Dependency 확인</p>
+<p>Performance 화면 하단의 <strong>Dependencies</strong> 탭에서 외부 호출(MySQL, Redis, RabbitMQ 등) 응답 시간도 확인할 수 있습니다.</p>
+</div>
+<h4 id="4-failures">4) Failures — 실패 분석<a class="headerlink" href="#4-failures" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Investigate</strong> → <strong>Failures</strong></li>
+<li><strong>Operations</strong> 탭 — 실패한 요청의 HTTP 상태 코드별 분류</li>
+<li><strong>Exceptions</strong> 탭 — 서비스에서 발생한 예외(Exception) 목록</li>
+<li>항목 클릭 → <strong>End-to-end transaction details</strong> 에서 실패 원인 추적</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">의도적 에러 생성</p>
+<p>실패 데이터를 확인하려면 존재하지 않는 endpoint로 요청을 보내세요:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">bash</label><label for="__tabbed_5_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://apigateway.awesome.</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">.nip.io/api/nonexistent&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/L</span> %i <span class="k">in</span> <span class="p">(</span><span class="mi">1</span>,<span class="mi">1</span>,<span class="mi">10</span><span class="p">)</span> <span class="k">do</span> curl -s <span class="s2">&quot;http://apigateway.awesome.</span><span class="nv">%INGRESS_IP%</span><span class="s2">.nip.io/api/nonexistent&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/app/failures-performance-transactions" target="_blank" rel="noopener">Investigate failures, performance, and transactions</a></p>
+</blockquote>
+<h4 id="5-search">5) Search — 개별 텔레메트리 검색<a class="headerlink" href="#5-search" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Investigate</strong> → <strong>Search</strong></li>
+<li>시간 범위를 <strong>Last 30 minutes</strong>로 설정</li>
+<li><strong>Event types</strong> 필터로 Request, Dependency, Exception, Trace 등 선택</li>
+<li>항목 클릭 → <strong>End-to-end transaction details</strong> 에서 전체 호출 체인 확인</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Transaction Diagnostics</p>
+<p>End-to-end transaction details 화면은 <strong>Gantt chart</strong> 형태로 요청의 전체 흐름을 보여줍니다. 서버 간 텔레메트리를 자동으로 correlation하여 하나의 요청이 여러 서비스를 거치는 과정을 추적할 수 있습니다.</p>
+</div>
+<h4 id="6-live-metrics">6) Live Metrics (참고)<a class="headerlink" href="#6-live-metrics" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Investigate</strong> → <strong>Live Metrics</strong></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Live Metrics 미지원 (OTel Collector 경유 시)</p>
+<p>Live Metrics(QuickPulse)는 애플리케이션 SDK가 Application Insights에 <strong>직접 연결</strong>할 때만 동작합니다.<br />
+이 Lab에서는 앱 → <strong>OTel Collector</strong> → Azure Monitor Exporter 경로를 사용하므로 <strong>Live Metrics가 표시되지 않습니다</strong>.<br />
+이는 정상이며, 텔레메트리 데이터는 위의 <strong>Performance, Failures, Application Map, Search</strong> 등에서 확인할 수 있습니다.<br />
+→ <a href="https://learn.microsoft.com/azure/azure-monitor/app/live-stream#supported-features-table" target="_blank" rel="noopener">Live Metrics 지원 조건</a></p>
+</div>
+<hr />
+<h3 id="part-4-logs-kql">Part 4: Logs (KQL) 쿼리<a class="headerlink" href="#part-4-logs-kql" title="Permanent link">&para;</a></h3>
+<p><strong>Application Insights</strong> → <strong>Monitoring</strong> → <strong>Logs</strong> 에서 아래 KQL 쿼리를 실행합니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">데이터 지연</p>
+<p>Logs 쿼리 결과는 <strong>2~5분</strong> 지연이 있을 수 있습니다. 트래픽 생성 후 잠시 대기한 뒤 쿼리를 실행하세요.</p>
+</div>
+<h4 id="_1">서비스별 요청 수<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">requests</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+<span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">cloud_RoleName</span>
+<span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">count_</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div>
+<h4 id="p95">서비스별 평균 응답 시간 (P95 포함)<a class="headerlink" href="#p95" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">requests</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+<span class="p">|</span><span class="w"> </span><span class="k">summarize</span>
+<span class="w">    </span><span class="n">avg_duration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">avg</span><span class="p">(</span><span class="n">duration</span><span class="p">),</span>
+<span class="w">    </span><span class="n">p95_duration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">percentile</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">),</span>
+<span class="w">    </span><span class="n">request_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">count</span><span class="p">()</span>
+<span class="w">  </span><span class="k">by</span><span class="w"> </span><span class="n">cloud_RoleName</span>
+<span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">avg_duration</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div>
+<h4 id="_2">실패 요청 조회<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">requests</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">success</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="n">false</span>
+<span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">cloud_RoleName</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">resultCode</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span>
+<span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div>
+<h4 id="dependency-mysql-redis">Dependency 호출 분석 (MySQL, Redis 등)<a class="headerlink" href="#dependency-mysql-redis" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+<span class="p">|</span><span class="w"> </span><span class="k">summarize</span>
+<span class="w">    </span><span class="n">avg_duration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">avg</span><span class="p">(</span><span class="n">duration</span><span class="p">),</span>
+<span class="w">    </span><span class="n">failure_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">countif</span><span class="p">(</span><span class="n">success</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="n">false</span><span class="p">),</span>
+<span class="w">    </span><span class="n">total_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">count</span><span class="p">()</span>
+<span class="w">  </span><span class="k">by</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">type</span>
+<span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">avg_duration</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div>
+<h4 id="_3">분산 추적 — 특정 요청의 호출 체인<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">requests</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="s">&quot;products&quot;</span>
+<span class="p">|</span><span class="w"> </span><span class="k">take</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">operation_Id</span>
+</code></pre></div>
+<p>위 쿼리 결과의 <code>operation_Id</code>를 복사한 뒤:</p>
+<div class="highlight"><pre><span></span><code><span class="k">union</span><span class="w"> </span><span class="n">requests</span><span class="p">,</span><span class="w"> </span><span class="n">dependencies</span><span class="p">,</span><span class="w"> </span><span class="n">traces</span>
+<span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">operation_Id</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;&lt;복사한 operation_Id&gt;&quot;</span>
+<span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="n">asc</span>
+<span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">itemType</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">success</span>
+</code></pre></div>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete" target="_blank" rel="noopener">Application Insights telemetry data model</a></p>
+</blockquote>
+<hr />
+<h3 id="part-5-alert-rule">Part 5: Alert Rule 생성 (선택)<a class="headerlink" href="#part-5-alert-rule" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Application Insights</strong> → <strong>Monitoring</strong> → <strong>Alerts</strong> → <strong>+ Create</strong> → <strong>Alert rule</strong></li>
+<li><strong>Condition</strong>: Signal = <code>Failed requests</code>, Threshold &gt; 5 (5분 내 실패 5건 이상)</li>
+<li><strong>Actions</strong>: 이메일 알림 또는 Action Group (실습에서는 생략 가능)</li>
+<li><strong>Details</strong>: Alert rule name = <code>High Error Rate - Lab92</code></li>
+<li><strong>Review + create</strong></li>
+</ol>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/alerts/alerts-overview" target="_blank" rel="noopener">Alerts overview</a></p>
+</blockquote>
+<hr />
+<h2 id="verify-azure-portal">Verify - Azure Portal<a class="headerlink" href="#verify-azure-portal" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>메뉴</th>
+<th>확인 항목</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Overview</strong></td>
+<td>요청 수, 실패율, 응답 시간 그래프</td>
+</tr>
+<tr>
+<td><strong>Live Metrics</strong></td>
+<td>OTel Collector 경유 시 미지원 (SDK 직접 연결 필요)</td>
+</tr>
+<tr>
+<td><strong>Application Map</strong></td>
+<td>서비스 간 의존 관계, 노드별 응답 시간/실패율</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>Operation별 응답 시간, Dependency 응답 시간</td>
+</tr>
+<tr>
+<td><strong>Failures</strong></td>
+<td>실패 요청 분류, Exception 목록</td>
+</tr>
+<tr>
+<td><strong>Search</strong></td>
+<td>개별 텔레메트리 항목, End-to-end transaction details</td>
+</tr>
+<tr>
+<td><strong>Logs</strong></td>
+<td>KQL 쿼리 (requests, dependencies, traces 테이블)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">추가 확인</p>
+<ul>
+<li><strong>Application Insights</strong> → <strong>Metrics</strong> → 커스텀 차트 생성 (예: 서비스별 응답 시간 추이)</li>
+<li><strong>AKS</strong> → <strong>Insights</strong> → Container Insights 활성화 시 노드/Pod CPU/Memory 메트릭</li>
+<li><strong>Log Analytics Workspace</strong> → <strong>Logs</strong> → <code>ContainerLogV2</code> 테이블에서 AKS 컨테이너 로그</li>
+</ul>
+</div>
+<hr />
+<h2 id="otel-collector">OTel Collector 설정 설명<a class="headerlink" href="#otel-collector" title="Permanent link">&para;</a></h2>
+<p><code>otel-collector.yaml</code>에 정의된 Collector 구성:</p>
+<table>
+<thead>
+<tr>
+<th>구성 요소</th>
+<th>설정</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Receiver</strong></td>
+<td><code>otlp</code> (gRPC:4317, HTTP:4318)</td>
+<td>앱에서 보내는 OTLP 데이터 수신</td>
+</tr>
+<tr>
+<td><strong>Processor</strong></td>
+<td><code>memory_limiter</code>, <code>batch</code></td>
+<td>메모리 보호 + 배치 전송 (효율)</td>
+</tr>
+<tr>
+<td><strong>Exporter</strong></td>
+<td><code>azuremonitor</code></td>
+<td>Application Insights로 전송</td>
+</tr>
+<tr>
+<td><strong>Exporter</strong></td>
+<td><code>debug</code></td>
+<td>stdout 로그 (테스트용)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">운영 환경 권장 사항</p>
+<ul>
+<li><code>debug</code> exporter 제거</li>
+<li><code>memory_limiter</code> 값을 노드 리소스에 맞게 조정</li>
+<li>Collector를 <strong>DaemonSet</strong> 또는 <strong>Deployment(replica 2+)</strong>로 운영</li>
+<li>Sampling 설정 추가 (예: <code>probabilistic_sampler</code>, rate 0.1)</li>
+</ul>
+</div>
+<hr />
+<h2 id="otel-collector-azure-monitor">참고: OTel Collector 없이 Azure Monitor로 직접 전송<a class="headerlink" href="#otel-collector-azure-monitor" title="Permanent link">&para;</a></h2>
+<p>이 Lab에서는 <strong>OTel Collector</strong>를 별도 배포하여 Traces/Metrics/Logs를 Azure Monitor로 전송합니다.
+하지만 Collector를 거치지 않는 <strong>직접 전송</strong> 방법도 있습니다.</p>
+<h3 id="1-application-sdk-exporter">방법 1 — Application SDK 직접 Exporter<a class="headerlink" href="#1-application-sdk-exporter" title="Permanent link">&para;</a></h3>
+<p>각 언어별 <strong>Azure Monitor OpenTelemetry Exporter/Distro</strong>를 앱 코드에 추가하면, Application Insights의 <strong>Connection String</strong>만으로 Collector 없이 직접 전송할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>언어</th>
+<th>패키지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET</td>
+<td><code>Azure.Monitor.OpenTelemetry.AspNetCore</code> → <code>UseAzureMonitor()</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td>Azure Monitor OpenTelemetry Distro (auto-attach)</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><code>@azure/monitor-opentelemetry</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>azure-monitor-opentelemetry-exporter</code></td>
+</tr>
+</tbody>
+</table>
+<p>앱에 <code>APPLICATIONINSIGHTS_CONNECTION_STRING</code> 환경변수를 주입하면 traces, metrics, logs가 Application Insights로 바로 전송됩니다.</p>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/app/opentelemetry-enable" target="_blank" rel="noopener">Enable Azure Monitor OpenTelemetry</a></p>
+</blockquote>
+<h3 id="2-aks-autoinstrumentation-preview">방법 2 — AKS Autoinstrumentation (Preview)<a class="headerlink" href="#2-aks-autoinstrumentation-preview" title="Permanent link">&para;</a></h3>
+<p>AKS 클러스터 설정에서 <strong>Application Monitoring</strong>을 활성화하면, <strong>Java / Node.js</strong> 앱에 대해 코드 수정 없이 자동 계측이 가능합니다 (Preview).</p>
+<ol>
+<li>AKS <strong>Monitor settings</strong> → "Enable support for Autoinstrumentation" 활성화</li>
+<li>Application Insights 리소스에 "Enable OTLP Support (Preview)" 켬</li>
+<li>Namespace별로 autoinstrumentation 또는 autoconfiguration 선택</li>
+</ol>
+<p>별도 Collector 배포 없이, AKS 플랫폼 수준에서 OTel 데이터를 Azure Monitor로 라우팅합니다.</p>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/containers/kubernetes-open-protocol" target="_blank" rel="noopener">Monitor AKS applications with OTLP (Preview)</a></p>
+</blockquote>
+<h3 id="collector">Collector 방식과의 비교<a class="headerlink" href="#collector" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>OTel Collector (이 Lab)</th>
+<th>SDK 직접 Exporter</th>
+<th>AKS Autoinstrumentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>추가 인프라</td>
+<td>Collector Pod 필요</td>
+<td>없음</td>
+<td>없음 (AKS add-on)</td>
+</tr>
+<tr>
+<td>코드 변경</td>
+<td>앱은 OTLP로 export → Collector가 변환</td>
+<td>앱에 SDK/패키지 추가 필요</td>
+<td>Java/Node.js는 변경 없음</td>
+</tr>
+<tr>
+<td>지원 언어</td>
+<td>모든 OTel 호환 언어</td>
+<td>.NET, Java, Node.js, Python</td>
+<td>Java, Node.js (Preview)</td>
+</tr>
+<tr>
+<td>유연성</td>
+<td>높음 (필터, 샘플링, 멀티 백엔드)</td>
+<td>중간</td>
+<td>낮음 (플랫폼 관리)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>GA (contrib exporter)</td>
+<td>GA</td>
+<td><strong>Preview</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">이 Lab에서 Collector를 사용하는 이유</p>
+<p>Collector 방식은 <strong>언어에 상관없이</strong> 동작하고, 필터링·샘플링·멀티 백엔드 전송 등 <strong>유연한 파이프라인 설계</strong>가 가능합니다. 운영 환경에서 가장 보편적인 패턴이며, 직접 Exporter나 AKS Autoinstrumentation은 <strong>단순한 구성</strong>이 필요할 때 적합합니다.</p>
+</div>
+<hr />
+<h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">아직 삭제하지 마세요</p>
+<p>이 Lab이 AKS 시리즈의 마지막 실습입니다.<br />
+Lab 90 · 91 · 92 리소스를 한꺼번에 정리하려면 <strong><a href="../lab99-aks-cleanup/">Custom Lab Cleanup</a></strong> 을 진행하세요.</p>
+</div>
+<hr />
+<h2 id="terraform-files">Terraform Files<a class="headerlink" href="#terraform-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>versions.tf</code></td>
+<td>Terraform / provider 버전 제약</td>
+</tr>
+<tr>
+<td><code>providers.tf</code></td>
+<td><code>azurerm</code> provider</td>
+</tr>
+<tr>
+<td><code>variables.tf</code></td>
+<td>prefix, RG, retention 등</td>
+</tr>
+<tr>
+<td><code>main.tf</code></td>
+<td>Log Analytics Workspace, Application Insights</td>
+</tr>
+<tr>
+<td><code>outputs.tf</code></td>
+<td>workspace name/ID, connection string</td>
+</tr>
+<tr>
+<td><code>terraform.tfvars.example</code></td>
+<td>변수 예시 파일</td>
+</tr>
+<tr>
+<td><code>clusters/az104-aks/otel-collector/otel-collector.yaml</code></td>
+<td>OTel Collector Kubernetes 매니페스트 (ConfigMap + Deployment + Service)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Collector CrashLoop</td>
+<td>Connection String 누락</td>
+<td>Secret 생성 확인: <code>kubectl get secret -n otel-collector</code></td>
+</tr>
+<tr>
+<td>Application Insights 데이터 없음</td>
+<td>Exporter 설정 오류</td>
+<td>Collector 로그 확인: <code>kubectl logs -n otel-collector deployment/otel-apps</code></td>
+</tr>
+<tr>
+<td>Traces만 보이고 Metrics 없음</td>
+<td>Pipeline 설정 누락</td>
+<td><code>config.yaml</code>에서 metrics pipeline 확인</td>
+</tr>
+<tr>
+<td>앱 로그에 "connection refused"</td>
+<td>Collector 미배포 또는 Service DNS 미해결</td>
+<td><code>kubectl get svc -n otel-collector</code>, endpoint 확인</td>
+</tr>
+<tr>
+<td>Log Analytics 쿼리 결과 없음</td>
+<td>데이터 지연 (최대 5분)</td>
+<td>5분 대기 후 재시도</td>
+</tr>
+<tr>
+<td>Alert 미발동</td>
+<td>Threshold 미달 또는 평가 기간 미경과</td>
+<td>Alert condition의 evaluation period, threshold 확인</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cost-caution">Cost &amp; Caution<a class="headerlink" href="#cost-caution" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">데이터 수집 비용</p>
+<p>Log Analytics는 <strong>수집량 기반</strong> 과금입니다. 실습 후 OTel Collector를 삭제하지 않으면 계속 데이터가 쌓입니다. 실습 종료 시 반드시 <code>terraform destroy</code>와 Collector 정리를 수행하세요.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

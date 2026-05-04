@@ -1,0 +1,2351 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AZ-104 Terraform Lab - onboarding docs">
+      
+      
+      
+        <link rel="canonical" href="https://noisonnoiton.github.io/az-104-labs/lab09a-paas-webapp/">
+      
+      
+        <link rel="prev" href="../lab08-manage-vms/">
+      
+      
+        <link rel="next" href="../lab90-aks/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Lab 09a - PaaS Web App - AZ-104 Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-09a-paas-web-app-terraform" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="AZ-104 Labs" class="md-header__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AZ-104 Labs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 09a - PaaS Web App
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../foundations/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../prerequisite/" class="md-tabs__link">
+          
+  
+  
+  Prerequisite
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../lab00-skeleton/" class="md-tabs__link">
+          
+  
+  
+  Terraform Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AZ-104 Labs" class="md-nav__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AZ-104 Labs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/01-iac-paradigms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC paradigms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02-terraform-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02b-terraform-hcl-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL block samples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/03-terraform-auth-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth & syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/04-kubernetes-essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisite
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prerequisite
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/01-azure-access-terraform-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure & Terraform auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/02-setup-windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/03-setup-macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/04-clone-repository/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clone repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Terraform Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-skeleton/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skeleton (RG verify)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 - Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-network-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 - Network Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-manage-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-manage-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 - Manage VMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concept-mapping-official-lab-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Mapping (Official Lab 09)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS 배포와의 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-login-to-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Login to Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-initialize-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Initialize Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-check-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Check outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup-teardown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup (Teardown)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-web-app-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: Azure Web App에서의 OpenTelemetry 연계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="참고: Azure Web App에서의 OpenTelemetry 연계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-azure-monitor-opentelemetry-distro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1 — Azure Monitor OpenTelemetry Distro (권장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-app-service-codeless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2 — App Service 자동 계측 (Codeless)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-codeless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java 자동 계측 — "Codeless"의 실제 의미
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        언어별 "자동 계측" 비교 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab90-aks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 90 - ACR + AKS Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab91-aks-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab92-aks-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab99-aks-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Lab Cleanup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concept-mapping-official-lab-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Mapping (Official Lab 09)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS 배포와의 비교
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-login-to-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Login to Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-initialize-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Initialize Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-check-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Check outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup-teardown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup (Teardown)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-web-app-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        참고: Azure Web App에서의 OpenTelemetry 연계
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="참고: Azure Web App에서의 OpenTelemetry 연계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-azure-monitor-opentelemetry-distro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 1 — Azure Monitor OpenTelemetry Distro (권장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-app-service-codeless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        방법 2 — App Service 자동 계측 (Codeless)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-codeless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java 자동 계측 — "Codeless"의 실제 의미
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        언어별 "자동 계측" 비교 요약
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../lab00-skeleton/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Terraform Lab
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-09a-paas-web-app-terraform">Lab 09a - PaaS Web App (Terraform)<a class="headerlink" href="#lab-09a-paas-web-app-terraform" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">목표</p>
+<p>Azure <strong>App Service (Web App for Containers)</strong> 를 Terraform으로 배포하고, 강사 공유 ACR의 컨테이너 이미지를 <strong>Managed Identity</strong> 인증으로 Pull하여 실행합니다. PPT <strong>M9 (Administer PaaS Compute Options)</strong> 모듈의 직접 실습 대응입니다.</p>
+</div>
+<hr />
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjYxN3B4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6NDA1cHg7aGVpZ2h0OjYxN3B4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQwNSA2MTciIHdpZHRoPSI0MDVweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgc3R1ZGVudFJnLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InN0dWRlbnRSZyIgZGF0YS1zb3VyY2UtbGluZT0iMjMiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjRUZGNkZGIiBoZWlnaHQ9IjIwNi4xOSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMzg0IiB4PSI3IiB5PSI2OC4xMzkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5MC4wNjM1IiB4PSIxNTMuOTY4MyIgeT0iODMuMTM0MiI+U3R1ZGVudCBSRzwvdGV4dD48L2c+PCEtLWNsdXN0ZXIgc2hhcmVkUmctLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ic2hhcmVkUmciIGRhdGEtc291cmNlLWxpbmU9IjI5IiBpZD0iZW50MDAwNyI+PHJlY3QgZmlsbD0iI0YzRThGRiIgaGVpZ2h0PSIxMTkuNTkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjE0NSIgeD0iMjMyIiB5PSIyOTguMzI5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODMuMDYzNSIgeD0iMjYyLjk2ODMiIHk9IjMxMy4zMjQyIj5TaGFyZWQgUkc8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTI5Ljk3ODUiIHg9IjIzOS41MTA3IiB5PSIzMjkuNjIxIj4oSW5zdHJ1Y3RvcikmbHQ7L2ImZ3Q7PC90ZXh0PjwvZz48IS0tZW50aXR5IHBsYW4tLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJzdHVkZW50UmcucGxhbiIgZGF0YS1zb3VyY2UtbGluZT0iMjQiIGlkPSJlbnQwMDA0Ij48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjE1My4zMDA4IiB4PSIyMy4zNSIgeT0iMTAzLjEzOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEzMy4zMDA4IiB4PSIzMy4zNSIgeT0iMTI2LjEzNDIiPkFwcCBTZXJ2aWNlIFBsYW48L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjkuODQ5NiIgeD0iMzMuMzUiIHk9IjE0Mi40MzEiPkxpbnV4IC8gQjE8L3RleHQ+PC9nPjwhLS1lbnRpdHkgd2ViYXBwLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ic3R1ZGVudFJnLndlYmFwcCIgZGF0YS1zb3VyY2UtbGluZT0iMjUiIGlkPSJlbnQwMDA1Ij48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEzOC4yNjg2IiB4PSIyMzYuODciIHk9IjEwMy4xMzkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTguMjY4NiIgeD0iMjQ2Ljg3IiB5PSIxMjYuMTM0MiI+TGludXggV2ViIEFwcDwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3OS4zMzc5IiB4PSIyNDYuODciIHk9IjE0Mi40MzEiPihDb250YWluZXIpPC90ZXh0PjwvZz48IS0tZW50aXR5IG1zaS0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InN0dWRlbnRSZy5tc2kiIGRhdGEtc291cmNlLWxpbmU9IjI2IiBpZD0iZW50MDAwNiI+PHJlY3QgZmlsbD0iI0UwRTdGRiIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxNDIuNjAyNSIgeD0iMjMyLjciIHk9IjIwNS43MjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTkuOTcwNyIgeD0iMjQyLjciIHk9IjIyOC43MjQyIj5TeXN0ZW0gQXNzaWduZWQ8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTIyLjYwMjUiIHg9IjI0Mi43IiB5PSIyNDUuMDIxIj5NYW5hZ2VkIElkZW50aXR5PC90ZXh0PjwvZz48IS0tZW50aXR5IGFjci0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InNoYXJlZFJnLmFjciIgZGF0YS1zb3VyY2UtbGluZT0iMzAiIGlkPSJlbnQwMDA4Ij48cmVjdCBmaWxsPSIjRDFGQUU1IiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEwMS41MTg2IiB4PSIyNTMuMjQiIHk9IjM0OS4zMjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4MS41MTg2IiB4PSIyNjMuMjQiIHk9IjM3Mi4zMjQyIj5BQ1IgKEJhc2ljKTwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3OC44MDQ3IiB4PSIyNjMuMjQiIHk9IjM4OC42MjEiPmF3ZXNvbWUtKjwvdGV4dD48L2c+PCEtLWVudGl0eSBpbmV0LS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iaW5ldCIgZGF0YS1zb3VyY2UtbGluZT0iMjEiIGlkPSJlbnQwMDAyIj48cGF0aCBkPSJNMjcyLjg1MTgsMTQuNzE5NyBDMjc1Ljk0NzUsOS42ODU2IDI3OS44NzYxLDkuNDIwNCAyODMuNjgzNSwxMy45MTAzIEMyODYuNzkxNSw3LjczODQgMjkxLjEzNTgsNy44MzkxIDI5NS4zNzc1LDEyLjcwOTggQzI5OC4yOTM1LDcuMzg3MiAzMDIuNTYxMyw2LjkwOTcgMzA2LjE0MTMsMTIuMDI1MSBDMzA5Ljg4OTgsNy4xMDA3IDMxMy43NDY3LDYgMzE3LjczNCwxMS43NjYxIEMzMjIuNzc3Miw2LjUwMjcgMzI3LjAwODIsNi42NTE0IDMyOS44NTA3LDEzLjg5NzcgQzMzMy45MDgzLDguNzMwMiAzMzguNTY2MSw5LjAwNDcgMzQyLjI1MjUsMTQuMzM2MiBDMzQ5LjU5MDQsMTcuMTc1NiAzNTEuMzI3NywyNC41MzE3IDM0NS4wMTI5LDI5LjgwNzEgQzM1MC44MTc1LDM2LjIwODcgMzUwLjY2Myw0MS4yOTI0IDM0Mi42NjcsNDUuNjUwNiBDMzQwLjcxMjgsNTEuODExMiAzMzUuMTc5LDUyLjIxOTIgMzMxLjQzMDIsNDcuNTA0OSBDMzI4LjQ5MDQsNTUuNzc4MSAzMjQuMDIzMSw1Ni44MjAyIDMxNy44OTkyLDUwLjQ0NjQgQzMxNi45NjY4LDU2LjE2MjcgMzEyLjI3MzQsNTguMzQ1NiAzMDcuMzg1NCw1NS4wNzMyIEMzMDIuNzg3Myw1OS4yNzEzIDI5Ny41MDQzLDU4LjczMTUgMjk1LjU0MjEsNTIuMTcxNCBDMjg5LjAyMjMsNTcuMDA2OSAyODUuNzk3Miw1NC4zNzI4IDI4My41ODk5LDQ3LjY5NDYgQzI3OS4zODE2LDUyLjE1MDIgMjc0LjMxNDMsNTEuNjgxOCAyNzEuNjQyNyw0NS45MDExIEMyNjEuOTg0Nyw0NC45Mjg0IDI1OC43NjM4LDM3LjcwNDkgMjY1LjM1OTksMzAuMjE5OSBDMjU5LjI0MjksMjEuMjM3NiAyNjIuMzM1NywxNS42NjI1IDI3Mi44NTE4LDE0LjcxOTciIGZpbGw9IiNGMUY1RjkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjU1LjgzNTkiIHg9IjI3OC4wOCIgeT0iMzMuODM0MiI+SW50ZXJuZXQ8L3RleHQ+PC9nPjwhLS1saW5rIGluZXQgdG8gd2ViYXBwLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDIiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIzNCIgaWQ9ImxuazkiPjxwYXRoIGQ9Ik0zMDYsNTIuNTM5IEMzMDYsNjcuNjE5IDMwNiw4MS4yMDkgMzA2LDk2Ljg0OSIgZmlsbD0ibm9uZSIgaWQ9ImluZXQtdG8td2ViYXBwIiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzAwNzhENCIgcG9pbnRzPSIzMDYsMTAyLjg0OSwzMTAsOTMuODQ5LDMwNiw5Ny44NDksMzAyLDkzLjg0OSwzMDYsMTAyLjg0OSIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQxLjc0ODUiIHg9IjI2NCIgeT0iNzMuNzU1OSI+SFRUUFM8L3RleHQ+PC9nPjwhLS1saW5rIHBsYW4gdG8gd2ViYXBwLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDQiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIzNyIgaWQ9ImxuazEwIj48cGF0aCBkPSJNMTc3LDEyOS45MTkgQzE5Ni41NCwxMjkuOTE5IDIxMS40MiwxMjkuOTE5IDIzMC41NiwxMjkuOTE5IiBmaWxsPSJub25lIiBpZD0icGxhbi10by13ZWJhcHAiIHN0eWxlPSJzdHJva2U6IzY0NzQ4QjtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjNjQ3NDhCIiBwb2ludHM9IjIzNi41NiwxMjkuOTE5LDIyNy41NiwxMjUuOTE5LDIzMS41NiwxMjkuOTE5LDIyNy41NiwxMzMuOTE5LDIzNi41NiwxMjkuOTE5IiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzQuODM1OSIgeD0iMTk4Ljc4IiB5PSIxNDIuOTg1OSI+aG9zdHM8L3RleHQ+PC9nPjwhLS1saW5rIHdlYmFwcCB0byBtc2ktLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNSIgZGF0YS1lbnRpdHktMj0iZW50MDAwNiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjQwIiBpZD0ibG5rMTEiPjxwYXRoIGQ9Ik0zMDYsMTU2LjExOSBDMzA2LDE3MS4zMTkgMzA2LDE4NC4yOTkgMzA2LDE5OS40NzkiIGZpbGw9Im5vbmUiIGlkPSJ3ZWJhcHAtdG8tbXNpIiBzdHlsZT0ic3Ryb2tlOiM3QzNBRUQ7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzdDM0FFRCIgcG9pbnRzPSIzMDYsMjA1LjQ3OSwzMTAsMTk2LjQ3OSwzMDYsMjAwLjQ3OSwzMDIsMTk2LjQ3OSwzMDYsMjA1LjQ3OSIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQ5LjYwMDYiIHg9IjI1NiIgeT0iMTc2Ljg2NTkiPmlkZW50aXR5PC90ZXh0PjwvZz48IS0tbGluayBtc2kgdG8gYWNyLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDYiIGRhdGEtZW50aXR5LTI9ImVudDAwMDgiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI0MyIgaWQ9ImxuazEyIj48cGF0aCBkPSJNMzA0LDI1OC42OTkgQzMwNCwyODQuNDg5IDMwNCwzMTcuMzQ5IDMwNCwzNDMuMDg5IiBmaWxsPSJub25lIiBpZD0ibXNpLXRvLWFjciIgc3R5bGU9InN0cm9rZTojMTZBMzRBO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMxNkEzNEEiIHBvaW50cz0iMzA0LDM0OS4wODksMzA4LDM0MC4wODksMzA0LDM0NC4wODksMzAwLDM0MC4wODksMzA0LDM0OS4wODkiIHN0eWxlPSJzdHJva2U6IzE2QTM0QTtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0NC42ODc1IiB4PSIyMjEuMzYyMyIgeT0iMjg0Ljk2NTkiPkFjclB1bGw8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTE5LjQxMjEiIHg9IjE4NCIgeT0iMzAwLjA5ODgiPihSb2xlIEFzc2lnbm1lbnQpPC90ZXh0PjwvZz48ZyBjbGFzcz0ibGVnZW5kIiBkYXRhLXNvdXJjZS1saW5lPSI0NSI+PHJlY3QgZmlsbD0iI0RERERERCIgaGVpZ2h0PSIxNjAuNjcxOSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB3aWR0aD0iMjI5LjY2ODEiIHg9IjE1Ni4zMzE5IiB5PSI0MzcuOTE5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjUuNzU5OSIgeD0iMTY2LjIwNTkiIHk9IjQ1Ny45MTQyIj4mIzQ5MzUzOyYjNDkzNDU7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjY5LjI3MzciIHg9IjIwMS43MTM5IiB5PSI0NTcuOTE0MiI+JiM0NzUzMjsmIzQ5NTQ4OyYjNDk4Mjg7ICYjNTA5NzY7JiM1NDgwNTs8L3RleHQ+PHJlY3QgZmlsbD0iI0RCRUFGRSIgaGVpZ2h0PSIxNi4yOTY5IiBzdHlsZT0ic3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjE7IiB3aWR0aD0iMzUuNTA3OSIgeD0iMTYxLjMzMTkiIHk9IjQ2MS4yMTU5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSIxNjEuMzMxOSIgeT0iNDc0LjIxMSI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExNy43NzY0IiB4PSIyMDEuMjkiIHk9IjQ3NC4yMTEiPkFwcCBTZXJ2aWNlIFBsYW48L3RleHQ+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIxNi4yOTY5IiBzdHlsZT0ic3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjE7IiB3aWR0aD0iMzUuNTA3OSIgeD0iMTYxLjMzMTkiIHk9IjQ3Ny41MTI4Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSIxNjEuMzMxOSIgeT0iNDkwLjUwNzkiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDYuOTMxNiIgeD0iMjAxLjI5IiB5PSI0OTAuNTA3OSI+V2ViIEFwcCAoQ29udGFpbmVyKTwvdGV4dD48cmVjdCBmaWxsPSIjRDFGQUU1IiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNS41MDc5IiB4PSIxNjEuMzMxOSIgeT0iNDkzLjgwOTciLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjE2MS4zMzE5IiB5PSI1MDYuODA0OCI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE3NS4yNTk4IiB4PSIyMDEuMjkiIHk9IjUwNi44MDQ4Ij5BQ1IgKENvbnRhaW5lciBSZWdpc3RyeSk8L3RleHQ+PHJlY3QgZmlsbD0iI0UwRTdGRiIgaGVpZ2h0PSIxNi4yOTY5IiBzdHlsZT0ic3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjE7IiB3aWR0aD0iMzUuNTA3OSIgeD0iMTYxLjMzMTkiIHk9IjUxMC4xMDY1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSIxNjEuMzMxOSIgeT0iNTIzLjEwMTciPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjIuNjAyNSIgeD0iMjAxLjI5IiB5PSI1MjMuMTAxNyI+TWFuYWdlZCBJZGVudGl0eTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMi44Nzk5IiB4PSIxNjYuMjA1OSIgeT0iNTM5LjM5ODUiPiYjNDk0NDA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljc1OTkiIHg9IjIwMS43MTM5IiB5PSI1MzkuMzk4NSI+JiM1MTAzMjsmIzQ4MTIwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjE2MS4zMzE5IiB5PSI1NTUuNjk1NCI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDc4RDQiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE2Ljg1NzQiIHg9IjE2NS43ODIxIiB5PSI1NTUuNjk1NCI+JiM5NDczOyYjOTQ3Mzs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSIxODIuNjM5NSIgeT0iNTU1LjY5NTQiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4OC4wNSIgeD0iMjAxLjI5IiB5PSI1NTUuNjk1NCI+SFRUUFMgJiM1Mzk0NDsmIzQ3MDAwOyYjNTQ1ODk7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iMTYxLjMzMTkiIHk9IjU3MS45OTIzIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzdDM0FFRCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTYuODU3NCIgeD0iMTY1Ljc4MjEiIHk9IjU3MS45OTIzIj4mIzk0NzY7JiM5NDc2OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjE4Mi42Mzk1IiB5PSI1NzEuOTkyMyI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjgzLjg2NTQiIHg9IjIwMS4yOSIgeT0iNTcxLjk5MjMiPklkZW50aXR5ICYjNTA2NzI7JiM0NDIwODs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSIxNjEuMzMxOSIgeT0iNTg4LjI4OTIiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMTZBMzRBIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSIxNjUuNzgyMSIgeT0iNTg4LjI4OTIiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iMTgyLjYzOTUiIHk9IjU4OC4yODkyIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTMyLjEyODEiIHg9IjIwMS4yOSIgeT0iNTg4LjI4OTIiPkFjclB1bGwgKCYjNTEwNjA7JiM0ODEyMDsmIzUxNjQ4OyBwdWxsKTwvdGV4dD48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMTYxLjMzMTkiIHgyPSIzODEiIHkxPSI0NDQuOTE5IiB5Mj0iNDQ0LjkxOSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSIxNjEuMzMxOSIgeDI9IjM4MSIgeTE9IjQ2MS4yMTU5IiB5Mj0iNDYxLjIxNTkiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMTYxLjMzMTkiIHgyPSIzODEiIHkxPSI0NzcuNTEyOCIgeTI9IjQ3Ny41MTI4Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjE2MS4zMzE5IiB4Mj0iMzgxIiB5MT0iNDkzLjgwOTciIHkyPSI0OTMuODA5NyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSIxNjEuMzMxOSIgeDI9IjM4MSIgeTE9IjUxMC4xMDY1IiB5Mj0iNTEwLjEwNjUiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMTYxLjMzMTkiIHgyPSIzODEiIHkxPSI1MjYuNDAzNCIgeTI9IjUyNi40MDM0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjE2MS4zMzE5IiB4Mj0iMzgxIiB5MT0iNTQyLjcwMDMiIHkyPSI1NDIuNzAwMyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSIxNjEuMzMxOSIgeDI9IjM4MSIgeTE9IjU1OC45OTcyIiB5Mj0iNTU4Ljk5NzIiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMTYxLjMzMTkiIHgyPSIzODEiIHkxPSI1NzUuMjk0IiB5Mj0iNTc1LjI5NCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSIxNjEuMzMxOSIgeDI9IjM4MSIgeTE9IjU5MS41OTA5IiB5Mj0iNTkxLjU5MDkiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMTYxLjMzMTkiIHgyPSIxNjEuMzMxOSIgeTE9IjQ0NC45MTkiIHkyPSI1OTEuNTkwOSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSIxOTYuODM5OCIgeDI9IjE5Ni44Mzk4IiB5MT0iNDQ0LjkxOSIgeTI9IjU5MS41OTA5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjM4MSIgeDI9IjM4MSIgeTE9IjQ0NC45MTkiIHkyPSI1OTEuNTkwOSIvPjwvZz48P3BsYW50dW1sLXNyYyBQTEhEUnpEMDRCdHhMbW05NFdiSXNlSWE3cUhmOTJVbnNxZ2JINHViM2NxRjZ0a0pNN05Ncmt3UTRaTDhMQXNHZzNXTXFHRDVGSTJ1ODU0WDNodG1QcFhJenAtbWt6d2NRT1h5SUR4Q1VwRnBQWG9zdnZDOEtKRzQzX1RHNzcweDk3bUozSjVxNDY2NTNnUC1wczJKZkMwZGM4eVkzMjdiV3QwZ0dDRU9VNnY4MlFRbUY4TUpxQ0NDSHgxT2Q0djZQNC0yMnFOM1UwRzV5RzR0MzQ4QTRHZW12clgxbmVFN3hHcnA0czA1Q2piTW1wOWpBb0NtaXpzNjU2bE9oT1I2Y2V4Nk1ZTlJqMU9hdmdvMm5ZcFJOaEhqWU5OTUpDVGdBVDBrTXlpZnM3WmtqMm43V1NOWXFkQWhhWjZjTXlLa0h3R1ZPM1dtNlk3ckM2c2dKWkxET3JpM3R6cVpjMzV1T2FXM3F2bmlvSWdSMnhSbnNaM1M4OG16b0FtSlplTDVGMEU4V1JHSWlkUjlOaDJWNmlQVGVLb2pNLV9tc0NFNFd4RFFjLV9NTEpmQjhRU0ZTaFEzNk84UEhJMk16VDl0Q1JHM0gySGpYc3B1OTd1NXl6MGVBT2I4MTQydkVpREV5cnhXQldZVGI5ZmhZWmNHdzk3YzVOU1ZUdjZlOFZzVjlkVDZaRUNYYzhwdlZPQXo3VjhDNFRKNzdncEJQZHEtS2tHWHlvNWg1UXFiTXhhbkMtaTBLSzVtTGFOSFRTOHVaTHFVcWxwVHUyZWt2elJ4a3BVeHQ3c2tXUFpsdmRTOHNpU2k3RUIyT3FMNGhqWUpZQ2tJLWltdUhSc1V4cUFrNnlHdWR6d1BzYURYTXN6X3JtbHRJUTUtRXN5THJoUXNzZnM5V0JCbUJmcGhLcEpJRWNiZUV4ak9NUWVpRHRRZnRuX21RUTUxbzNZUjJGZFE3eVg1Q090NDkxdlkwLW5mQktzUXN5dWtEU2tjclRnVGdvaUpnbkZVSENYcVFKaUUwamFBbmFKcFBRdmVmUkhlYllsY3hLWklaLWZqbFozUjJLTlBUN0QzOFBldFowM3RDVjUwak13Q0xvMHZVZlNTN09CdVRsdHJVX0JzVk5CbzFQOUY1cFRkN3MxaVo2bHdqUXAzNjZSbEJ1c2Rod1lDd3prMmdSRkk0a2dETEg5b2F2Q21FQlpsWXNDT3dScHFVY0pVeDhOOWs2WnItNEJzY1BvVk5WLXVhWDNLcjd6QUxVLXJfa1ZxSzNvclVPTEE3UkxPazNjdmtsdnlUZEZ3LW51ZFRMcm1aaUtwblBkS0ozdlVfbHJ2VU8tSmNscl9kU2MyYWxEVmVoVmFzbms4bjZ5dmJwR3h6Vm1WPz48L2c+PC9zdmc+" class="uml" alt="uml diagram" title="" /></p>
+<hr />
+<h2 id="resources-created">Resources Created<a class="headerlink" href="#resources-created" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>리소스</th>
+<th>기본 이름/값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App Service Plan</td>
+<td><code>{prefix}-plan</code> (Linux, B1 SKU)</td>
+</tr>
+<tr>
+<td>Linux Web App</td>
+<td><code>{prefix}-app</code> (Container mode)</td>
+</tr>
+<tr>
+<td>System Assigned Managed Identity</td>
+<td>Web App에 자동 생성</td>
+</tr>
+<tr>
+<td>Role Assignment</td>
+<td>AcrPull — Web App MI → 공유 ACR</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Web App for Containers</p>
+<p>일반 App Service는 코드(ZIP deploy)를 실행하지만, <strong>Web App for Containers</strong>는 Docker 이미지를 직접 실행합니다. ACR 이미지 주소와 <code>WEBSITES_PORT</code> 환경변수만 설정하면 별도 빌드 없이 컨테이너가 기동됩니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">비용 주의</p>
+<p><strong>App Service Plan</strong>은 VM과 동일하게 <strong>실행 중이면 시간당 과금</strong>됩니다. 실습이 끝나면 반드시 <strong><code>terraform destroy</code></strong>로 정리하세요.</p>
+</div>
+<hr />
+<h2 id="prerequisite">Prerequisite<a class="headerlink" href="#prerequisite" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>권한</td>
+<td>할당된 <strong>Resource Group</strong>에 <strong>Contributor</strong> 이상</td>
+</tr>
+<tr>
+<td>도구</td>
+<td><a href="https://learn.microsoft.com/cli/azure/install-azure-cli" target="_blank" rel="noopener">Azure CLI</a> 설치, Terraform <strong>1.5+</strong> 설치</td>
+</tr>
+<tr>
+<td>인증</td>
+<td><a href="../prerequisite/01-azure-access-terraform-auth/"><code>az login</code></a> 후 올바른 <strong>subscription</strong> 선택</td>
+</tr>
+<tr>
+<td>선행 Lab</td>
+<td><a href="../lab00-skeleton/">Lab 00 - Skeleton</a>으로 RG 연결 검증 권장</td>
+</tr>
+<tr>
+<td>공유 ACR 이미지</td>
+<td>강사가 사전 push — <code>az acr repository list --name &lt;ACR&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="concept-mapping-official-lab-09">Concept Mapping (Official Lab 09)<a class="headerlink" href="#concept-mapping-official-lab-09" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>공식 Lab 09 주제</th>
+<th>이 모듈에서의 위치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web App 배포 (App Service Plan)</td>
+<td><code>main.tf</code> - <code>azurerm_service_plan</code></td>
+</tr>
+<tr>
+<td>컨테이너 이미지 배포</td>
+<td><code>main.tf</code> - <code>azurerm_linux_web_app</code> (docker config)</td>
+</tr>
+<tr>
+<td>Managed Identity</td>
+<td><code>main.tf</code> - Web App <code>identity</code> block</td>
+</tr>
+<tr>
+<td>ACR 연동</td>
+<td><code>main.tf</code> - <code>azurerm_role_assignment</code> (AcrPull)</td>
+</tr>
+<tr>
+<td>Container Instances (ACI)</td>
+<td>본 모듈 범위 밖 — PPT에서 비교 설명</td>
+</tr>
+<tr>
+<td>Container Apps</td>
+<td>본 모듈 범위 밖 — PPT에서 비교 설명</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="aks">AKS 배포와의 비교<a class="headerlink" href="#aks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>Web App for Containers (이 Lab)</th>
+<th>AKS (Lab 90-92)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>컨테이너 단위</td>
+<td>단일 컨테이너 (1 Web App = 1 image)</td>
+<td>Pod (multi-container 가능)</td>
+</tr>
+<tr>
+<td>오케스트레이션</td>
+<td>없음 (PaaS가 관리)</td>
+<td>Kubernetes (Deployment, Service, Ingress)</td>
+</tr>
+<tr>
+<td>스케일링</td>
+<td>App Service Plan 스케일 (수동/자동)</td>
+<td>HPA, Cluster Autoscaler</td>
+</tr>
+<tr>
+<td>네트워크</td>
+<td>App Service 기본 도메인 + Custom Domain</td>
+<td>Service + Ingress Controller</td>
+</tr>
+<tr>
+<td>적합한 워크로드</td>
+<td>단일 서비스, API backend, 간단한 웹 앱</td>
+<td>마이크로서비스, 복잡한 토폴로지</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-by-step">Step-by-Step<a class="headerlink" href="#step-by-step" title="Permanent link">&para;</a></h2>
+<p>Terraform 코드 위치: <strong><code>labs/terraform/lab09a-paas-webapp/</code></strong></p>
+<h3 id="1-prepare-variables">1) Prepare variables<a class="headerlink" href="#1-prepare-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>labs/terraform/lab09a-paas-webapp
+cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
+</code></pre></div>
+<p>에디터로 <code>terraform.tfvars</code>를 열고 다음을 설정합니다.</p>
+<ul>
+<li><strong><code>resource_group_name</code></strong> (필수) — 강사가 알려준 <strong>본인 RG</strong> 이름</li>
+<li><strong><code>acr_name</code></strong> (필수) — 강사가 알려준 <strong>공유 ACR</strong> 이름</li>
+</ul>
+<h3 id="2-login-to-azure">2) Login to Azure<a class="headerlink" href="#2-login-to-azure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
+az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-o<span class="w"> </span>table
+</code></pre></div>
+<h3 id="3-initialize-terraform">3) Initialize Terraform<a class="headerlink" href="#3-initialize-terraform" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>Initializing the backend...
+Initializing provider plugins...
+- Finding hashicorp/azurerm versions matching &quot;~&gt; 4.0&quot;...
+- Installing hashicorp/azurerm v4.x.x...
+
+Terraform has been successfully initialized!
+</code></pre></div>
+</details>
+<h3 id="4-plan">4) Plan<a class="headerlink" href="#4-plan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>plan
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title"><code>terraform plan</code>에서 볼 것</p>
+<ul>
+<li><strong>추가될 리소스 수</strong> — App Service Plan, Linux Web App, Role Assignment 총 <strong>3개</strong> (+ data source 2개는 카운트 미포함)</li>
+<li><strong>Web App</strong> — <code>docker_registry_url</code>, <code>docker_image_name</code> 확인</li>
+<li><strong>Role Assignment</strong> — Web App Managed Identity → ACR에 <code>AcrPull</code></li>
+<li><strong><code>webapp_url</code></strong> — <code>(known after apply)</code> — apply 후 확정됨</li>
+</ul>
+</div>
+<h3 id="5-apply">5) Apply<a class="headerlink" href="#5-apply" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>apply
+</code></pre></div>
+<p>프롬프트에 <strong><code>yes</code></strong>를 입력합니다. 완료까지 <strong>2~3분</strong> 소요됩니다.</p>
+<details class="example">
+<summary>예상 출력 (요약)</summary>
+<div class="highlight"><pre><span></span><code>Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+app_service_plan_name = &quot;az104-lab09a-plan&quot;
+resource_group_name   = &quot;rg-az104-student01&quot;
+webapp_name           = &quot;az104-lab09a-app&quot;
+webapp_principal_id   = &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;
+webapp_url            = &quot;https://az104-lab09a-app.azurewebsites.net&quot;
+</code></pre></div>
+</details>
+<h3 id="6-check-outputs">6) Check outputs<a class="headerlink" href="#6-check-outputs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output
+terraform<span class="w"> </span>output<span class="w"> </span>webapp_url
+</code></pre></div>
+<hr />
+<h2 id="verify-azure-portal">Verify - Azure Portal<a class="headerlink" href="#verify-azure-portal" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>App Service</strong> → <strong>Overview</strong>에서 URL, Status가 <code>Running</code>인지 확인합니다.</li>
+<li><strong>배포 센터(Deployment Center)</strong> → 컨테이너 설정, ACR 레지스트리, 이미지 이름이 정확한지 확인합니다.</li>
+<li><strong>Identity</strong> → System Assigned가 <strong>On</strong>이고 Principal ID가 있는지 확인합니다.</li>
+<li><strong>Log stream</strong> → 컨테이너 stdout/stderr 실시간 로그를 확인합니다.</li>
+</ol>
+<hr />
+<h2 id="verify-cli">Verify - CLI<a class="headerlink" href="#verify-cli" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">bash</label><label for="__tabbed_1_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># Web App URL 접근 테스트</span>
+curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>webapp_url<span class="k">)</span><span class="s2">/health&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/f</span> <span class="s2">&quot;tokens=*&quot;</span> <span class="nv">%a in (&#39;terraform output -raw webapp_url&#39;) do curl -s %</span>a/health
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">초기 시작 지연</p>
+<p>Web App for Containers는 최초 이미지 pull + cold start에 <strong>30초~2분</strong> 걸릴 수 있습니다. 502 응답이 나오면 잠시 대기 후 재시도하세요.</p>
+</div>
+<hr />
+<h2 id="cleanup-teardown">Cleanup (Teardown)<a class="headerlink" href="#cleanup-teardown" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>destroy
+</code></pre></div>
+<p>프롬프트에 <strong><code>yes</code></strong>를 입력합니다.</p>
+<div class="admonition danger">
+<p class="admonition-title">비용 방지</p>
+<p>App Service Plan은 시간당 과금됩니다. 실습이 끝나면 반드시 <code>terraform destroy</code>를 실행하세요.</p>
+</div>
+<hr />
+<h2 id="terraform-files">Terraform Files<a class="headerlink" href="#terraform-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>versions.tf</code></td>
+<td>Terraform / provider 버전 제약</td>
+</tr>
+<tr>
+<td><code>providers.tf</code></td>
+<td><code>azurerm</code> provider</td>
+</tr>
+<tr>
+<td><code>variables.tf</code></td>
+<td>prefix, RG, ACR, 이미지, SKU 등</td>
+</tr>
+<tr>
+<td><code>main.tf</code></td>
+<td>App Service Plan, Web App, Role Assignment</td>
+</tr>
+<tr>
+<td><code>outputs.tf</code></td>
+<td>webapp_url, webapp_name, principal_id</td>
+</tr>
+<tr>
+<td><code>terraform.tfvars.example</code></td>
+<td>변수 예시 파일 (비밀 값 없음)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>502 Bad Gateway</td>
+<td>컨테이너 시작 실패 또는 cold start 지연</td>
+<td>Log stream 확인, 2분 대기 후 재시도</td>
+</tr>
+<tr>
+<td><code>docker pull</code> 실패 로그</td>
+<td>ACR Pull 권한 미부여</td>
+<td>Role Assignment 전파 지연(~5분), <code>terraform apply</code> 재실행</td>
+</tr>
+<tr>
+<td>포트 불일치</td>
+<td>컨테이너가 8080이 아닌 다른 포트 listen</td>
+<td><code>WEBSITES_PORT</code> 환경변수와 컨테이너 포트 일치 확인</td>
+</tr>
+<tr>
+<td>이미지 not found</td>
+<td><code>container_image</code> 변수 오타</td>
+<td><code>az acr repository show-tags --name &lt;ACR&gt; --repository awesome-apigateway</code></td>
+</tr>
+<tr>
+<td>Managed Identity 비활성</td>
+<td>Terraform 적용 순서 이슈 (드묾)</td>
+<td><code>terraform apply</code> 재실행</td>
+</tr>
+<tr>
+<td><code>Resource Group "xxx" was not found</code></td>
+<td>RG 이름 오류 또는 다른 subscription</td>
+<td><code>terraform.tfvars</code>와 <code>az account show</code> 확인</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cost-caution">Cost &amp; Caution<a class="headerlink" href="#cost-caution" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">실수 방지</p>
+<p><code>terraform.tfvars</code>의 <code>resource_group_name</code>이 <strong>반드시 본인 RG</strong>인지 확인한 뒤 <code>apply</code>하세요. Web App은 Public URL로 노출되므로, 인증 없는 API 엔드포인트를 방치하지 않도록 실습 외 시간에는 반드시 삭제합니다.</p>
+</div>
+<hr />
+<h2 id="azure-web-app-opentelemetry">참고: Azure Web App에서의 OpenTelemetry 연계<a class="headerlink" href="#azure-web-app-opentelemetry" title="Permanent link">&para;</a></h2>
+<p>이 Lab에서는 OpenTelemetry 계측을 다루지 않지만, <strong>Azure Web App 기반</strong>에서 OTel 데이터를 Application Insights로 보내는 방법은 다음과 같습니다.</p>
+<h3 id="1-azure-monitor-opentelemetry-distro">방법 1 — Azure Monitor OpenTelemetry Distro (권장)<a class="headerlink" href="#1-azure-monitor-opentelemetry-distro" title="Permanent link">&para;</a></h3>
+<p>각 언어별로 제공되는 Azure Monitor OpenTelemetry Distro/SDK를 앱에 추가합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .NET 예시</span>
+dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>Azure.Monitor.OpenTelemetry.AspNetCore
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplication</span><span class="p">.</span><span class="n">CreateBuilder</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddOpenTelemetry</span><span class="p">().</span><span class="n">UseAzureMonitor</span><span class="p">();</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>언어</th>
+<th>패키지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET</td>
+<td><code>Azure.Monitor.OpenTelemetry.AspNetCore</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td>Azure Monitor OpenTelemetry Distro (auto-attach JAR)</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><code>@azure/monitor-opentelemetry</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>azure-monitor-opentelemetry</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-app-service-codeless">방법 2 — App Service 자동 계측 (Codeless)<a class="headerlink" href="#2-app-service-codeless" title="Permanent link">&para;</a></h3>
+<p>Azure Portal에서 <strong>Application Insights</strong>를 연결하면, .NET / Java / Node.js 앱은 코드 변경 없이 자동 계측됩니다.</p>
+<ol>
+<li>App Service → <strong>Application Insights</strong> → "Turn on" 클릭</li>
+<li>Connection String이 환경변수로 자동 주입</li>
+<li>Traces, Metrics, Logs가 Application Insights로 전송</li>
+</ol>
+<blockquote>
+<p>참고: <a href="https://learn.microsoft.com/azure/azure-monitor/app/azure-web-apps" target="_blank" rel="noopener">Enable Application Insights for Azure App Service</a></p>
+</blockquote>
+<h3 id="java-codeless">Java 자동 계측 — "Codeless"의 실제 의미<a class="headerlink" href="#java-codeless" title="Permanent link">&para;</a></h3>
+<p>Java의 자동 계측은 <strong>소스 코드 수정이 없다</strong>는 뜻이지, <strong>아무것도 실행하지 않는다</strong>는 뜻이 아닙니다. Java는 JVM에 <strong><code>-javaagent</code> JAR</strong>이 attach되어야 바이트코드 수준에서 동적 계측이 이루어집니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Java 자동 계측의 본질 — JAR이 JVM에 로드되어야 동작</span>
+java<span class="w"> </span>-javaagent:/path/to/applicationinsights-agent-3.7.8.jar<span class="w"> </span>-jar<span class="w"> </span>myapp.jar
+</code></pre></div>
+<p>차이는 <strong>누가 JAR을 주입하느냐</strong>입니다:</p>
+<table>
+<thead>
+<tr>
+<th>배포 환경</th>
+<th>JAR 주입 주체</th>
+<th>개발자가 할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>App Service (비컨테이너, JAR/WAR 배포)</strong></td>
+<td><strong>Azure 플랫폼</strong>이 자동으로 JAR 다운로드 + JVM 인수 설정</td>
+<td>Portal에서 Application Insights 켜기만 하면 됨 (진짜 codeless)</td>
+</tr>
+<tr>
+<td><strong>App Service for Containers (이 Lab)</strong></td>
+<td>플랫폼이 환경변수 주입 시도하나, 컨테이너 내부 JVM 인수는 <strong>이미지에 의존</strong></td>
+<td>이미지에 JAR 포함 + <code>JAVA_TOOL_OPTIONS</code> 설정 필요</td>
+</tr>
+<tr>
+<td><strong>AKS Autoinstrumentation (Preview)</strong></td>
+<td>AKS 플랫폼이 <strong>init container</strong>로 JAR 주입 + <code>JAVA_TOOL_OPTIONS</code> 환경변수 자동 설정</td>
+<td>코드/이미지 수정 없음</td>
+</tr>
+<tr>
+<td><strong>AKS 직접 구성 (이 과정 Lab 92)</strong></td>
+<td><strong>개발자</strong></td>
+<td>Dockerfile에 JAR 포함 또는 OTel Collector 별도 배포</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">컨테이너 환경에서의 Java 자동 계측</p>
+<p><strong>Web App for Containers</strong> 또는 <strong>AKS</strong>에서 Java 앱을 자동 계측하려면, 이미지 빌드 시 JAR을 포함하거나 환경변수로 JVM에 연결해야 합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Dockerfile 예시</span>
+<span class="k">ADD</span><span class="w"> </span>applicationinsights-agent-3.7.8.jar<span class="w"> </span>/agent/
+<span class="k">ENV</span><span class="w"> </span><span class="nv">JAVA_TOOL_OPTIONS</span><span class="o">=</span><span class="s2">&quot;-javaagent:/agent/applicationinsights-agent-3.7.8.jar&quot;</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">APPLICATIONINSIGHTS_CONNECTION_STRING</span><span class="o">=</span><span class="s2">&quot;InstrumentationKey=xxx;...&quot;</span>
+</code></pre></div>
+<p>또는 Terraform <code>app_settings</code>로 환경변수를 주입할 수 있습니다:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">app_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">JAVA_TOOL_OPTIONS</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-javaagent:/agent/applicationinsights-agent-3.7.8.jar&quot;</span>
+<span class="w">  </span><span class="na">APPLICATIONINSIGHTS_CONNECTION_STRING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;connection-string&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<h3 id="_1">언어별 "자동 계측" 비교 요약<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>언어</th>
+<th>계측 방식</th>
+<th>소스 변경</th>
+<th>런타임 의존성</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>.NET</strong></td>
+<td>SDK 패키지 + 한 줄 초기화</td>
+<td><code>UseAzureMonitor()</code> 1줄</td>
+<td>NuGet 패키지</td>
+</tr>
+<tr>
+<td><strong>Java</strong></td>
+<td>JVM Agent (바이트코드 계측)</td>
+<td><strong>없음</strong></td>
+<td>JAR 파일이 JVM에 attach 되어야 함</td>
+</tr>
+<tr>
+<td><strong>Node.js</strong></td>
+<td>SDK 패키지 + 한 줄 초기화</td>
+<td><code>useAzureMonitor()</code> 1줄</td>
+<td>npm 패키지</td>
+</tr>
+<tr>
+<td><strong>Python</strong></td>
+<td>SDK 패키지 + 한 줄 초기화</td>
+<td><code>configure_azure_monitor()</code> 1줄</td>
+<td>pip 패키지</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">AKS vs Web App 비교</p>
+<ul>
+<li><strong>Web App (비컨테이너 Java)</strong>: Portal에서 Application Insights 켜면 Azure가 JAR + JVM 설정 <strong>전부 자동 처리</strong> → 진짜 codeless</li>
+<li><strong>Web App for Containers</strong>: 이미지에 JAR이 포함되어 있어야 함 → semi-codeless</li>
+<li><strong>AKS Autoinstrumentation (Preview)</strong>: 플랫폼이 init container로 자동 주입 → codeless (Preview)</li>
+<li><strong>AKS + OTel Collector (Lab 92)</strong>: 앱에서 OTLP로 export → Collector가 변환 전송 → 가장 유연하지만 설정 복잡</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

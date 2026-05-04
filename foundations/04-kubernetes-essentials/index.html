@@ -1,0 +1,2413 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AZ-104 Terraform Lab - onboarding docs">
+      
+      
+      
+        <link rel="canonical" href="https://noisonnoiton.github.io/az-104-labs/foundations/04-kubernetes-essentials/">
+      
+      
+        <link rel="prev" href="../03-terraform-auth-syntax/">
+      
+      
+        <link rel="next" href="../../prerequisite/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Kubernetes essentials - AZ-104 Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubernetes" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AZ-104 Labs" class="md-header__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AZ-104 Labs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kubernetes essentials
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../prerequisite/" class="md-tabs__link">
+          
+  
+  
+  Prerequisite
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lab00-skeleton/" class="md-tabs__link">
+          
+  
+  
+  Terraform Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AZ-104 Labs" class="md-nav__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AZ-104 Labs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-iac-paradigms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC paradigms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-terraform-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02b-terraform-hcl-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL block samples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-terraform-auth-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth & syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 인프라 진화 — 서버에서 오케스트레이션까지
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kubernetes란?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#control-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Plane (마스터)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worker Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-core-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Core Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Core Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label-selector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Label &amp; Selector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-service-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Service &amp; Ingress
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Service &amp; Ingress">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-storage-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Storage &amp; Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Storage &amp; Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configmap-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ConfigMap &amp; Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Probes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-monitoring-lab-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Monitoring (Lab 92 연결)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-kubectl-cheatsheet-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. kubectl Cheatsheet (Lab에서 쓰는 명령)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한눈에 보기
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisite
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prerequisite
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prerequisite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prerequisite/01-azure-access-terraform-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure & Terraform auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prerequisite/02-setup-windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prerequisite/03-setup-macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../prerequisite/04-clone-repository/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clone repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Terraform Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab00-skeleton/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skeleton (RG verify)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab04-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 - Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab06-network-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 - Network Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab07-manage-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab08-manage-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 - Manage VMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab09a-paas-webapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab90-aks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 90 - ACR + AKS Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab91-aks-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab92-aks-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab99-aks-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Lab Cleanup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 인프라 진화 — 서버에서 오케스트레이션까지
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kubernetes란?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#control-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Plane (마스터)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worker Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-core-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Core Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Core Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label-selector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Label &amp; Selector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-service-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Service &amp; Ingress
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Service &amp; Ingress">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-storage-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Storage &amp; Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Storage &amp; Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configmap-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ConfigMap &amp; Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Probes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-monitoring-lab-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Monitoring (Lab 92 연결)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-kubectl-cheatsheet-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. kubectl Cheatsheet (Lab에서 쓰는 명령)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        한눈에 보기
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Foundations
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kubernetes">Kubernetes 핵심 개념 (참고)<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">이 문서의 역할</p>
+<p>2일차 AKS Lab(<a href="../../lab90-aks/">Lab 90</a>~<a href="../../lab92-aks-monitoring/">Lab 92</a>) 전에
+<strong>Kubernetes 핵심 용어와 구조를 한 페이지로</strong> 훑습니다.
+실습에서 직접 만나는 개념 위주로 정리했으며, 깊이 있는 내용은 <a href="https://kubernetes.io/docs/home/" target="_blank" rel="noopener">공식 문서</a>를 참고하세요.</p>
+</div>
+<hr />
+<h2 id="1">1. 인프라 진화 — 서버에서 오케스트레이션까지<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjYycHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDoyMDZweDtoZWlnaHQ6NjJweDtiYWNrZ3JvdW5kOiNGRkZGRkY7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMDYgNjIiIHdpZHRoPSIyMDZweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWVudGl0eSBzcnYtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJzcnYiIGRhdGEtc291cmNlLWxpbmU9IjExIiBpZD0iZW50MDAwMiI+PHJlY3QgZmlsbD0iI0ZFRTJFMiIgaGVpZ2h0PSI0MCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjAiIHg9IjciIHk9IjgiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSIxNyIgeT0iMTgiPlRyYWRpdGlvbmFsIFNlcnZlcjwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSIxNyIgeT0iMjgiPjEgYXBwIHBlciBtYWNoaW5lPC90ZXh0PjwvZz48IS0tZW50aXR5IHZtLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0idm0iIGRhdGEtc291cmNlLWxpbmU9IjEyIiBpZD0iZW50MDAwMyI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSI0MCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjAiIHg9IjYyIiB5PSI4Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMCIgeD0iNzIiIHk9IjE4Ij5WaXJ0dWFsIE1hY2hpbmU8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMCIgeD0iNzIiIHk9IjI4Ij5NdWx0aXBsZSBPUywgaGVhdnk8L3RleHQ+PC9nPjwhLS1lbnRpdHkgY3RyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY3RyIiBkYXRhLXNvdXJjZS1saW5lPSIxMyIgaWQ9ImVudDAwMDQiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iNDAiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjIwIiB4PSIxMTciIHk9IjgiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSIxMjciIHk9IjE4Ij5Db250YWluZXI8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMCIgeD0iMTI3IiB5PSIyOCI+TGlnaHR3ZWlnaHQsIGZhc3Q8L3RleHQ+PC9nPjwhLS1lbnRpdHkgazhzLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iazhzIiBkYXRhLXNvdXJjZS1saW5lPSIxNCIgaWQ9ImVudDAwMDUiPjxyZWN0IGZpbGw9IiNEQkVBRkUiIGhlaWdodD0iNDAiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjIwIiB4PSIxNzIiIHk9IjgiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSIxODIiIHk9IjE4Ij5LdWJlcm5ldGVzPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjAiIHg9IjE4MiIgeT0iMjgiPkNvbnRhaW5lciBvcmNoZXN0cmF0aW9uPC90ZXh0PjwvZz48IS0tbGluayBzcnYgdG8gdm0tLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMiIgZGF0YS1lbnRpdHktMj0iZW50MDAwMyIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjE2IiBpZD0ibG5rNiI+PHBhdGggZD0iTTI3LjM1LDI4IEMzNy4xOCwyOCA0NS44OCwyOCA1NS43LDI4IiBmaWxsPSJub25lIiBpZD0ic3J2LXRvLXZtIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI2MS43LDI4LDUyLjcsMjQsNTYuNywyOCw1Mi43LDMyLDYxLjcsMjgiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSI0My41MiIgeT0iMTciPmlzb2xhdGlvbjwvdGV4dD48L2c+PCEtLWxpbmsgdm0gdG8gY3RyLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDMiIGRhdGEtZW50aXR5LTI9ImVudDAwMDQiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIxNyIgaWQ9ImxuazciPjxwYXRoIGQ9Ik04Mi4zNSwyOCBDOTIuMTgsMjggMTAwLjg4LDI4IDExMC43LDI4IiBmaWxsPSJub25lIiBpZD0idm0tdG8tY3RyIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIxMTYuNywyOCwxMDcuNywyNCwxMTEuNywyOCwxMDcuNywzMiwxMTYuNywyOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjAiIHg9Ijk4LjUyIiB5PSIxNyI+cGFja2FnaW5nPC90ZXh0PjwvZz48IS0tbGluayBjdHIgdG8gazhzLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDQiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIxOCIgaWQ9ImxuazgiPjxwYXRoIGQ9Ik0xMzcuMzUsMjggQzE0Ny4xOCwyOCAxNTUuODgsMjggMTY1LjcsMjgiIGZpbGw9Im5vbmUiIGlkPSJjdHItdG8tazhzIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIxNzEuNywyOCwxNjIuNywyNCwxNjYuNywyOCwxNjIuNywzMiwxNzEuNywyOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjAiIHg9IjE1My41MiIgeT0iNyI+bWFuYWdlbWVudDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIwIiB4PSIxNTMuNTIiIHk9IjE3Ij5hdCBzY2FsZTwvdGV4dD48L2c+PD9wbGFudHVtbC1zcmMgSlAxRFJ5OG0zOFJsLUhLTU40N1lPbVo0T0g4VnhNTFpFdTFzd2lMaEpIa3JUUWVheE9JY19WU3YzN016SDc5VUZ0dlZzdk1RNnhIT0dxUE5SMmlWNl9QbE0xRVNhVHRxSjVQVmJVa1JBaXRhUm1zMWlSdW0weTZRYmhGS00yT0I2cEtLQUZOOFVLTm1oVlI2UGNHRmZaOE1uaEZQVWREeVVsblQyZnNNSkN4MUdlSzRadnZ2akRvak9sTVpyRi1PcVNMWWZocXNaMUw4bGV2aW1kRjBmZTU2cDZqQzJtYXYwZEpXUjBWWkU4ZU1xTTh1dTREUnRtZnktY2pELTJIeHdxUWF6X0M0MmlCa1RpVXhFajNueWgwVXFXVTlYdUE5d3dsRTJfejV1UHQwNVBzX093Y052Q1R2bDhqTUctd2JfSUd2Wm9VTlMzejN4ZldNdkJwNWlEMFRCcFRFeTdzcVlvRXZlc21talM1Vy1YcG9SNDR4S3pzUmJQSXo1M290cTYxUU9ndXZMdzdrbkoxbkF1VFhwQWFjeldjWjF2VFlIUnkwPz48L2c+PC9zdmc+" class="uml" alt="uml diagram" title="" /></p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>특징</th>
+<th>비유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical Server</td>
+<td>1 앱 = 1 장비</td>
+<td>단독 주택</td>
+</tr>
+<tr>
+<td>Virtual Machine</td>
+<td>1 장비에 여러 OS</td>
+<td>아파트</td>
+</tr>
+<tr>
+<td>Container</td>
+<td>경량, 빠른 시작</td>
+<td>공유 오피스</td>
+</tr>
+<tr>
+<td><strong>Kubernetes</strong></td>
+<td>컨테이너 자동 관리</td>
+<td>건물 관리자</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>컨테이너는 <strong>패키징</strong>을 해결하고, Kubernetes는 <strong>대규모 운영</strong>을 해결합니다.</p>
+</blockquote>
+<hr />
+<h2 id="2-kubernetes">2. Kubernetes란?<a class="headerlink" href="#2-kubernetes" title="Permanent link">&para;</a></h2>
+<p>Kubernetes(K8s)는 컨테이너화된 애플리케이션의 <strong>배포, 스케일링, 자동 복구</strong>를 관리하는 오픈소스 플랫폼입니다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>유형</td>
+<td>Open Source (CNCF)</td>
+</tr>
+<tr>
+<td>카테고리</td>
+<td>Container Orchestrator</td>
+</tr>
+<tr>
+<td>기원</td>
+<td>Google Borg → 2014 공개</td>
+</tr>
+<tr>
+<td>약칭</td>
+<td>K8s (K와 s 사이 8글자)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심 원칙 — Declarative(선언적):</strong><br />
+"원하는 상태(desired state)"를 YAML로 정의하면, Kubernetes가 <strong>현재 상태를 원하는 상태로 수렴</strong>시킵니다.</p>
+<hr />
+<h2 id="3-architecture">3. Architecture<a class="headerlink" href="#3-architecture" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjM3MHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6ODM5cHg7aGVpZ2h0OjM3MHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDgzOSAzNzAiIHdpZHRoPSI4MzlweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgY3AtLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY3AiIGRhdGEtc291cmNlLWxpbmU9IjE4IiBpZD0iZW50MDAwMiI+PHJlY3QgZmlsbD0iI0VGRjZGRiIgaGVpZ2h0PSIxODIuNzQiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjI2MiIgeD0iNyIgeT0iOTcuOCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEwNi43MTU4IiB4PSI4NC42NDIxIiB5PSIxMTIuNzk1MSI+Q29udHJvbCBQbGFuZTwvdGV4dD48L2c+PCEtLWNsdXN0ZXIgbjEtLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjEiIGRhdGEtc291cmNlLWxpbmU9IjI1IiBpZD0iZW50MDAwNyI+PHJlY3QgZmlsbD0iI0YwRkRGNCIgaGVpZ2h0PSIxNzEuNzQiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjI1NCIgeD0iMjkzIiB5PSIxODUuMSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExOC4wMTU2IiB4PSIzNjAuOTkyMiIgeT0iMjAwLjA5NTEiPldvcmtlciBOb2RlIDE8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIG4yLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9Im4yIiBkYXRhLXNvdXJjZS1saW5lPSIzMiIgaWQ9ImVudDAwMTIiPjxyZWN0IGZpbGw9IiNGMEZERjQiIGhlaWdodD0iMTcxLjc0IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIyNTQiIHg9IjU3MSIgeT0iMTg1LjEiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTguMDE1NiIgeD0iNjM4Ljk5MjIiIHk9IjIwMC4wOTUxIj5Xb3JrZXIgTm9kZSAyPC90ZXh0PjwvZz48IS0tZW50aXR5IGFwaS0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImNwLmFwaSIgZGF0YS1zb3VyY2UtbGluZT0iMTkiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjkyLjUwODgiIHg9IjU5Ljc1IiB5PSIxMzIuOCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjcyLjUwODgiIHg9IjY5Ljc1IiB5PSIxNTUuNzk1MSI+QVBJIFNlcnZlcjwvdGV4dD48L2c+PCEtLWVudGl0eSBldGNkLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY3AuZXRjZCIgZGF0YS1zb3VyY2UtbGluZT0iMjAiIGlkPSJlbnQwMDA0Ij48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjUwLjY4NjUiIHg9IjIwMi42NiIgeT0iMTMyLjgiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIzMC42ODY1IiB4PSIyMTIuNjYiIHk9IjE1NS43OTUxIj5ldGNkPC90ZXh0PjwvZz48IS0tZW50aXR5IHNjaGVkLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY3Auc2NoZWQiIGRhdGEtc291cmNlLWxpbmU9IjIxIiBpZD0iZW50MDAwNSI+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI5MC4wODg5IiB4PSIyMi45NiIgeT0iMjIwLjEiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3MC4wODg5IiB4PSIzMi45NiIgeT0iMjQzLjA5NTEiPlNjaGVkdWxlcjwvdGV4dD48L2c+PCEtLWVudGl0eSBjdHJsLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY3AuY3RybCIgZGF0YS1zb3VyY2UtbGluZT0iMjIiIGlkPSJlbnQwMDA2Ij48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9Ijg5LjE3MjkiIHg9IjE2My40MSIgeT0iMjExLjk1Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjkuMTcyOSIgeD0iMTczLjQxIiB5PSIyMzQuOTQ1MSI+Q29udHJvbGxlcjwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2MS4zNjYyIiB4PSIxNzMuNDEiIHk9IjI1MS4yNDIiPk1hbmFnZXI8L3RleHQ+PC9nPjwhLS1lbnRpdHkga2wxLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjEua2wxIiBkYXRhLXNvdXJjZS1saW5lPSIyNiIgaWQ9ImVudDAwMDgiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNzIuNDcyNyIgeD0iMzA4Ljc2IiB5PSIyMjAuMSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjUyLjQ3MjciIHg9IjMxOC43NiIgeT0iMjQzLjA5NTEiPmt1YmVsZXQ8L3RleHQ+PC9nPjwhLS1lbnRpdHkga3AxLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjEua3AxIiBkYXRhLXNvdXJjZS1saW5lPSIyNyIgaWQ9ImVudDAwMDkiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iOTkuMzEwNSIgeD0iNDMxLjM0IiB5PSIyMjAuMSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijc5LjMxMDUiIHg9IjQ0MS4zNCIgeT0iMjQzLjA5NTEiPmt1YmUtcHJveHk8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcGEtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMS5wYSIgZGF0YS1zb3VyY2UtbGluZT0iMjgiIGlkPSJlbnQwMDEwIj48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjU5LjkyMTkiIHg9IjMxMi4wNCIgeT0iMzA0LjU0Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzkuOTIxOSIgeD0iMzIyLjA0IiB5PSIzMjcuNTM1MSI+UG9kIEE8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcGItLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMS5wYiIgZGF0YS1zb3VyY2UtbGluZT0iMjkiIGlkPSJlbnQwMDExIj48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjU5Ljk0OTIiIHg9IjQyMi4wMyIgeT0iMzA0LjU0Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzkuOTQ5MiIgeD0iNDMyLjAzIiB5PSIzMjcuNTM1MSI+UG9kIEI8L3RleHQ+PC9nPjwhLS1lbnRpdHkga2wyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjIua2wyIiBkYXRhLXNvdXJjZS1saW5lPSIzMyIgaWQ9ImVudDAwMTMiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNzIuNDcyNyIgeD0iNTg2Ljc2IiB5PSIyMjAuMSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjUyLjQ3MjciIHg9IjU5Ni43NiIgeT0iMjQzLjA5NTEiPmt1YmVsZXQ8L3RleHQ+PC9nPjwhLS1lbnRpdHkga3AyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjIua3AyIiBkYXRhLXNvdXJjZS1saW5lPSIzNCIgaWQ9ImVudDAwMTQiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iOTkuMzEwNSIgeD0iNzA5LjM0IiB5PSIyMjAuMSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijc5LjMxMDUiIHg9IjcxOS4zNCIgeT0iMjQzLjA5NTEiPmt1YmUtcHJveHk8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcGMtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMi5wYyIgZGF0YS1zb3VyY2UtbGluZT0iMzUiIGlkPSJlbnQwMDE1Ij48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjYwLjEyMDEiIHg9IjU5Mi45NCIgeT0iMzA0LjU0Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNDAuMTIwMSIgeD0iNjAyLjk0IiB5PSIzMjcuNTM1MSI+UG9kIEM8L3RleHQ+PC9nPjwhLS1lbnRpdHkgdXNlci0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InVzZXIiIGRhdGEtc291cmNlLWxpbmU9IjM4IiBpZD0iZW50MDAxNiI+PGVsbGlwc2UgY3g9IjEwNS45OTgzIiBjeT0iMTQiIGZpbGw9IiNGMUYxRjEiIHJ4PSI4IiByeT0iOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHBhdGggZD0iTTEwNS45OTgzLDIyIEwxMDUuOTk4Myw0OSBNOTIuOTk4MywzMCBMMTE4Ljk5ODMsMzAgTTEwNS45OTgzLDQ5IEw5Mi45OTgzLDY0IE0xMDUuOTk4Myw0OSBMMTE4Ljk5ODMsNjQiIGZpbGw9Im5vbmUiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjUxLjU1NjYiIHg9IjgwLjIyIiB5PSI3OC40OTUxIj5rdWJlY3RsPC90ZXh0PjwvZz48IS0tbGluayB1c2VyIHRvIGFwaS0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDE2IiBkYXRhLWVudGl0eS0yPSJlbnQwMDAzIiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNDAiIGlkPSJsbmsxNyI+PHBhdGggZD0iTTEwNiw4Mi4wOSBDMTA2LDk5LjE2IDEwNiwxMTIuNDggMTA2LDEyNi4zIiBmaWxsPSJub25lIiBpZD0idXNlci10by1hcGkiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMDA3OEQ0IiBwb2ludHM9IjEwNiwxMzIuMywxMTAsMTIzLjMsMTA2LDEyNy4zLDEwMiwxMjMuMywxMDYsMTMyLjMiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgYXBpIHRvIHNjaGVkLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDMiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI0MSIgaWQ9ImxuazE4Ij48cGF0aCBkPSJNODYuNCwxNjkuNDYgQzg2LjQsMTg0LjI4IDg2LjQsMTk4Ljk1IDg2LjQsMjEzLjc2IiBmaWxsPSJub25lIiBpZD0iYXBpLXRvLXNjaGVkIiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzY0NzQ4QiIgcG9pbnRzPSI4Ni40LDIxOS43Niw5MC40LDIxMC43Niw4Ni40LDIxNC43Niw4Mi40LDIxMC43Niw4Ni40LDIxOS43NiIgc3R5bGU9InN0cm9rZTojNjQ3NDhCO3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBhcGkgdG8gY3RybC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDAzIiBkYXRhLWVudGl0eS0yPSJlbnQwMDA2IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNDIiIGlkPSJsbmsxOSI+PHBhdGggZD0iTTE0Mi40NSwxNjkuMyBDMTQyLjQ1LDE4OC44IDE0Mi40NSwyMTYuODQgMTQyLjQ1LDIxNi44NCBDMTQyLjQ1LDIxNi44NCAxNDUuNjcsMjE2Ljg0IDE1Ny4xOSwyMTYuODQiIGZpbGw9Im5vbmUiIGlkPSJhcGktdG8tY3RybCIgc3R5bGU9InN0cm9rZTojNjQ3NDhCO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM2NDc0OEIiIHBvaW50cz0iMTYzLjE5LDIxNi44NCwxNTQuMTksMjEyLjg0LDE1OC4xOSwyMTYuODQsMTU0LjE5LDIyMC44NCwxNjMuMTksMjE2Ljg0IiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGFwaSB0byBldGNkLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDMiIGRhdGEtZW50aXR5LTI9ImVudDAwMDQiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI0MyIgaWQ9ImxuazIwIj48cGF0aCBkPSJNMTUyLjQ3LDE1MS44NCBDMTY5LjQ0LDE1MS44NCAxODIsMTUxLjg0IDE5Ni40OCwxNTEuODQiIGZpbGw9Im5vbmUiIGlkPSJhcGktdG8tZXRjZCIgc3R5bGU9InN0cm9rZTojNjQ3NDhCO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM2NDc0OEIiIHBvaW50cz0iMjAyLjQ4LDE1MS44NCwxOTMuNDgsMTQ3Ljg0LDE5Ny40OCwxNTEuODQsMTkzLjQ4LDE1NS44NCwyMDIuNDgsMTUxLjg0IiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGFwaSB0byBrbDEtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMyIgZGF0YS1lbnRpdHktMj0iZW50MDAwOCIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjQ1IiBpZD0ibG5rMjEiPjxwYXRoIGQ9Ik0xMjIuODUsMTY5LjQ4IEMxMjIuODUsMTgyLjU5IDEyMi44NSwxOTcuODQgMTIyLjg1LDE5Ny44NCBDMTIyLjg1LDE5Ny44NCAzNDUsMTk3Ljg0IDM0NSwxOTcuODQgQzM0NSwxOTcuODQgMzQ1LDIwMy4yNCAzNDUsMjEzLjkzIiBmaWxsPSJub25lIiBpZD0iYXBpLXRvLWtsMSIgc3R5bGU9InN0cm9rZTojMTZBMzRBO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMxNkEzNEEiIHBvaW50cz0iMzQ1LDIxOS45MywzNDksMjEwLjkzLDM0NSwyMTQuOTMsMzQxLDIxMC45MywzNDUsMjE5LjkzIiBzdHlsZT0ic3Ryb2tlOiMxNkEzNEE7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGFwaSB0byBrbDItLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMyIgZGF0YS1lbnRpdHktMj0iZW50MDAxMyIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjQ2IiBpZD0ibG5rMjIiPjxwYXRoIGQ9Ik0xMzIuNjUsMTY5LjMyIEMxMzIuNjUsMTc2Ljg1IDEzMi42NSwxODMuODQgMTMyLjY1LDE4My44NCBDMTMyLjY1LDE4My44NCA2MjMsMTgzLjg0IDYyMywxODMuODQgQzYyMywxODMuODQgNjIzLDE5OC4wNCA2MjMsMjEzLjgzIiBmaWxsPSJub25lIiBpZD0iYXBpLXRvLWtsMiIgc3R5bGU9InN0cm9rZTojMTZBMzRBO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMxNkEzNEEiIHBvaW50cz0iNjIzLDIxOS44Myw2MjcsMjEwLjgzLDYyMywyMTQuODMsNjE5LDIxMC44Myw2MjMsMjE5LjgzIiBzdHlsZT0ic3Ryb2tlOiMxNkEzNEE7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGtsMSB0byBwYS0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA4IiBkYXRhLWVudGl0eS0yPSJlbnQwMDEwIiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNDgiIGlkPSJsbmsyMyI+PHBhdGggZD0iTTM0MiwyNTYuNTcgQzM0MiwyNzAuNjQgMzQyLDI4My45OCAzNDIsMjk4LjExIiBmaWxsPSJub25lIiBpZD0ia2wxLXRvLXBhIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIzNDIsMzA0LjExLDM0NiwyOTUuMTEsMzQyLDI5OS4xMSwzMzgsMjk1LjExLDM0MiwzMDQuMTEiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsga2wxIHRvIHBiLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDgiIGRhdGEtZW50aXR5LTI9ImVudDAwMTEiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI0OSIgaWQ9ImxuazI0Ij48cGF0aCBkPSJNMzgxLjU0LDIzOC44NCBDNDAzLjI5LDIzOC44NCA0MjYuNjksMjM4Ljg0IDQyNi42OSwyMzguODQgQzQyNi42OSwyMzguODQgNDI2LjY5LDI3My4zOCA0MjYuNjksMjk4LjA4IiBmaWxsPSJub25lIiBpZD0ia2wxLXRvLXBiIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI0MjYuNjksMzA0LjA4LDQzMC42OSwyOTUuMDgsNDI2LjY5LDI5OS4wOCw0MjIuNjksMjk1LjA4LDQyNi42OSwzMDQuMDgiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsga2wyIHRvIHBjLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMTMiIGRhdGEtZW50aXR5LTI9ImVudDAwMTUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI1MCIgaWQ9ImxuazI1Ij48cGF0aCBkPSJNNjIzLDI1Ni41NyBDNjIzLDI3MC42NCA2MjMsMjgzLjk4IDYyMywyOTguMTEiIGZpbGw9Im5vbmUiIGlkPSJrbDItdG8tcGMiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTtzdHJva2UtZGFzaGFycmF5OjcsNzsiLz48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjYyMywzMDQuMTEsNjI3LDI5NS4xMSw2MjMsMjk5LjExLDYxOSwyOTUuMTEsNjIzLDMwNC4xMSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48P3BsYW50dW1sLXNyYyBaUEIxUnZpbTVDUmxfWWxVYWJ0SjBJTGYzYnFhMjVaUU9LZEtKRGZYc3k2T3JtSlhzaVlPUkxNcl90cXM0NGdwVERpNXVVX3hzTnhGdHdsQkdiUENpbVY4eVB1cm1iMGJwT096OEVvUGg2VHhyQ0t6Z0dUODUxQkRPdU1XajNjZ2FRNUw4dEVrajRHRG92NGtMT3VyTFozdG5aMkpmSEQzWnYwdFJ6U3gwN1dGYXNiQXdPQklZUEtzc29IajlVaEhYOFBFc2NzSlphaFlEQUFmYS1Cak5QQlVqUUJkdEltSm91cWxHTXdPRjBZNDluOGhkUURVQXc0cXpEand4VEVudUFONGtlUTBrRE94UGtnZHJ6NlNhYi00RjF5cGtTck1RdWplOU0wZGNDSlJUemJnMGdtNk5lN2h1Y2FDSHhpRk81X2xFLWVNT0xLMXF2V2NDS3Q3NTFnVWp4eHhrR0ppLUg3cEhsSWRyNnZyMlVsaGlqbk4tUDU5VGtXdFNBRjVtRl9IcE1VYkl2bE5uY080X2oyRHpBNEJ1NEtfUFBFWEdEQ0lmVjFYY2xXcUlrVmRvQXBJd2tUWkhyS05nUHRBOE1nMVllNkJ6VG9DRXBGaHBCeU03Sm1ON1ZveHdFMl9ZV3ZVQXRoVHJTTTdrWFd0VGJSUTR4V0hoVGxLZzBibk52WHp3UVZvTXd2LW9EZEFaRzFuT3MyREhOV0pCa0VKcVFQd3NOQnZkSmN3RTFvRGpUcDRhOUZkQndCaEMzaGppbGN5UFdJNGtGSWtkNzJyaVg2eU42UjRGVEVtdkJ5MT8+PC9nPjwvc3ZnPg==" class="uml" alt="uml diagram" title="" /></p>
+<h3 id="control-plane">Control Plane (마스터)<a class="headerlink" href="#control-plane" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API Server</strong></td>
+<td>모든 요청의 진입점 (<code>kubectl</code> 명령 수신)</td>
+</tr>
+<tr>
+<td><strong>etcd</strong></td>
+<td>클러스터 상태를 저장하는 Key-Value DB</td>
+</tr>
+<tr>
+<td><strong>Scheduler</strong></td>
+<td>새 Pod을 어느 노드에 배치할지 결정</td>
+</tr>
+<tr>
+<td><strong>Controller Manager</strong></td>
+<td>desired state ↔ current state를 지속 비교·조정</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">AKS에서는</p>
+<p>Control Plane은 <strong>Azure가 관리</strong>합니다. etcd에 직접 접근하거나 마스터 노드에 SSH 할 수 없으며, <code>kubectl</code>로만 상호 작용합니다.</p>
+</div>
+<h3 id="worker-node">Worker Node<a class="headerlink" href="#worker-node" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>kubelet</strong></td>
+<td>API Server 지시를 받아 Pod/컨테이너 실행</td>
+</tr>
+<tr>
+<td><strong>kube-proxy</strong></td>
+<td>Service 네트워킹 규칙 관리 (iptables/IPVS)</td>
+</tr>
+<tr>
+<td><strong>Container Runtime</strong></td>
+<td>실제 컨테이너 실행 (AKS는 <strong>containerd</strong> 사용)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">AKS Node Pool</p>
+<p><a href="../../lab90-aks/">Lab 90</a>에서 <code>system</code> pool(1 node) + <code>user</code> pool(1 node)을 생성합니다. VMSS 기반이며 <code>kubectl get nodes</code>로 확인합니다.</p>
+</div>
+<hr />
+<h2 id="4-core-objects">4. Core Objects<a class="headerlink" href="#4-core-objects" title="Permanent link">&para;</a></h2>
+<h3 id="pod">Pod<a class="headerlink" href="#pod" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Kubernetes의 <strong>최소 배포 단위</strong></li>
+<li>보통 <strong>1 Pod = 1 Container</strong> (가장 흔한 패턴)</li>
+<li>Pod 안 컨테이너끼리 <strong>네트워크(같은 IP, localhost 통신)</strong>와 <strong>스토리지</strong>를 공유</li>
+<li>Pod은 <strong>임시(ephemeral)</strong> — 죽으면 새로 생성 (IP 변경)</li>
+</ul>
+<h3 id="namespace">Namespace<a class="headerlink" href="#namespace" title="Permanent link">&para;</a></h3>
+<p>클러스터를 <strong>논리적으로 격리</strong>하는 단위입니다.</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Namespace</th>
+<th>용도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default</code></td>
+<td>기본</td>
+</tr>
+<tr>
+<td><code>kube-system</code></td>
+<td>K8s 핵심 컴포넌트 (CoreDNS, Metrics Server 등)</td>
+</tr>
+<tr>
+<td><code>app-routing-system</code></td>
+<td>AKS Web App Routing (Ingress Controller)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Lab 91에서</p>
+<p>마이크로서비스를 <code>awesome</code>, <code>awesome-infra</code> 등 <strong>별도 namespace</strong>에 배포합니다.</p>
+</div>
+<h3 id="label-selector">Label &amp; Selector<a class="headerlink" href="#label-selector" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Label:</strong> 리소스에 붙이는 <code>key=value</code> 태그 (예: <code>app=nginx</code>)</li>
+<li><strong>Selector:</strong> Label을 기준으로 리소스를 <strong>쿼리</strong> (Service가 Pod을 찾는 방식)</li>
+</ul>
+<hr />
+<h2 id="5-workloads">5. Workloads<a class="headerlink" href="#5-workloads" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjMxOXB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6Njk0cHg7aGVpZ2h0OjMxOXB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDY5NCAzMTkiIHdpZHRoPSI2OTRweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgZGVwLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImRlcCIgZGF0YS1zb3VyY2UtbGluZT0iMTEiIGlkPSJlbnQwMDAyIj48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjI5OC44OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjMxIiB4PSI3IiB5PSI3Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iOTUuNDIyOSIgeD0iNzQuNzg4NiIgeT0iMjEuOTk1MSI+RGVwbG95bWVudDwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjEuNzU4IiB4PSI2MS42MjEiIHk9IjM4LjI5MiI+U3RhdGVsZXNzICYjNTA1NDU7ICYjNDQyODg7JiM0NzUzMjs8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIHJzLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImRlcC5ycyIgZGF0YS1zb3VyY2UtbGluZT0iMTIiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjE5OS44OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTU5IiB4PSIzOSIgeT0iNzQiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4My45MTExIiB4PSI3Ni41NDQ0IiB5PSI4OC45OTUxIj5SZXBsaWNhU2V0PC90ZXh0PjwvZz48IS0tZW50aXR5IHAxLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iZGVwLnJzLnAxIiBkYXRhLXNvdXJjZS1saW5lPSIxMyIgaWQ9ImVudDAwMDQiPjxyZWN0IGZpbGw9IiNFRkY2RkYiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNDUuODk0NSIgeD0iNTUuMDUiIHk9IjEwOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljg5NDUiIHg9IjY1LjA1IiB5PSIxMzEuOTk1MSI+UG9kPC90ZXh0PjwvZz48IS0tZW50aXR5IHAyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iZGVwLnJzLnAyIiBkYXRhLXNvdXJjZS1saW5lPSIxNCIgaWQ9ImVudDAwMDUiPjxyZWN0IGZpbGw9IiNFRkY2RkYiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNDUuODk0NSIgeD0iMTM2LjA1IiB5PSIxMDkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS44OTQ1IiB4PSIxNDYuMDUiIHk9IjEzMS45OTUxIj5Qb2Q8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcDMtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJkZXAucnMucDMiIGRhdGEtc291cmNlLWxpbmU9IjE1IiBpZD0iZW50MDAwNiI+PHJlY3QgZmlsbD0iI0VGRjZGRiIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI0NS44OTQ1IiB4PSI1NS4wNSIgeT0iMjIxLjU5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjUuODk0NSIgeD0iNjUuMDUiIHk9IjI0NC41ODUxIj5Qb2Q8L3RleHQ+PC9nPjwhLS1lbnRpdHkgc3MtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJzcyIgZGF0YS1zb3VyY2UtbGluZT0iMTkiIGlkPSJlbnQwMDA3Ij48cmVjdCBmaWxsPSIjRDFGQUU1IiBoZWlnaHQ9IjY4Ljg5MDYiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEwOS41MzcxIiB4PSIyNjUuMjMiIHk9IjkyLjciLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4OS41MzcxIiB4PSIyNzUuMjMiIHk9IjExNS42OTUxIj5TdGF0ZWZ1bFNldDwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3NS4zMjkzIiB4PSIyNzUuMjMiIHk9IjEzMS45OTIiPiYjNDk2OTI7JiM0OTQzNjsmIzE4MztJRCAmIzQ4MzcyOyYjNTExMDk7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjMxLjMwODYiIHg9IjI3NS4yMyIgeT0iMTQ4LjI4ODkiPihEQik8L3RleHQ+PC9nPjwhLS1lbnRpdHkgZHMtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJkcyIgZGF0YS1zb3VyY2UtbGluZT0iMjAiIGlkPSJlbnQwMDA4Ij48cmVjdCBmaWxsPSIjRkVGM0M3IiBoZWlnaHQ9IjY4Ljg5MDYiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjExNS4wODczIiB4PSI0MDkuNDYiIHk9IjkyLjciLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5MS4wMDY4IiB4PSI0MTkuNDYiIHk9IjExNS42OTUxIj5EYWVtb25TZXQ8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iOTUuMDg3MyIgeD0iNDE5LjQ2IiB5PSIxMzEuOTkyIj4mIzQ3Nzg0OyYjNDYzMDQ7ICYjNDU0MzI7JiM0NjMwMDsmIzUwNjQwOyAxJiM0NDA2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTEuMzY1MiIgeD0iNDE5LjQ2IiB5PSIxNDguMjg4OSI+KGFnZW50KTwvdGV4dD48L2c+PCEtLWVudGl0eSBqb2ItLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJqb2IiIGRhdGEtc291cmNlLWxpbmU9IjIxIiBpZD0iZW50MDAwOSI+PHJlY3QgZmlsbD0iI0ZFRTJFMiIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxMjEuMzIyMyIgeD0iNTU5LjM0IiB5PSIxMDAuODUiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMDEuMzIyMyIgeD0iNTY5LjM0IiB5PSIxMjMuODQ1MSI+Sm9iIC8gQ3JvbkpvYjwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4Mi4yMDczIiB4PSI1NjkuMzQiIHk9IjE0MC4xNDIiPjEmIzU0OTI0OyYjMTgzOyYjNDgxNTI7JiM0ODM3MzsgJiM1MTA4OTsmIzUwNjI5OzwvdGV4dD48L2c+PCEtLWxpbmsgZGVwIHRvIHNzLS0+PCEtLWxpbmsgc3MgdG8gZHMtLT48IS0tbGluayBkcyB0byBqb2ItLT48P3BsYW50dW1sLXNyYyBWUDFGSW05MTZDUmx5b2JVc2FpVG41Unh1cTQ0cnpzMUVhSGFqLWVtRWdEa2haRkJ4N1k4MjNlS1RFWEdIMUdYcWdNOHc1MWVzRGNGdXN4VmVONEw0dXJrbV9peXhzLVV2bXRnQmxVOTkwc1doNEFRZGlBMmdvdElPNTBhRjRXS2NOR2hBOVlPRjlTcFRVR3A0NUJMbjlHV0hQRkppZjJTSVNZV1FPNkw1VTVMWnk0bmllSWFKMVE0OW9HT295bGg2TmpiRkRramtVS3dQcTQwQUpIQ0NGUU9KWmdfWWo0OUdoLU9YTW1mUHBGVjRxU0RuYktzTVNoanl3OFlZZGQzelVaczBtUlRxXzN2Ukc1OGU0bHZPRFlNYXlVRV9keUFpZ0M5UmZhS2NPZnpDVzMzbWhPclF6aU1ERFB6NG1tN3VwTUNfckhKX3doZllOZW9Ob01FTmNid0VpY2VJdEpIWWl2UV9UdzYzTTZkNnhNVnpsY1lSSXQ1QTV0R2k0c1NUclBkM3E5T0dfMDk4dG56Mk15VThKcF8yY3pRcVRxTGM4RnRia1FHZ1p4UDI0S3IyWml1TkxZVkdNc0E0WUlYODBOTmhuN0VfN3d1eEZWMnpfa215bWJILXBnd0V1eVBYemdnOEt4QUlJNHFGN0xZaC1QSW9sWTFUQWlyYlNaZm00WGRkWGxKMEQ0X25maHQwbTAwPz48L2c+PC9zdmc+" class="uml" alt="uml diagram" title="" /></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>용도</th>
+<th>Lab 연결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Stateless 앱 (Web, API) — ReplicaSet 자동 관리</td>
+<td>Lab 91 마이크로서비스 전체</td>
+</tr>
+<tr>
+<td><strong>StatefulSet</strong></td>
+<td>순서·고유 ID 필요 (DB, 메시지 큐)</td>
+<td>Lab 91 MySQL, RabbitMQ</td>
+</tr>
+<tr>
+<td><strong>DaemonSet</strong></td>
+<td>모든 노드에 1개씩 (모니터링 agent, 로그 수집)</td>
+<td>Lab 92 OTel Collector</td>
+</tr>
+<tr>
+<td><strong>Job / CronJob</strong></td>
+<td>1회·주기적 배치 작업</td>
+<td>(이 과정에서는 직접 사용하지 않음)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Deployment → ReplicaSet → Pod</p>
+<p>Deployment를 만들면 K8s가 자동으로 <strong>ReplicaSet</strong>을 생성하고, ReplicaSet이 지정된 수만큼 <strong>Pod</strong>을 유지합니다. <code>replicas: 3</code>이면 항상 3개 Pod이 Running 상태를 유지합니다.</p>
+</div>
+<hr />
+<h2 id="6-service-ingress">6. Service &amp; Ingress<a class="headerlink" href="#6-service-ingress" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjM1M3B4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6NDU0cHg7aGVpZ2h0OjM1M3B4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQ1NCAzNTMiIHdpZHRoPSI0NTRweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWVudGl0eSBleHQtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJleHQiIGRhdGEtc291cmNlLWxpbmU9IjE0IiBpZD0iZW50MDAwMiI+PGVsbGlwc2UgY3g9IjE0OS41MTU1IiBjeT0iMTQiIGZpbGw9IiNGMUYxRjEiIHJ4PSI4IiByeT0iOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHBhdGggZD0iTTE0OS41MTU1LDIyIEwxNDkuNTE1NSw0OSBNMTM2LjUxNTUsMzAgTDE2Mi41MTU1LDMwIE0xNDkuNTE1NSw0OSBMMTM2LjUxNTUsNjQgTTE0OS41MTU1LDQ5IEwxNjIuNTE1NSw2NCIgZmlsbD0ibm9uZSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTguMzMxMSIgeD0iMTIwLjM1IiB5PSI3OC40OTUxIj5FeHRlcm5hbDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIzMS45MTAyIiB4PSIxMjAuMzUiIHk9Ijk0Ljc5MiI+VXNlcjwvdGV4dD48L2c+PCEtLWVudGl0eSBpbnQtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJpbnQiIGRhdGEtc291cmNlLWxpbmU9IjE1IiBpZD0iZW50MDAwMyI+PGVsbGlwc2UgY3g9IjM4MC41MjExIiBjeT0iMTQiIGZpbGw9IiNGMUYxRjEiIHJ4PSI4IiByeT0iOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHBhdGggZD0iTTM4MC41MjExLDIyIEwzODAuNTIxMSw0OSBNMzY3LjUyMTEsMzAgTDM5My41MjExLDMwIE0zODAuNTIxMSw0OSBMMzY3LjUyMTEsNjQgTTM4MC41MjExLDQ5IEwzOTMuNTIxMSw2NCIgZmlsbD0ibm9uZSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTQuMjAyMSIgeD0iMzUzLjQyIiB5PSI3OC40OTUxIj5JbnRlcm5hbDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS44OTQ1IiB4PSIzNTMuNDIiIHk9Ijk0Ljc5MiI+UG9kPC90ZXh0PjwvZz48IS0tZW50aXR5IGluZy0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImluZyIgZGF0YS1zb3VyY2UtbGluZT0iMTciIGlkPSJlbnQwMDA0Ij48cmVjdCBmaWxsPSIjRkVGM0M3IiBoZWlnaHQ9IjY4Ljg5MDYiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEwNi41OTA4IiB4PSIxNzQuMjIiIHk9IjE1OC4xIi8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTguMjYyNyIgeD0iMTg0LjIyIiB5PSIxODEuMDk1MSI+SW5ncmVzczwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3NS40NjE5IiB4PSIxODQuMjIiIHk9IjE5Ny4zOTIiPkw3IFJvdXRpbmc8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODYuNTkwOCIgeD0iMTg0LjIyIiB5PSIyMTMuNjg4OSI+KGhvc3QgLyBwYXRoKTwvdGV4dD48L2c+PCEtLWVudGl0eSBsYi0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImxiIiBkYXRhLXNvdXJjZS1saW5lPSIxOCIgaWQ9ImVudDAwMDUiPjxyZWN0IGZpbGw9IiNEQkVBRkUiIGhlaWdodD0iNjguODkwNiIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTI3LjAzNzEiIHg9IjciIHk9IjE1OC4xIi8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTA3LjAzNzEiIHg9IjE3IiB5PSIxODEuMDk1MSI+TG9hZEJhbGFuY2VyPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijc1LjM1MjUiIHg9IjE3IiB5PSIxOTcuMzkyIj5FeHRlcm5hbCBJUDwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3Mi45NDYzIiB4PSIxNyIgeT0iMjEzLjY4ODkiPihBenVyZSBMQik8L3RleHQ+PC9nPjwhLS1lbnRpdHkgY2lwLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iY2lwIiBkYXRhLXNvdXJjZS1saW5lPSIxOSIgaWQ9ImVudDAwMDYiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iNTIuNTkzOCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTE5LjE4OTUiIHg9IjMyMC45MiIgeT0iMTY2LjI0Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNzEuOTM0NiIgeD0iMzMwLjkyIiB5PSIxODkuMjM1MSI+Q2x1c3RlcklQPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijk5LjE4OTUiIHg9IjMzMC45MiIgeT0iMjA1LjUzMiI+KEludGVybmFsIG9ubHkpPC90ZXh0PjwvZz48IS0tZW50aXR5IHBvZDEtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJwb2QxIiBkYXRhLXNvdXJjZS1saW5lPSIyMSIgaWQ9ImVudDAwMDciPjxyZWN0IGZpbGw9IiNFRkY2RkYiIGhlaWdodD0iNTIuNTkzOCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNTcuMjc2NCIgeD0iMTQ5Ljg4IiB5PSIyODYuOTkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS44OTQ1IiB4PSIxNTkuODgiIHk9IjMwOS45ODUxIj5Qb2Q8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzcuMjc2NCIgeD0iMTU5Ljg4IiB5PSIzMjYuMjgyIj4oYXBwKTwvdGV4dD48L2c+PCEtLWVudGl0eSBwb2QyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0icG9kMiIgZGF0YS1zb3VyY2UtbGluZT0iMjIiIGlkPSJlbnQwMDA4Ij48cmVjdCBmaWxsPSIjRUZGNkZGIiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjU3LjI3NjQiIHg9IjI0Ni44OCIgeT0iMjg2Ljk5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjUuODk0NSIgeD0iMjU2Ljg4IiB5PSIzMDkuOTg1MSI+UG9kPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM3LjI3NjQiIHg9IjI1Ni44OCIgeT0iMzI2LjI4MiI+KGFwcCk8L3RleHQ+PC9nPjwhLS1saW5rIGV4dCB0byBpbmctLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMiIgZGF0YS1lbnRpdHktMj0iZW50MDAwNCIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjI0IiBpZD0ibG5rOSI+PHBhdGggZD0iTTE2Ni4xMSw5OC40NyBDMTY2LjExLDE0My40IDE2Ni4xMSwyMDQuNTggMTY2LjExLDIwNC41OCBDMTY2LjExLDIwNC41OCAxNjMuMTUsMjA0LjU4IDE2Ny44OSwyMDQuNTgiIGZpbGw9Im5vbmUiIGlkPSJleHQtdG8taW5nIiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzAwNzhENCIgcG9pbnRzPSIxNzMuODksMjA0LjU4LDE2NC44OSwyMDAuNTgsMTY4Ljg5LDIwNC41OCwxNjQuODksMjA4LjU4LDE3My44OSwyMDQuNTgiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgZXh0IHRvIGxiLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDIiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIyNSIgaWQ9ImxuazEwIj48cGF0aCBkPSJNMTI3LjIsOTguMjcgQzEyNy4yLDExNy42NSAxMjcuMiwxMzMuNzcgMTI3LjIsMTUxLjcxIiBmaWxsPSJub25lIiBpZD0iZXh0LXRvLWxiIiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzAwNzhENCIgcG9pbnRzPSIxMjcuMiwxNTcuNzEsMTMxLjIsMTQ4LjcxLDEyNy4yLDE1Mi43MSwxMjMuMiwxNDguNzEsMTI3LjIsMTU3LjcxIiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGludCB0byBjaXAtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMyIgZGF0YS1lbnRpdHktMj0iZW50MDAwNiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjI2IiBpZD0ibG5rMTEiPjxwYXRoIGQ9Ik0zODAuNTIsOTguMjcgQzM4MC41MiwxMjAuNjkgMzgwLjUyLDE0MC43OCAzODAuNTIsMTU5LjgzIiBmaWxsPSJub25lIiBpZD0iaW50LXRvLWNpcCIgc3R5bGU9InN0cm9rZTojMTZBMzRBO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMxNkEzNEEiIHBvaW50cz0iMzgwLjUyLDE2NS44MywzODQuNTIsMTU2LjgzLDM4MC41MiwxNjAuODMsMzc2LjUyLDE1Ni44MywzODAuNTIsMTY1LjgzIiBzdHlsZT0ic3Ryb2tlOiMxNkEzNEE7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGluZyB0byBwb2QxLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDQiIGRhdGEtZW50aXR5LTI9ImVudDAwMDciIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIyOCIgaWQ9ImxuazEyIj48cGF0aCBkPSJNMTg1LjIsMjI3LjQ2IEMxODUuMiwyNDYuMjcgMTg1LjIsMjYzLjExIDE4NS4yLDI4MC40OSIgZmlsbD0ibm9uZSIgaWQ9ImluZy10by1wb2QxIiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzY0NzQ4QiIgcG9pbnRzPSIxODUuMiwyODYuNDksMTg5LjIsMjc3LjQ5LDE4NS4yLDI4MS40OSwxODEuMiwyNzcuNDksMTg1LjIsMjg2LjQ5IiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGluZyB0byBwb2QyLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDQiIGRhdGEtZW50aXR5LTI9ImVudDAwMDgiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSIyOSIgaWQ9ImxuazEzIj48cGF0aCBkPSJNMjY5LjUsMjI3LjQ2IEMyNjkuNSwyNDYuMjcgMjY5LjUsMjYzLjExIDI2OS41LDI4MC40OSIgZmlsbD0ibm9uZSIgaWQ9ImluZy10by1wb2QyIiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzY0NzQ4QiIgcG9pbnRzPSIyNjkuNSwyODYuNDksMjczLjUsMjc3LjQ5LDI2OS41LDI4MS40OSwyNjUuNSwyNzcuNDksMjY5LjUsMjg2LjQ5IiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGxiIHRvIHBvZDEtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNSIgZGF0YS1lbnRpdHktMj0iZW50MDAwNyIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjMwIiBpZD0ibG5rMTQiPjxwYXRoIGQ9Ik0xMzQuMDksMTgxLjU4IEMxNDcuNjYsMTgxLjU4IDE1Ny45OSwxODEuNTggMTU3Ljk5LDE4MS41OCBDMTU3Ljk5LDE4MS41OCAxNTcuOTksMjQyLjE1IDE1Ny45OSwyODAuNjMiIGZpbGw9Im5vbmUiIGlkPSJsYi10by1wb2QxIiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzY0NzQ4QiIgcG9pbnRzPSIxNTcuOTksMjg2LjYzLDE2MS45OSwyNzcuNjMsMTU3Ljk5LDI4MS42MywxNTMuOTksMjc3LjYzLDE1Ny45OSwyODYuNjMiIHN0eWxlPSJzdHJva2U6IzY0NzQ4QjtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgbGIgdG8gcG9kMi0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA1IiBkYXRhLWVudGl0eS0yPSJlbnQwMDA4IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iMzEiIGlkPSJsbmsxNSI+PHBhdGggZD0iTTcwLjUyLDIyNy40IEM3MC41MiwyMzguMzIgNzAuNTIsMjQ3LjU4IDcwLjUyLDI0Ny41OCBDNzAuNTIsMjQ3LjU4IDI1OC4xOSwyNDcuNTggMjU4LjE5LDI0Ny41OCBDMjU4LjE5LDI0Ny41OCAyNTguMTksMjYyLjM3IDI1OC4xOSwyODAuNTYiIGZpbGw9Im5vbmUiIGlkPSJsYi10by1wb2QyIiBzdHlsZT0ic3Ryb2tlOiM2NDc0OEI7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzY0NzQ4QiIgcG9pbnRzPSIyNTguMTksMjg2LjU2LDI2Mi4xOSwyNzcuNTYsMjU4LjE5LDI4MS41NiwyNTQuMTksMjc3LjU2LDI1OC4xOSwyODYuNTYiIHN0eWxlPSJzdHJva2U6IzY0NzQ4QjtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgY2lwIHRvIHBvZDEtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNiIgZGF0YS1lbnRpdHktMj0iZW50MDAwNyIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjMyIiBpZD0ibG5rMTYiPjxwYXRoIGQ9Ik0zODAuNTIsMjE5LjIxIEMzODAuNTIsMjQwLjc4IDM4MC41MiwyNjcuNTggMzgwLjUyLDI2Ny41OCBDMzgwLjUyLDI2Ny41OCAxOTYuMTgsMjY3LjU4IDE5Ni4xOCwyNjcuNTggQzE5Ni4xOCwyNjcuNTggMTk2LjE4LDI3MC42NCAxOTYuMTgsMjgwLjciIGZpbGw9Im5vbmUiIGlkPSJjaXAtdG8tcG9kMSIgc3R5bGU9InN0cm9rZTojNjQ3NDhCO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM2NDc0OEIiIHBvaW50cz0iMTk2LjE4LDI4Ni43LDIwMC4xOCwyNzcuNywxOTYuMTgsMjgxLjcsMTkyLjE4LDI3Ny43LDE5Ni4xOCwyODYuNyIgc3R5bGU9InN0cm9rZTojNjQ3NDhCO3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBjaXAgdG8gcG9kMi0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA2IiBkYXRhLWVudGl0eS0yPSJlbnQwMDA4IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iMzMiIGlkPSJsbmsxNyI+PHBhdGggZD0iTTMyMC44MiwxOTIuNTggQzMwNS4xMiwxOTIuNTggMjkyLjQ5LDE5Mi41OCAyOTIuNDksMTkyLjU4IEMyOTIuNDksMTkyLjU4IDI5Mi40OSwyNDQuOTQgMjkyLjQ5LDI4MC41IiBmaWxsPSJub25lIiBpZD0iY2lwLXRvLXBvZDIiIHN0eWxlPSJzdHJva2U6IzY0NzQ4QjtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjNjQ3NDhCIiBwb2ludHM9IjI5Mi40OSwyODYuNSwyOTYuNDksMjc3LjUsMjkyLjQ5LDI4MS41LDI4OC40OSwyNzcuNSwyOTIuNDksMjg2LjUiIHN0eWxlPSJzdHJva2U6IzY0NzQ4QjtzdHJva2Utd2lkdGg6MTsiLz48L2c+PD9wbGFudHVtbC1zcmMgVkw1RFJ6ZjA0QnRGaHZaUUZRRzc1MzBFUzRZSFJGMUFJQVgxZjNzNTdYUHgwYk9zaXpSa01hcVF2Unp0TlVFS0hEM2gtemV0Ui1yM29QS3F5WDRCa2ZVclNhQXAtb09WMk15YnN6dWpjVjhVeDlqOGJLcGtrSUJLbmt0cjRNNXFwS01rM1BGMW9IN0VrWTFCNVNQelc0LVZxdmxyRjVsWkxtcDJWZHl5Y1NTMTc2VEd4WUpsNUU0QmZEZUtQNlBRUU9DN3NtN3hsWV9wMW9QaENPQWNSQWk5MXphbWtIQm0yWTFwdnU0V1V0OWFNQWVEX3gxYTBmR013U2JyeDg4eFRnTUJsc0o5M2sxVlhVMXdFcnRtcGxZN2hZLXRxbXFsbnhaTWpJanZqLTZCbFJPRUJ4NklSbF9idUR2WEEzOG5kOHFfWDJvckI1QWY5RVRhc2dJazZJdk1GWWh2TkhsMlBUaGNnMnM2eXBIQkhGT1hQZ1Bnd3NzQkxQam5xSHMwY2pMcHd5dEJvZmk3OGlja3RidFlCX0c2TUxNamhEQjUwQ0RDWTk0R192VDVScEJtcXM3bHhsMWhGbWx6WXRsSnZrWkpYRGcyZHhGMTF3RGE2MlNUeFhpMkQ1RHZQWElGdXFkUUNLc2ZpcW00VmZSSmJaRDQxQ3FPZm90ZGNFV0Y/PjwvZz48L3N2Zz4=" class="uml" alt="uml diagram" title="" /></p>
+<table>
+<thead>
+<tr>
+<th>Service Type</th>
+<th>노출 범위</th>
+<th>사용 예</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ClusterIP</strong></td>
+<td>클러스터 내부만</td>
+<td>서비스 간 통신 (DB → App)</td>
+</tr>
+<tr>
+<td><strong>NodePort</strong></td>
+<td>노드 IP:포트</td>
+<td>테스트용 (프로덕션 비권장)</td>
+</tr>
+<tr>
+<td><strong>LoadBalancer</strong></td>
+<td><strong>외부 IP</strong> (Azure LB 자동 생성)</td>
+<td>Lab 91 API Gateway 외부 노출</td>
+</tr>
+<tr>
+<td><strong>ExternalName</strong></td>
+<td>외부 DNS 매핑</td>
+<td>외부 SaaS 연결</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ingress">Ingress<a class="headerlink" href="#ingress" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>L7(HTTP/HTTPS) 라우팅</strong> — Host, Path 기반으로 여러 Service에 트래픽 분배</li>
+<li>AKS에서는 <strong>Web App Routing</strong> add-on이 NGINX Ingress Controller를 자동 배포</li>
+<li>IngressClass: <code>webapprouting.kubernetes.azure.com</code></li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Lab 91에서</p>
+<p>Ingress를 통해 <code>&lt;EXTERNAL-IP&gt;.nip.io</code> host-based routing으로 서비스를 외부 노출합니다.</p>
+</div>
+<h3 id="dns">DNS<a class="headerlink" href="#dns" title="Permanent link">&para;</a></h3>
+<p>클러스터 내 Service는 자동으로 DNS 이름을 받습니다:</p>
+<div class="highlight"><pre><span></span><code>&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local
+</code></pre></div>
+<hr />
+<h2 id="7-storage-configuration">7. Storage &amp; Configuration<a class="headerlink" href="#7-storage-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>개념</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Volume</strong></td>
+<td>Pod에 마운트되는 저장소 (Pod 삭제 시 소멸 가능)</td>
+</tr>
+<tr>
+<td><strong>PersistentVolume (PV)</strong></td>
+<td>클러스터 수준의 영구 스토리지</td>
+</tr>
+<tr>
+<td><strong>PersistentVolumeClaim (PVC)</strong></td>
+<td>Pod이 PV를 <strong>요청</strong>하는 방법</td>
+</tr>
+<tr>
+<td><strong>StorageClass</strong></td>
+<td>동적 프로비저닝 규칙 (AKS: <code>managed-csi</code> = Azure Disk)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Lab 91에서</p>
+<p>MySQL, RabbitMQ가 <strong>PVC</strong>를 사용하여 Azure Managed Disk에 데이터를 영구 저장합니다.</p>
+</div>
+<h3 id="configmap-secret">ConfigMap &amp; Secret<a class="headerlink" href="#configmap-secret" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>용도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ConfigMap</strong></td>
+<td>비민감 설정 (DB host, feature flag)</td>
+</tr>
+<tr>
+<td><strong>Secret</strong></td>
+<td>민감 데이터 (password, API key) — base64 인코딩</td>
+</tr>
+</tbody>
+</table>
+<h3 id="health-probes">Health Probes<a class="headerlink" href="#health-probes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Probe</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Liveness</strong></td>
+<td>죽었으면 <strong>재시작</strong></td>
+</tr>
+<tr>
+<td><strong>Readiness</strong></td>
+<td>준비 안 됐으면 <strong>트래픽 차단</strong></td>
+</tr>
+<tr>
+<td><strong>Startup</strong></td>
+<td>초기화 완료까지 <strong>다른 probe 지연</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-scaling">8. Scaling<a class="headerlink" href="#8-scaling" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjEyNHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6NjkwcHg7aGVpZ2h0OjEyNHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDY5MCAxMjQiIHdpZHRoPSI2OTBweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgbjEtLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjEiIGRhdGEtc291cmNlLWxpbmU9IjExIiBpZD0iZW50MDAwMiI+PHJlY3QgZmlsbD0iI0YwRkRGNCIgaGVpZ2h0PSIxMDMuMyIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTk0IiB4PSI3IiB5PSI3Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTUuNDY2OCIgeD0iNzYuMjY2NiIgeT0iMjEuOTk1MSI+Tm9kZSAxPC90ZXh0PjwvZz48IS0tY2x1c3RlciBuMi0tPjxnIGNsYXNzPSJjbHVzdGVyIiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMiIgZGF0YS1zb3VyY2UtbGluZT0iMTYiIGlkPSJlbnQwMDA1Ij48cmVjdCBmaWxsPSIjRjBGREY0IiBoZWlnaHQ9IjEwMy4zIiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIyMzgiIHg9IjI0MSIgeT0iNyIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjU1LjQ2NjgiIHg9IjMzMi4yNjY2IiB5PSIyMS45OTUxIj5Ob2RlIDI8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIG4zLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9Im4zIiBkYXRhLXNvdXJjZS1saW5lPSIyMSIgaWQ9ImVudDAwMDgiPjxyZWN0IGZpbGw9IiNGRUYzQzciIGhlaWdodD0iMTAzLjMiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjE1NyIgeD0iNTE5IiB5PSI3Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTA1LjUzMzIiIHg9IjU0NC43MzM0IiB5PSIyMS45OTUxIj5Ob2RlIDMgKG5ldyk8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcDEtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMS5wMSIgZGF0YS1zb3VyY2UtbGluZT0iMTIiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjQ1Ljg5NDUiIHg9IjMxLjA1IiB5PSI1MCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljg5NDUiIHg9IjQxLjA1IiB5PSI3Mi45OTUxIj5Qb2Q8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcDItLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJuMS5wMiIgZGF0YS1zb3VyY2UtbGluZT0iMTMiIGlkPSJlbnQwMDA0Ij48cmVjdCBmaWxsPSIjREJFQUZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjQ1Ljg5NDUiIHg9IjExMi4wNSIgeT0iNTAiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS44OTQ1IiB4PSIxMjIuMDUiIHk9IjcyLjk5NTEiPlBvZDwvdGV4dD48L2c+PCEtLWVudGl0eSBwMy0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9Im4yLnAzIiBkYXRhLXNvdXJjZS1saW5lPSIxNyIgaWQ9ImVudDAwMDYiPjxyZWN0IGZpbGw9IiNEQkVBRkUiIGhlaWdodD0iMzYuMjk2OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNDUuODk0NSIgeD0iMjY1LjA1IiB5PSI1MCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljg5NDUiIHg9IjI3NS4wNSIgeT0iNzIuOTk1MSI+UG9kPC90ZXh0PjwvZz48IS0tZW50aXR5IHA0LS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjIucDQiIGRhdGEtc291cmNlLWxpbmU9IjE4IiBpZD0iZW50MDAwNyI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI5MC4yMDUxIiB4PSIzNDUuOSIgeT0iNTAiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3MC4yMDUxIiB4PSIzNTUuOSIgeT0iNzIuOTk1MSI+UG9kIChuZXcpPC90ZXh0PjwvZz48IS0tZW50aXR5IHA1LS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0ibjMucDUiIGRhdGEtc291cmNlLWxpbmU9IjIyIiBpZD0iZW50MDAwOSI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI5MC4yMDUxIiB4PSI1NDIuOSIgeT0iNTAiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3MC4yMDUxIiB4PSI1NTIuOSIgeT0iNzIuOTk1MSI+UG9kIChuZXcpPC90ZXh0PjwvZz48IS0tbGluayBuMSB0byBuMi0tPjwhLS1saW5rIG4yIHRvIG4zLS0+PD9wbGFudHVtbC1zcmMgWFAxMVF5OG02OFJsLUhLVlVkNjdpaFFmdzQ0QVFma1ozRG5qeDEyUkpua2lOcWVJYUo3c3R2VERQbWlna3R4RmNfVHZZVGpoUWdNTDFyMnViU1Y2MnFELTlHeThRcWFrTWdGTE0tUWtlS09KLWV5TW1MWFZjbndtdmFZZ0NmUkdtZkpyMExQVXFndjEtNkdCT25OUWZNY0NYTTRTSndQNVRoY3pyaGhRNHBlN0FWalBTQ2FhOVAtRjFWalloQWlQcDNSdm9ZWTRQRlF5b0dTVzdMMDJHbjZCR2NIMXFhay02Rk5Cc3kyQkhKYU52THNRTmtiektUZzlxZHo0Xzg0OEhlSWRmdENjMm5zYnVDbDkwbnFfWHBpZl90am04LXROWmxrcnVLVVlqcmVoWFZIa3pReHNLSHg2aXgzX3ppb18wRzAwPz48L2c+PC9zdmc+" class="uml" alt="uml diagram" title="" /></p>
+<ul>
+<li>트래픽이 늘면 <strong>같은 Pod에 컨테이너를 추가하는 것이 아니라</strong>, <strong>Pod 수를 늘립니다</strong> (Horizontal Scaling)</li>
+<li>노드가 부족하면 <strong>새 노드를 추가</strong>합니다 (Cluster Autoscaler)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>대상</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HPA</strong> (Horizontal Pod Autoscaler)</td>
+<td>Pod</td>
+<td>CPU/Memory 기준 Pod 수 자동 조정</td>
+</tr>
+<tr>
+<td><strong>VPA</strong> (Vertical Pod Autoscaler)</td>
+<td>Pod</td>
+<td>개별 Pod의 resource request/limit 조정</td>
+</tr>
+<tr>
+<td><strong>Cluster Autoscaler</strong></td>
+<td>Node</td>
+<td>노드 수 자동 조정 (AKS에서 지원)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-monitoring-lab-92">9. Monitoring (Lab 92 연결)<a class="headerlink" href="#9-monitoring-lab-92" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>역할</th>
+<th>Lab 연결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kubectl top nodes/pods</code></td>
+<td>실시간 리소스 사용량</td>
+<td>Lab 90 Deep Dive</td>
+</tr>
+<tr>
+<td><code>kubectl get events</code></td>
+<td>클러스터 이벤트 조회</td>
+<td>트러블슈팅 전반</td>
+</tr>
+<tr>
+<td><strong>OTel Collector</strong></td>
+<td>Traces, Metrics, Logs 수집·전송</td>
+<td>Lab 92</td>
+</tr>
+<tr>
+<td><strong>Azure Monitor</strong></td>
+<td>Application Insights, Log Analytics</td>
+<td>Lab 92</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Lab 92에서</p>
+<p>OTel Collector를 <strong>DaemonSet</strong>으로 배포하고, Azure Monitor exporter로 분산 추적(Distributed Tracing)을 확인합니다.</p>
+</div>
+<hr />
+<h2 id="10-kubectl-cheatsheet-lab">10. kubectl Cheatsheet (Lab에서 쓰는 명령)<a class="headerlink" href="#10-kubectl-cheatsheet-lab" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kubectl get nodes</code></td>
+<td>노드 목록</td>
+</tr>
+<tr>
+<td><code>kubectl get pods -A</code></td>
+<td>전체 namespace Pod 조회</td>
+</tr>
+<tr>
+<td><code>kubectl get svc</code></td>
+<td>Service 목록 (External IP 확인)</td>
+</tr>
+<tr>
+<td><code>kubectl get namespaces</code></td>
+<td>Namespace 목록</td>
+</tr>
+<tr>
+<td><code>kubectl describe pod &lt;NAME&gt;</code></td>
+<td>Pod 상세 (Events, Conditions)</td>
+</tr>
+<tr>
+<td><code>kubectl logs &lt;POD&gt;</code></td>
+<td>Pod 로그 확인</td>
+</tr>
+<tr>
+<td><code>kubectl top nodes</code></td>
+<td>노드 CPU/Memory 사용량</td>
+</tr>
+<tr>
+<td><code>kubectl top pods -A</code></td>
+<td>Pod CPU/Memory 사용량</td>
+</tr>
+<tr>
+<td><code>kubectl get events --sort-by='.lastTimestamp'</code></td>
+<td>최신 이벤트</td>
+</tr>
+<tr>
+<td><code>kubectl apply -f &lt;FILE&gt;</code></td>
+<td>선언적 리소스 생성/업데이트</td>
+</tr>
+<tr>
+<td><code>kubectl apply -k &lt;DIR&gt;</code></td>
+<td>Kustomize 기반 배포</td>
+</tr>
+<tr>
+<td><code>kubectl delete -f &lt;FILE&gt;</code></td>
+<td>리소스 삭제</td>
+</tr>
+<tr>
+<td><code>kubectl exec -it &lt;POD&gt; -- bash</code></td>
+<td>Pod 내부 셸 접속</td>
+</tr>
+<tr>
+<td><code>kubectl rollout undo deploy &lt;NAME&gt;</code></td>
+<td>이전 버전 롤백</td>
+</tr>
+<tr>
+<td><code>kubectl scale deploy &lt;NAME&gt; --replicas=N</code></td>
+<td>수동 스케일링</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_1">한눈에 보기<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>용어</th>
+<th>한 줄 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>Control Plane + Worker Node 전체</td>
+</tr>
+<tr>
+<td><strong>Node</strong></td>
+<td>컨테이너를 실행하는 머신 (AKS: VMSS)</td>
+</tr>
+<tr>
+<td><strong>Pod</strong></td>
+<td>최소 배포 단위 (1+ 컨테이너)</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Stateless 앱 관리, ReplicaSet 자동 생성</td>
+</tr>
+<tr>
+<td><strong>StatefulSet</strong></td>
+<td>Stateful 앱 (DB), 순서·고유 ID 보장</td>
+</tr>
+<tr>
+<td><strong>DaemonSet</strong></td>
+<td>모든 노드에 1개씩 배치</td>
+</tr>
+<tr>
+<td><strong>Service</strong></td>
+<td>Pod에 안정적 네트워크 접근 제공</td>
+</tr>
+<tr>
+<td><strong>Ingress</strong></td>
+<td>L7 HTTP/HTTPS 라우팅</td>
+</tr>
+<tr>
+<td><strong>Namespace</strong></td>
+<td>논리적 격리</td>
+</tr>
+<tr>
+<td><strong>ConfigMap</strong></td>
+<td>비민감 설정</td>
+</tr>
+<tr>
+<td><strong>Secret</strong></td>
+<td>민감 데이터</td>
+</tr>
+<tr>
+<td><strong>PV / PVC</strong></td>
+<td>영구 스토리지 / 스토리지 요청</td>
+</tr>
+<tr>
+<td><strong>HPA</strong></td>
+<td>Pod 수 자동 조정</td>
+</tr>
+<tr>
+<td><strong>kubelet</strong></td>
+<td>노드에서 Pod을 실행하는 agent</td>
+</tr>
+<tr>
+<td><strong>kubectl</strong></td>
+<td>K8s CLI 도구</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">다음 단계</p>
+<p>이 개념들을 <a href="../../lab90-aks/">Lab 90</a>부터 직접 체험합니다.
+<code>terraform apply</code> → <code>kubectl get nodes</code> → 앱 배포 → 모니터링 순서로 진행됩니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

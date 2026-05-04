@@ -1,0 +1,2490 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AZ-104 Terraform Lab - onboarding docs">
+      
+      
+      
+        <link rel="canonical" href="https://noisonnoiton.github.io/az-104-labs/lab07-manage-storage/">
+      
+      
+        <link rel="prev" href="../lab06-network-traffic/">
+      
+      
+        <link rel="next" href="../lab08-manage-vms/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Lab 07 - Manage Storage - AZ-104 Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-07-manage-azure-storage-terraform" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="AZ-104 Labs" class="md-header__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AZ-104 Labs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 07 - Manage Storage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../foundations/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../prerequisite/" class="md-tabs__link">
+          
+  
+  
+  Prerequisite
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../lab00-skeleton/" class="md-tabs__link">
+          
+  
+  
+  Terraform Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AZ-104 Labs" class="md-nav__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AZ-104 Labs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/01-iac-paradigms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC paradigms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02-terraform-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02b-terraform-hcl-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL block samples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/03-terraform-auth-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth & syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/04-kubernetes-essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisite
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prerequisite
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/01-azure-access-terraform-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure & Terraform auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/02-setup-windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/03-setup-macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/04-clone-repository/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clone repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Terraform Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-skeleton/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skeleton (RG verify)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 - Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-network-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 - Network Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concept-mapping-official-lab-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Mapping (Official Lab 07)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blob-vs-file-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blob vs File Share — 차이점
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-login-to-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Login to Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-initialize-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Initialize Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-check-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Check outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blob-public-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blob Public Access 테스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blob Public Access 테스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        브라우저에서 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        curl로 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Access 제한 테스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Access 제한 테스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-deny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: Deny로 전환
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: 공개 접근 차단 확인 (수강생 브라우저)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-vnet-vm-service-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: VNet 내 VM에서 접근 확인 (Service Endpoint)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-allow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4단계: Allow로 복원
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verify - Azure Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-explorer-blob-vs-file-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Explorer로 Blob vs File Share 비교
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup-teardown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup (Teardown)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-manage-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 - Manage VMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09a-paas-webapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab90-aks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 90 - ACR + AKS Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab91-aks-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab92-aks-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab99-aks-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Lab Cleanup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources Created
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concept-mapping-official-lab-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Mapping (Official Lab 07)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blob-vs-file-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blob vs File Share — 차이점
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) Prepare variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-login-to-azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Login to Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-initialize-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Initialize Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-check-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Check outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blob-public-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blob Public Access 테스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blob Public Access 테스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        브라우저에서 접근
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        curl로 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Access 제한 테스트
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Access 제한 테스트">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-deny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1단계: Deny로 전환
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2단계: 공개 접근 차단 확인 (수강생 브라우저)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-vnet-vm-service-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3단계: VNet 내 VM에서 접근 확인 (Service Endpoint)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-allow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4단계: Allow로 복원
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verify - Azure Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-explorer-blob-vs-file-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Explorer로 Blob vs File Share 비교
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup-teardown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup (Teardown)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost &amp; Caution
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="네비게이션" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../lab00-skeleton/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Terraform Lab
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-07-manage-azure-storage-terraform">Lab 07 - Manage Azure Storage (Terraform)<a class="headerlink" href="#lab-07-manage-azure-storage-terraform" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">목표</p>
+<p>공식 <a href="https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/Instructions/Labs/LAB_07-Manage_Azure_Storage.html" target="_blank" rel="noopener">Lab 07 - Manage Azure Storage</a>에서 다루는 <strong>Storage Account, Blob, Azure Files, 네트워크 액세스</strong> 개념을 <strong>Terraform</strong>으로 배포하고, <strong>Portal / CLI</strong>로 검증합니다.</p>
+<p>핵심 체험:</p>
+<ol>
+<li><strong>Blob Public Access</strong> — <code>index.html</code>을 브라우저에서 공개 접근</li>
+<li><strong>Network Access 제한</strong> — <code>Deny</code> 전환 후 브라우저에서 403, <strong>VNet 내 VM에서는 접근 성공</strong> (Service Endpoint)</li>
+<li><strong>Blob vs File Share</strong> — Storage Explorer에서 유사하게 보이지만 내부 저장 방식이 다른 두 서비스 비교</li>
+</ol>
+</div>
+<hr />
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjUyNHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6OTE1cHg7aGVpZ2h0OjUyNHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDkxNSA1MjQiIHdpZHRoPSI5MTVweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuM2JldGE2Pz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgcmctLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0icmciIGRhdGEtc291cmNlLWxpbmU9IjIzIiBpZD0iZW50MDAwMiI+PHJlY3QgZmlsbD0ibm9uZSIgaGVpZ2h0PSIzMDEuODkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9Ijg5NCIgeD0iNyIgeT0iNyIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEyNS43Njc2IiB4PSIzOTEuMTE2MiIgeT0iMjEuOTk1MSI+UmVzb3VyY2UgR3JvdXA8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIHZuZXQtLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0icmcudm5ldCIgZGF0YS1zb3VyY2UtbGluZT0iMjUiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjRUZGNkZGIiBoZWlnaHQ9IjIzNC44OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iNDE1IiB4PSIzMSIgeT0iNTAiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIzOC43MzkzIiB4PSIxNjQuNzU3MyIgeT0iNjQuOTk1MSI+Vk5ldDwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5OC45OTgiIHg9IjIxMy4yNDQ2IiB5PSI2NC45OTUxIj4xMC4zMC4wLjAvMTY8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIHNuZXRfdm0tLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0icmcudm5ldC5zbmV0X3ZtIiBkYXRhLXNvdXJjZS1saW5lPSIyNyIgaWQ9ImVudDAwMDQiPjxyZWN0IGZpbGw9IiNEQkVBRkUiIGhlaWdodD0iMTUxLjg5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIzNTEiIHg9IjYzIiB5PSIxMDEiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNzIuNzU3OCIgeD0iMTUyLjEyMTEiIHk9IjExNS45OTUxIj5zbmV0LXZtICAxMC4zMC4wLjAvMjQ8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjk4Ljg2MDQiIHg9Ijg5LjA2OTgiIHk9IjEzMi4yOTIiPihTZXJ2aWNlIEVuZHBvaW50OiBNaWNyb3NvZnQuU3RvcmFnZSk8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIHNhLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InJnLnNhIiBkYXRhLXNvdXJjZS1saW5lPSIzMyIgaWQ9ImVudDAwMDciPjxyZWN0IGZpbGw9IiNGRUYzQzciIGhlaWdodD0iMTUxLjg5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIzOTEiIHg9IjQ3OCIgeT0iMTAxIi8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTMwLjgxMjUiIHg9IjYwOC4wOTM4IiB5PSIxMTUuOTk1MSI+U3RvcmFnZSBBY2NvdW50PC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE2MS43NzkzIiB4PSI1OTIuNjEwNCIgeT0iMTMyLjI5MiI+c3R7cHJlZml4fXtyYW5kb219PC90ZXh0PjwvZz48IS0tZW50aXR5IG5zZy0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InJnLnZuZXQuc25ldF92bS5uc2ciIGRhdGEtc291cmNlLWxpbmU9IjI4IiBpZD0iZW50MDAwNSI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI5My4yODgxIiB4PSI4Ny4zNiIgeT0iMTY4LjE1Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzAuMjA4IiB4PSI5Ny4zNiIgeT0iMTkxLjE0NTEiPk5TRzwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3My4yODgxIiB4PSI5Ny4zNiIgeT0iMjA3LjQ0MiI+KFNTSCBvbmx5KTwvdGV4dD48L2c+PCEtLWVudGl0eSB2bS0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9InJnLnZuZXQuc25ldF92bS52bSIgZGF0YS1zb3VyY2UtbGluZT0iMjkiIGlkPSJlbnQwMDA2Ij48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjY4Ljg5MDYiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEwNS4xNDg0IiB4PSIyNDAuNDMiIHk9IjE2MCIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI0Ljc2NjYiIHg9IjI1MC40MyIgeT0iMTgyLjk5NTEiPlZNPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijg1LjE0ODQiIHg9IjI1MC40MyIgeT0iMTk5LjI5MiI+dm0te3ByZWZpeH08L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNzQuODgwOSIgeD0iMjUwLjQzIiB5PSIyMTUuNTg4OSI+KyBQdWJsaWMgSVA8L3RleHQ+PC9nPjwhLS1lbnRpdHkgd2ViLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0icmcuc2Eud2ViIiBkYXRhLXNvdXJjZS1saW5lPSIzNCIgaWQ9ImVudDAwMDgiPjxyZWN0IGZpbGw9IiNFMEYyRkUiIGhlaWdodD0iNjguODkwNiIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTA5LjMzMiIgeD0iNTAyLjMzIiB5PSIxNjAiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIzMC45NDYzIiB4PSI1MTIuMzMiIHk9IjE4Mi45OTUxIj5CbG9iPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjMyLjQ1MDIiIHg9IjU1Mi4xNzY3IiB5PSIxODIuOTk1MSI+d2ViPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijg5LjMzMiIgeD0iNTEyLjMzIiB5PSIxOTkuMjkyIj4ocHVibGljIHJlYWQpPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijc0Ljg4NzciIHg9IjUxMi4zMyIgeT0iMjE1LjU4ODkiPmluZGV4Lmh0bWw8L3RleHQ+PC9nPjwhLS1lbnRpdHkgZmlsZXMtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJyZy5zYS5maWxlcyIgZGF0YS1zb3VyY2UtbGluZT0iMzUiIGlkPSJlbnQwMDA5Ij48cmVjdCBmaWxsPSIjRDFGQUU1IiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjEyOS41NzMyIiB4PSI2NzEuMjEiIHk9IjE2OC4xNSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjY5LjYwMzUiIHg9IjY4MS4yMSIgeT0iMTkxLjE0NTEiPkZpbGUgU2hhcmU8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjMuNjI4OSIgeD0iNjgxLjIxIiB5PSIyMDcuNDQyIj5zaGFyZTAxPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQxLjQ5NDEiIHg9Ijc0OS4yODkxIiB5PSIyMDcuNDQyIj4oU01CKTwvdGV4dD48L2c+PCEtLWxpbmsgc25ldF92bSB0byBzYS0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA0IiBkYXRhLWVudGl0eS0yPSJlbnQwMDA3IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iMzkiIGlkPSJsbmsxMCI+PHBhdGggZD0iTTQxNC42ODI5LDI0Ni44OSBDNDE0Ljk1MDYsMjQ2Ljg5IDQxNS4yMjQxLDI0Ni44OSA0MTUuNTAzMywyNDYuODkgQzQxNi4wNjE4LDI0Ni44OSA0MTYuNjQzMiwyNDYuODkgNDE3LjI0NzMsMjQ2Ljg5IEM0MTkuNjYzMywyNDYuODkgNDIyLjQ0MDQsMjQ2Ljg5IDQyNS41NTA4LDI0Ni44OSBDNDM3Ljk5MjIsMjQ2Ljg5IDQ1NS43NjU2LDI0Ni44OSA0NzcuMDkzOCwyNDYuODkgQzQ3Ny4yNjA0LDI0Ni44OSA0NzEuNDI3MiwyNDYuODkgNDcxLjU5NDMsMjQ2Ljg5IiBmaWxsPSJub25lIiBpZD0ic25ldF92bS10by1zYSIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM3QzNBRUQiIHBvaW50cz0iNDc3LjU5NDMsMjQ2Ljg5LDQ2OC41OTQzLDI0Mi44OSw0NzIuNTk0MywyNDYuODksNDY4LjU5NDMsMjUwLjg5LDQ3Ny41OTQzLDI0Ni44OSIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExMC4wMzY2IiB4PSI1MjIuNSIgeT0iMjQyLjk1NjkiPlNlcnZpY2UgRW5kcG9pbnQ8L3RleHQ+PC9nPjxnIGNsYXNzPSJsZWdlbmQiIGRhdGEtc291cmNlLWxpbmU9IjQxIj48cmVjdCBmaWxsPSIjREREREREIiBoZWlnaHQ9IjE3Ni45Njg4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNTAuNTkzOCIgeD0iNTQ1LjQwNjMiIHk9IjMyOC44OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljc1OTkiIHg9IjU1NS4yODAzIiB5PSIzNDguODg1MSI+JiM0OTM1MzsmIzQ5MzQ1OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2OS4yNzM3IiB4PSI3MjcuMTQ5NCIgeT0iMzQ4Ljg4NTEiPiYjNDc1MzI7JiM0OTU0ODsmIzQ5ODI4OyAmIzUwOTc2OyYjNTQ4MDU7PC90ZXh0PjxyZWN0IGZpbGw9IiNCRkRCRkUiIGhlaWdodD0iMTYuMjk2OSIgc3R5bGU9InN0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxOyIgd2lkdGg9IjE3MS44NjkxIiB4PSI1NTAuNDA2MyIgeT0iMzUyLjE4NjkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjU1MC40MDYzIiB5PSIzNjUuMTgyIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjEuNjU2MyIgeD0iNzI2LjcyNTYiIHk9IjM2NS4xODIiPlZNPC90ZXh0PjxyZWN0IGZpbGw9IiNGRUYzQzciIGhlaWdodD0iMTYuMjk2OSIgc3R5bGU9InN0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxOyIgd2lkdGg9IjE3MS44NjkxIiB4PSI1NTAuNDA2MyIgeT0iMzY4LjQ4MzgiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9IjU1MC40MDYzIiB5PSIzODEuNDc4OSI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE1OS44MjQyIiB4PSI3MjYuNzI1NiIgeT0iMzgxLjQ3ODkiPlN0b3JhZ2UgQWNjb3VudCAvIE5TRzwvdGV4dD48cmVjdCBmaWxsPSIjRTBGMkZFIiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIxNzEuODY5MSIgeD0iNTUwLjQwNjMiIHk9IjM4NC43ODA2Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI1NTAuNDA2MyIgeT0iMzk3Ljc3NTciPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMDMuODEwNSIgeD0iNzI2LjcyNTYiIHk9IjM5Ny43NzU3Ij5CbG9iIENvbnRhaW5lcjwvdGV4dD48cmVjdCBmaWxsPSIjRDFGQUU1IiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIxNzEuODY5MSIgeD0iNTUwLjQwNjMiIHk9IjQwMS4wNzc1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI1NTAuNDA2MyIgeT0iNDE0LjA3MjYiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2OS42MDM1IiB4PSI3MjYuNzI1NiIgeT0iNDE0LjA3MjYiPkZpbGUgU2hhcmU8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTEuNTE5OCIgeD0iNTU1LjI4MDMiIHk9IjQzMC4zNjk1Ij4mIzQ1MzQ4OyYjNTM5NDQ7JiM1MDg5MjsmIzUzMzU2OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS43NTk5IiB4PSI3MjcuMTQ5NCIgeT0iNDMwLjM2OTUiPiYjNDk0NDQ7JiM0Nzc0OTs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI1NTAuNDA2MyIgeT0iNDQ2LjY2NjQiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjN0MzQUVEIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI1NTQuODU2NCIgeT0iNDQ2LjY2NjQiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iNTcxLjcxMzkiIHk9IjQ0Ni42NjY0Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTE4LjUwMSIgeD0iNzI2LjcyNTYiIHk9IjQ0Ni42NjY0Ij5TZXJ2aWNlIEVuZHBvaW50PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjU2LjM5MzgiIHg9IjU1NS4yODAzIiB5PSI0NjIuOTYzMiI+JiM1MTIxNzsmIzQ0NTQwOyAmIzUxMjIxOyYjNTIyOTM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjI1Ljc1OTkiIHg9IjcyNy4xNDk0IiB5PSI0NjIuOTYzMiI+JiM0NjA0MTsmIzUxMDg5OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTUuNTM0MiIgeD0iNTU0Ljg1NjQiIHk9IjQ3OS4yNjAxIj5kZWZhdWx0X2FjdGlvbiA9PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQyLjk4NDQiIHg9IjY3NC44NDA4IiB5PSI0NzkuMjYwMSI+QWxsb3c8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI3MTcuODI1MiIgeT0iNDc5LjI2MDEiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMDIuMDk4OSIgeD0iNzI2LjcyNTYiIHk9IjQ3OS4yNjAxIj5QdWJsaWMgJiM1MTIxNzsmIzQ0NTQwOyAmIzU0NzI4OyYjNTA4NTc7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExNS41MzQyIiB4PSI1NTQuODU2NCIgeT0iNDk1LjU1NyI+ZGVmYXVsdF9hY3Rpb24gPTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0MC4yMDkiIHg9IjY3NC44NDA4IiB5PSI0OTUuNTU3Ij5EZW55PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iNzE1LjA0OTgiIHk9IjQ5NS41NTciPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjcuNjc5IiB4PSI3MjYuNzI1NiIgeT0iNDk1LjU1NyI+Vk5ldCAmIzUxMjA0OyYjNTA4NTc7IChTRSAmIzU0NTk2OyYjNTA4MzY7KTwvdGV4dD48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTUwLjQwNjMiIHgyPSI4OTEiIHkxPSIzMzUuODkiIHkyPSIzMzUuODkiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTUwLjQwNjMiIHgyPSI4OTEiIHkxPSIzNTIuMTg2OSIgeTI9IjM1Mi4xODY5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjU1MC40MDYzIiB4Mj0iODkxIiB5MT0iMzY4LjQ4MzgiIHkyPSIzNjguNDgzOCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI1NTAuNDA2MyIgeDI9Ijg5MSIgeTE9IjM4NC43ODA2IiB5Mj0iMzg0Ljc4MDYiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTUwLjQwNjMiIHgyPSI4OTEiIHkxPSI0MDEuMDc3NSIgeTI9IjQwMS4wNzc1Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjU1MC40MDYzIiB4Mj0iODkxIiB5MT0iNDE3LjM3NDQiIHkyPSI0MTcuMzc0NCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI1NTAuNDA2MyIgeDI9Ijg5MSIgeTE9IjQzMy42NzEzIiB5Mj0iNDMzLjY3MTMiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTUwLjQwNjMiIHgyPSI4OTEiIHkxPSI0NDkuOTY4MSIgeTI9IjQ0OS45NjgxIi8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjU1MC40MDYzIiB4Mj0iODkxIiB5MT0iNDY2LjI2NSIgeTI9IjQ2Ni4yNjUiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTUwLjQwNjMiIHgyPSI4OTEiIHkxPSI0ODIuNTYxOSIgeTI9IjQ4Mi41NjE5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjU1MC40MDYzIiB4Mj0iODkxIiB5MT0iNDk4Ljg1ODgiIHkyPSI0OTguODU4OCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI1NTAuNDA2MyIgeDI9IjU1MC40MDYzIiB5MT0iMzM1Ljg5IiB5Mj0iNDk4Ljg1ODgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNzIyLjI3NTQiIHgyPSI3MjIuMjc1NCIgeTE9IjMzNS44OSIgeTI9IjQ5OC44NTg4Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg5MSIgeDI9Ijg5MSIgeTE9IjMzNS44OSIgeTI9IjQ5OC44NTg4Ii8+PC9nPjw/cGxhbnR1bWwtc3JjIFRMSFRRbmYxNTd0Vk50NWgyWktNVE90djhYWjFaUmpmZTloVzFsakdJclh0SHJzb3BZb3BncWRHRjhHYWZHczE0YVplOW9LRmVUMklicHdyM19xclZNcE1fejN2cUNIT2tlZUV2dnZ4dmp1cFRwUk9UaDVsS1FpRDNjZk83SXlxMjB4QkxYazFRVTRXUUlCZ0RmSldia0l2NjhMeEZXOTJtbk9QMnIzSW1PdkRBNE9LNWlUbUoxbUs4MV9jck42b1hSU3ZFQVNnb1lEOGlXVGl1WDRBbGtNWEM0RzJLWHV5aDlSckpNM0ZDaUljVENFT0R1bU9HeXFuakFaZjFLQ053RVB3UE9HUWtmNVRNVTNlQ3JzM01tTkxjOTVTTy1zZlJldUtDYVAxZC1EZWpHSXROQ3FlUWY5UkRiVlhOcnJqbExCS0FuOUxyT041dWNuQzZNeUdzUTY1Y253MmRnOEh3WTJ3OGxlUnZXc25wUFBoUnNDSzEzMlpTRGliUG9nWlBtanBYaEFsQTdTb2lMbXpOcTQxd0wwUm1JZXBzeS1id19hT00wN0c5amphV2JlamV2MEowMzlnQWdrY3MyVVRjSFZxQlpqMGFDeFVKbWpPOERialp3VkNwRFBtZDhyMHJzTXh3alpuWU9sMzlJWXZEWUsxUU9HZkNvSktRZzlmZVNtNWpmWTBGQTNVazNPcGFJa1BKdTFXUnFfSVNUMDR4a3Zhd0lMVVUwcnRzeWNVSnI3M3RUc2x1U1VtcVFieGhXcmg2eDg5amFrcm4ycHdud0hYSEwybVJKUUhlVEdBbWY1S1p1c1VHemh4aWMwQnZEWlNnck5wSTFzMElVc1drYW9GLXQ5cFlZbmRrZVBUeEEzVEwyamlVcUE1cU8zRnNSWTZ1UjlWaXNMSExDRENBVTBoRElERTk2d01ENmIwV3Y0MmFDQ2VNbmF2YzdtLWpSMklCVVo1NXpIamppOWFkZlV3MTlDZGVJV1VRWUJpVzYwZl9NTTgzYno3WG1WMExaVFZoZ0VOZno3OTVLSVZCV1ZsQmcybHo3RjNpU3YzN3pZbTJxSUVENFNjZDhDcXlENE45N2JwRTRjT2l5OWNyTkJ2SkhUSFVPRHV6QXZqN2M1NTc1cURKZHY2N3F5NzF6VXlnRVpld2tSUkNPejFKYnB1Zk02Vi1UX2QxLW9SSW1qS0wzRkhnbklDQmlfLV9GWjVfWXdZeHlVWXBKVmxleXpkR2Q3dV9qZ294RDBiY0R0Q0hBQldVTUdkYU0xb21fNFB2V19VbGVlLVZGclZMWDdYRlA3NFJuNUJFVUJTa0FkM3U4OGpwd1RQN1pUVFVseU4/PjwvZz48L3N2Zz4=" class="uml" alt="uml diagram" title="" /></p>
+<hr />
+<h2 id="resources-created">Resources Created<a class="headerlink" href="#resources-created" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>리소스</th>
+<th>기본 이름/값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VNet</td>
+<td><code>vnet-{prefix}</code> (<code>10.30.0.0/16</code>)</td>
+</tr>
+<tr>
+<td>Subnet</td>
+<td><code>snet-vm</code> (<code>10.30.0.0/24</code>), Service Endpoint: <code>Microsoft.Storage</code></td>
+</tr>
+<tr>
+<td>NSG</td>
+<td><code>nsg-vm-{prefix}</code> — SSH(22) 허용</td>
+</tr>
+<tr>
+<td>NSG Rule</td>
+<td><code>AllowSSH</code> (priority 100)</td>
+</tr>
+<tr>
+<td>NSG-Subnet 연결</td>
+<td><code>snet-vm</code> ↔ NSG</td>
+</tr>
+<tr>
+<td>Public IP</td>
+<td><code>pip-vm-{prefix}</code> (Standard, Static)</td>
+</tr>
+<tr>
+<td>NIC</td>
+<td><code>nic-vm-{prefix}</code></td>
+</tr>
+<tr>
+<td>VM</td>
+<td><code>vm-{prefix}</code> (Ubuntu 24.04 LTS, Standard_D2s_v3)</td>
+</tr>
+<tr>
+<td>Storage Account</td>
+<td><code>st{prefix}{random}</code> (전역 고유, LRS)</td>
+</tr>
+<tr>
+<td>Blob Container</td>
+<td><code>web</code> (public read — anonymous blob access)</td>
+</tr>
+<tr>
+<td>Blob (HTML)</td>
+<td><code>web/index.html</code> — 테스트용 정적 페이지</td>
+</tr>
+<tr>
+<td>File Share</td>
+<td><code>share01</code> (5 GiB quota)</td>
+</tr>
+<tr>
+<td>random_string</td>
+<td>Storage Account 이름 suffix (6자)</td>
+</tr>
+<tr>
+<td>random_password</td>
+<td>VM admin password (16자)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">비용 주의</p>
+<p><strong>VM</strong>(Standard_D2s_v3)과 <strong>Storage Account</strong>가 과금됩니다. 실습 후 <strong><code>terraform destroy</code></strong>로 정리하세요.</p>
+</div>
+<hr />
+<h2 id="prerequisite">Prerequisite<a class="headerlink" href="#prerequisite" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>권한</td>
+<td>할당된 <strong>Resource Group</strong>에 <strong>Contributor</strong> 이상</td>
+</tr>
+<tr>
+<td>도구</td>
+<td><a href="https://learn.microsoft.com/cli/azure/install-azure-cli" target="_blank" rel="noopener">Azure CLI</a> 설치, Terraform <strong>1.6+</strong> 설치</td>
+</tr>
+<tr>
+<td>인증</td>
+<td><a href="../prerequisite/01-azure-access-terraform-auth/"><code>az login</code></a> 후 올바른 <strong>subscription</strong> 선택</td>
+</tr>
+<tr>
+<td>선행 Lab</td>
+<td><a href="../lab00-skeleton/">Lab 00 - Skeleton</a>으로 RG 연결 검증 권장</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="concept-mapping-official-lab-07">Concept Mapping (Official Lab 07)<a class="headerlink" href="#concept-mapping-official-lab-07" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>공식 Lab 07 주제</th>
+<th>이 모듈에서의 위치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage Account 프로비저닝</td>
+<td><code>storage.tf</code> — <code>azurerm_storage_account</code> (tier, replication)</td>
+</tr>
+<tr>
+<td>Blob 컨테이너 + Public Access</td>
+<td><code>storage.tf</code> — <code>web</code> container (<code>blob</code> access) + <code>index.html</code> 업로드</td>
+</tr>
+<tr>
+<td>Azure Files</td>
+<td><code>storage.tf</code> — <code>azurerm_storage_share</code> (SMB, quota)</td>
+</tr>
+<tr>
+<td>네트워크 액세스 제어</td>
+<td><code>network.tf</code> — VNet + Service Endpoint, <code>storage.tf</code> — <code>network_rules</code> (Allow/Deny)</td>
+</tr>
+<tr>
+<td>VNet 내부 접근 검증</td>
+<td><code>vm.tf</code> — VNet 내 VM에서 curl로 Blob 접근 (Service Endpoint 경유)</td>
+</tr>
+<tr>
+<td>SAS (Shared Access Signature)</td>
+<td>Terraform 범위 밖 — Portal/CLI로 직접 생성하여 검증</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="blob-vs-file-share">Blob vs File Share — 차이점<a class="headerlink" href="#blob-vs-file-share" title="Permanent link">&para;</a></h2>
+<p>Portal의 <strong>Storage Explorer</strong>에서 보면 Blob Container와 File Share 모두 <strong>디렉터리/파일</strong> 구조로 탐색할 수 있어서 비슷해 보입니다. 하지만 내부 동작은 다릅니다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th><strong>Blob Storage</strong></th>
+<th><strong>Azure Files (File Share)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>프로토콜</strong></td>
+<td>HTTP/HTTPS (REST API)</td>
+<td><strong>SMB</strong> / NFS / REST</td>
+</tr>
+<tr>
+<td><strong>저장 구조</strong></td>
+<td><strong>Flat namespace</strong> — "디렉터리"는 이름에 <code>/</code>가 포함된 blob (가상 경로)</td>
+<td><strong>실제 디렉터리 + 파일</strong> (POSIX 또는 SMB 시맨틱)</td>
+</tr>
+<tr>
+<td><strong>접근 방식</strong></td>
+<td>URL로 직접 접근 (public container 가능)</td>
+<td><strong>마운트</strong> (<code>mount -t cifs</code>, Windows 드라이브 매핑)</td>
+</tr>
+<tr>
+<td><strong>주 용도</strong></td>
+<td>정적 웹, 이미지, 로그, 백업, Data Lake</td>
+<td>VM 공유 폴더, 레거시 앱의 파일 시스템</td>
+</tr>
+<tr>
+<td><strong>디렉터리</strong></td>
+<td>존재하지 않음 — blob 이름이 <code>images/photo.jpg</code>이면 Explorer에서 <code>images/</code> 폴더처럼 표시될 뿐</td>
+<td>실제 디렉터리 생성/삭제 가능</td>
+</tr>
+<tr>
+<td><strong>Lock / 동시 접근</strong></td>
+<td>blob lease (단일 writer)</td>
+<td>SMB oplock, 다중 사용자 동시 접근</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Storage Explorer에서 확인</p>
+<p>Portal에서 <strong>Storage Explorer</strong> → <code>web</code> 컨테이너와 <code>share01</code> File Share를 각각 열어 보세요. 둘 다 파일 목록이 보이지만, Blob에는 실제 디렉터리 개념이 없고 <strong>가상 경로</strong>(<code>/</code>로 구분된 이름)만 있습니다.</p>
+</div>
+<hr />
+<h2 id="step-by-step">Step-by-Step<a class="headerlink" href="#step-by-step" title="Permanent link">&para;</a></h2>
+<p>Terraform 코드 위치: <strong><code>labs/terraform/lab07-manage-storage/</code></strong></p>
+<h3 id="1-prepare-variables">1) Prepare variables<a class="headerlink" href="#1-prepare-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>labs/terraform/lab07-manage-storage
+cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
+</code></pre></div>
+<p>에디터로 <code>terraform.tfvars</code>를 열고 다음을 설정합니다.</p>
+<ul>
+<li><strong><code>resource_group_name</code></strong> (필수) — 강사가 알려준 <strong>본인 RG</strong> 이름</li>
+</ul>
+<h3 id="2-login-to-azure">2) Login to Azure<a class="headerlink" href="#2-login-to-azure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
+az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>-o<span class="w"> </span>table
+</code></pre></div>
+<h3 id="3-initialize-terraform">3) Initialize Terraform<a class="headerlink" href="#3-initialize-terraform" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init
+</code></pre></div>
+<h3 id="4-plan">4) Plan<a class="headerlink" href="#4-plan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>plan
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title"><code>terraform plan</code>에서 볼 것</p>
+</div>
+<ul>
+<li><strong>추가될 리소스 수</strong> — 총 <strong>14개</strong> (VNet, Subnet, NSG, NSG Rule, NSG-Subnet, PIP, NIC, VM, Storage Account, Container, Blob, File Share, random_string, random_password)<ul>
+<li><strong>Storage Account 이름</strong> — <code>(known after apply)</code> 로 표시되며, <code>random_string</code>이 적용 후 확정됨</li>
+<li><strong><code>network_rules</code></strong> — <code>default_action = "Allow"</code>, <code>virtual_network_subnet_ids</code>에 <code>snet-vm</code> 서브넷 ID 포함</li>
+<li><strong><code>web</code> 컨테이너</strong> — <code>container_access_type = "blob"</code> (anonymous read)</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-apply">5) Apply<a class="headerlink" href="#5-apply" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>apply
+</code></pre></div>
+<p>프롬프트에 <strong><code>yes</code></strong>를 입력합니다.</p>
+<details class="example">
+<summary>예상 출력 (요약)</summary>
+<div class="highlight"><pre><span></span><code>Apply complete! Resources: 14 added, 0 changed, 0 destroyed.
+
+Outputs:
+file_share_name        = &quot;share01&quot;
+index_html_url         = &quot;https://staz104lab07xxxxxx.blob.core.windows.net/web/index.html&quot;
+location               = &quot;koreacentral&quot;
+network_default_action = &quot;Allow&quot;
+primary_access_key     = &lt;sensitive&gt;
+primary_blob_endpoint  = &quot;https://staz104lab07xxxxxx.blob.core.windows.net/&quot;
+resource_group_name    = &quot;rg-az104-student01&quot;
+storage_account_name   = &quot;staz104lab07xxxxxx&quot;
+vm_admin_password      = &lt;sensitive&gt;
+vm_admin_username      = &quot;azureuser&quot;
+vm_public_ip           = &quot;x.x.x.x&quot;
+vnet_name              = &quot;vnet-az104-lab07&quot;
+web_container_name     = &quot;web&quot;
+</code></pre></div>
+</details>
+<h3 id="6-check-outputs">6) Check outputs<a class="headerlink" href="#6-check-outputs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output
+terraform<span class="w"> </span>output<span class="w"> </span>index_html_url
+terraform<span class="w"> </span>output<span class="w"> </span>vm_public_ip
+</code></pre></div>
+<hr />
+<h2 id="blob-public-access">Blob Public Access 테스트<a class="headerlink" href="#blob-public-access" title="Permanent link">&para;</a></h2>
+<p>Terraform이 <code>web</code> 컨테이너에 <code>index.html</code>을 업로드했습니다. <code>container_access_type = "blob"</code>이므로 <strong>인증 없이 URL만으로</strong> 접근 가능합니다.</p>
+<h3 id="_1">브라우저에서 접근<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output<span class="w"> </span>index_html_url
+</code></pre></div>
+<p>출력된 URL을 <strong>브라우저</strong>에 붙여넣습니다.</p>
+<details class="example">
+<summary>예상 결과</summary>
+<p>브라우저에 "<strong>Hello from AZ-104 Lab 07!</strong>" 페이지가 표시됩니다.</p>
+</details>
+<h3 id="curl">curl로 확인<a class="headerlink" href="#curl" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">bash</label><label for="__tabbed_1_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>index_html_url<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/f</span> <span class="s2">&quot;tokens=*&quot;</span> <span class="nv">%a in (&#39;terraform output -raw index_html_url&#39;) do curl -s &quot;%</span>a<span class="s2">&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="network-access">Network Access 제한 테스트<a class="headerlink" href="#network-access" title="Permanent link">&para;</a></h2>
+<h3 id="1-deny">1단계: Deny로 전환<a class="headerlink" href="#1-deny" title="Permanent link">&para;</a></h3>
+<p><code>terraform.tfvars</code>에 다음을 추가합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="na">network_default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>plan<span class="w">    </span><span class="c1"># network_rules.default_action: &quot;Allow&quot; → &quot;Deny&quot; 변경 확인</span>
+terraform<span class="w"> </span>apply
+</code></pre></div>
+<h3 id="2">2단계: 공개 접근 차단 확인 (수강생 브라우저)<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p><strong>같은 URL</strong>을 브라우저에서 다시 접속합니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">bash</label><label for="__tabbed_2_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>index_html_url<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/f</span> <span class="s2">&quot;tokens=*&quot;</span> <span class="nv">%a in (&#39;terraform output -raw index_html_url&#39;) do curl -s -o NUL -w &quot;%%{http_code}&quot; &quot;%</span>a<span class="s2">&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<details class="example">
+<summary>예상 결과</summary>
+<p><div class="highlight"><pre><span></span><code>403
+</code></pre></div>
+HTTP <strong>403 Forbidden</strong> — 수강생 노트북의 공인 IP가 허용 목록에 없으므로 차단됩니다.</p>
+</details>
+<h3 id="3-vnet-vm-service-endpoint">3단계: VNet 내 VM에서 접근 확인 (Service Endpoint)<a class="headerlink" href="#3-vnet-vm-service-endpoint" title="Permanent link">&para;</a></h3>
+<p>VM에 SSH로 접속합니다. <strong>로컬 터미널</strong> 또는 <strong>Azure Portal Cloud Shell</strong>을 사용합니다.</p>
+<p><strong>방법 A — 로컬 터미널</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">bash</label><label for="__tabbed_3_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>azureuser@<span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>vm_public_ip<span class="k">)</span>
+<span class="c1"># 비밀번호: terraform output -raw vm_admin_password</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="k">/f</span> <span class="s2">&quot;tokens=*&quot;</span> <span class="nv">%a in (&#39;terraform output -raw vm_public_ip&#39;) do ssh azureuser@%</span>a
+REM 비밀번호: terraform output -raw vm_admin_password
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><strong>방법 B — Azure Cloud Shell (Bash)</strong></p>
+<p>로컬에서 SSH가 안 되는 경우 <strong>Azure Portal</strong> → 상단 <strong>Cloud Shell</strong> 아이콘 (&gt;_) → <strong>Bash</strong> 를 선택합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Cloud Shell에서 실행 (VM Public IP를 복사해서 입력)</span>
+ssh<span class="w"> </span>azureuser@&lt;VM_PUBLIC_IP&gt;
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Cloud Shell에서 비밀번호 입력</p>
+<p>Terraform output은 Cloud Shell에서 직접 실행할 수 없으므로, <strong>로컬 터미널</strong>에서 <code>terraform output -raw vm_admin_password</code>와 <code>terraform output -raw vm_public_ip</code>로 값을 먼저 복사한 뒤, Cloud Shell에 붙여넣으세요.</p>
+</div>
+<p>VM 안에서 같은 blob URL에 접근합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># VM 내부에서 실행</span>
+curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://&lt;storage_account_name&gt;.blob.core.windows.net/web/index.html&quot;</span>
+</code></pre></div>
+<details class="example">
+<summary>예상 결과</summary>
+<p><div class="highlight"><pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="p">&gt;&lt;</span><span class="nt">title</span><span class="p">&gt;</span>AZ-104 Lab 07<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello from AZ-104 Lab 07!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  ...
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div>
+HTTP <strong>200 OK</strong> — VM은 <code>snet-vm</code> 서브넷의 <strong>Service Endpoint</strong> 경유로 Storage에 접근하므로, <code>Deny</code> 규칙에도 불구하고 <strong>정상 접근</strong>됩니다.</p>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">핵심 포인트</p>
+<table>
+<thead>
+<tr>
+<th>접근 위치</th>
+<th><code>default_action = Allow</code></th>
+<th><code>default_action = Deny</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>수강생 브라우저</strong> (공인 IP)</td>
+<td>✓ 200</td>
+<td>✗ <strong>403</strong></td>
+</tr>
+<tr>
+<td><strong>VNet 내 VM</strong> (Service Endpoint)</td>
+<td>✓ 200</td>
+<td>✓ <strong>200</strong></td>
+</tr>
+</tbody>
+</table>
+<p>같은 Storage Account, 같은 URL인데 <strong>접근 경로에 따라 결과가 다릅니다</strong>. 이것이 Service Endpoint의 핵심입니다.</p>
+</div>
+<h3 id="4-allow">4단계: Allow로 복원<a class="headerlink" href="#4-allow" title="Permanent link">&para;</a></h3>
+<p><code>terraform.tfvars</code>에서 해당 줄을 삭제하거나 주석 처리합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># network_default_action = &quot;Deny&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>apply
+</code></pre></div>
+<p>브라우저에서 다시 접근하면 <strong><code>index.html</code>이 정상 표시</strong>됩니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">반영 지연</p>
+<p>Network rule 변경 후 실제 적용까지 <strong>최대 30초~1분</strong> 걸릴 수 있습니다. 즉시 되지 않으면 잠시 기다렸다 다시 시도하세요.</p>
+</div>
+<hr />
+<h2 id="verify-azure-portal">Verify - Azure Portal<a class="headerlink" href="#verify-azure-portal" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Resource Group</strong> → Storage Account, VM, VNet 등이 보이는지 확인합니다.</li>
+<li><strong>Storage Account</strong> → <strong>Containers</strong> → <code>web</code> (Blob access level: Blob) 확인.</li>
+<li><strong>Storage Account</strong> → <strong>Containers</strong> → <code>web</code> → <code>index.html</code>이 업로드되어 있는지 확인.</li>
+<li><strong>Storage Account</strong> → <strong>File shares</strong> → <code>share01</code>이 존재하는지, quota가 5 GiB인지 확인.</li>
+<li><strong>Storage Account</strong> → <strong>Networking</strong> → "Firewalls and virtual networks"에서 <strong><code>snet-vm</code></strong> 서브넷이 등록되어 있는지, <strong>default action</strong> 값 확인.</li>
+</ol>
+<h3 id="storage-explorer-blob-vs-file-share">Storage Explorer로 Blob vs File Share 비교<a class="headerlink" href="#storage-explorer-blob-vs-file-share" title="Permanent link">&para;</a></h3>
+<p>Portal에서 <strong>Storage Explorer (preview)</strong> 를 열고:</p>
+<ul>
+<li><strong>Blob Containers → web</strong> → <code>index.html</code> 파일 확인. 추가 파일 업로드, 가상 폴더 생성을 시도해 보세요.</li>
+<li><strong>File Shares → share01</strong> → 새 <strong>디렉터리</strong> 생성, 파일 업로드를 시도해 보세요.</li>
+</ul>
+<p>양쪽 다 "폴더/파일"처럼 보이지만, Blob에서 만든 "폴더"는 실제로는 <strong>이름에 <code>/</code>가 포함된 blob</strong>이고, File Share에서 만든 폴더는 <strong>실제 디렉터리</strong>입니다.</p>
+<div class="admonition tip">
+<p class="admonition-title">추가 확인</p>
+<p>Portal에서 더 자세히 확인하고 싶다면:</p>
+<ul>
+<li><strong>Storage Account</strong> → <strong>Access keys</strong> 에서 Key / Connection string 확인</li>
+<li><strong>Storage Account</strong> → <strong>Networking</strong> → <strong>Network Routing</strong> 탭에서 라우팅 설정 확인</li>
+<li><strong>Activity log</strong> 에서 최근 변경 이력 (network rule 변경 등) 확인</li>
+</ul>
+</div>
+<hr />
+<h2 id="cleanup-teardown">Cleanup (Teardown)<a class="headerlink" href="#cleanup-teardown" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>destroy
+</code></pre></div>
+<p>프롬프트에 <strong><code>yes</code></strong>를 입력합니다.</p>
+<div class="admonition danger">
+<p class="admonition-title">데이터 삭제</p>
+<p>Storage Account가 삭제되면 그 안의 <strong>모든 blob, file share 데이터가 영구 삭제</strong>됩니다.</p>
+</div>
+<hr />
+<h2 id="terraform-files">Terraform Files<a class="headerlink" href="#terraform-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>versions.tf</code></td>
+<td>Terraform / provider 버전 제약</td>
+</tr>
+<tr>
+<td><code>providers.tf</code></td>
+<td><code>azurerm</code> provider</td>
+</tr>
+<tr>
+<td><code>variables.tf</code></td>
+<td>prefix, RG, replication, network action, VM size 등</td>
+</tr>
+<tr>
+<td><code>main.tf</code></td>
+<td>RG data source, random_string, locals</td>
+</tr>
+<tr>
+<td><code>network.tf</code></td>
+<td>VNet, Subnet (snet-vm + Microsoft.Storage Service Endpoint)</td>
+</tr>
+<tr>
+<td><code>vm.tf</code></td>
+<td>Ubuntu VM, NIC, Public IP, NSG (SSH only), random_password</td>
+</tr>
+<tr>
+<td><code>storage.tf</code></td>
+<td>Storage Account, <code>web</code> Blob Container, <code>index.html</code> Blob, File Share</td>
+</tr>
+<tr>
+<td><code>outputs.tf</code></td>
+<td>Storage name/URL, VM IP/password, network action</td>
+</tr>
+<tr>
+<td><code>terraform.tfvars.example</code></td>
+<td>변수 예시 파일 (비밀 값 없음)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage Account 이름 충돌</td>
+<td>전역 고유 이름이어야 함</td>
+<td><code>random_string</code>이 자동 생성하므로 재시도</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailure</code> blob 업로드</td>
+<td>RBAC 권한 부족 또는 network rule 차단</td>
+<td><code>--auth-mode login</code> 사용, network rules 확인</td>
+</tr>
+<tr>
+<td>Service Endpoint 미동작</td>
+<td>Subnet에 endpoint 미설정</td>
+<td><code>az network vnet subnet show</code>로 <code>serviceEndpoints</code> 확인</td>
+</tr>
+<tr>
+<td>403 on public blob (Allow 상태)</td>
+<td><code>allow_nested_items_to_be_public = false</code></td>
+<td><code>storage.tf</code>에서 <code>true</code>로 변경 후 재apply</td>
+</tr>
+<tr>
+<td>Deny 전환 후에도 접근 가능</td>
+<td>Network rule 반영 지연 (최대 1분)</td>
+<td>30초~1분 후 재시도</td>
+</tr>
+<tr>
+<td>Allow 복원 후에도 차단</td>
+<td>브라우저 캐시 또는 반영 지연</td>
+<td>시크릿 탭으로 시도, 1분 대기</td>
+</tr>
+<tr>
+<td>VM SSH 접속 불가</td>
+<td>NSG rule 누락 또는 PIP 미할당</td>
+<td><code>az network nsg rule list</code>, <code>az vm list-ip-addresses</code> 확인</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cost-caution">Cost &amp; Caution<a class="headerlink" href="#cost-caution" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">실수 방지</p>
+<p><code>terraform.tfvars</code>의 <code>resource_group_name</code>이 <strong>반드시 본인 RG</strong>인지 확인한 뒤 <code>apply</code>하세요. Storage Account 삭제 시 데이터는 복구할 수 없습니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
