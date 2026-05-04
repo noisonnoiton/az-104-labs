@@ -1,4 +1,4 @@
-# Lab AKS — ACR + AKS Deployment
+# Lab 90 - ACR + AKS Deployment
 
 AKS 클러스터를 배포하고, 강사가 사전 생성한 **공유 ACR**에 연결(AcrPull)합니다.
 
