@@ -11,7 +11,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   location            = local.location
   dns_prefix          = var.prefix
   kubernetes_version  = var.kubernetes_version
-  node_resource_group = "rg-mc-${var.prefix}"
+  node_resource_group = "mc-${var.resource_group_name}"
   tags                = local.tags
 
   # System node pool
