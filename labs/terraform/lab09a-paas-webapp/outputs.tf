@@ -18,3 +18,8 @@ output "webapp_principal_id" {
   value       = azurerm_linux_web_app.this.identity[0].principal_id
   description = "Web App의 System Assigned Managed Identity principal ID"
 }
+
+output "name_suffix" {
+  value       = random_string.suffix.result
+  description = "Web App 이름에 붙은 random suffix (전역 고유성 보장용)"
+}
