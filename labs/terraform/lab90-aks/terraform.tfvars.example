@@ -8,7 +8,7 @@
 resource_group_name = "rg-az104-user-01"
 
 # 필수: 강사가 알려준 공유 ACR 이름
-acr_name = "az104acrXXXXXX"
+acr_name = "acrXXXXXX"
 
 # 선택
 # subscription_id         = ""
