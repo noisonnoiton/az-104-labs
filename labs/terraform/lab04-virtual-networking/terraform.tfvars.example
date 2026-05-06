@@ -5,7 +5,7 @@
 #==============================================================================
 
 # 필수: 강사가 알려준 본인 RG 이름
-resource_group_name = "rg-az104-user-01"
+resource_group_name = "rg-az104-student01"
 
 # 선택
 # subscription_id       = ""          # 비우면 az CLI 현재 구독

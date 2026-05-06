@@ -5,7 +5,7 @@
 #==============================================================================
 
 # 필수: 강사가 알려준 본인 RG 이름
-resource_group_name = "rg-az104-user-01"
+resource_group_name = "rg-az104-student01"
 
 # 필수: 강사가 알려준 공유 ACR 이름
 acr_name = "acrXXXXXX"
