@@ -1,8 +1,8 @@
 # ---------- 공유 ACR 참조 ----------
-data "azurerm_container_registry" "shared" {
-  name                = var.acr_name
-  resource_group_name = var.acr_resource_group_name
-}
+# data "azurerm_container_registry" "shared" {
+#   name                = var.acr_name
+#   resource_group_name = var.acr_resource_group_name
+# }
 
 # ---------- AKS 클러스터 ----------
 resource "azurerm_kubernetes_cluster" "this" {

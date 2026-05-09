@@ -31,12 +31,12 @@ output "aks_subnet_name" {
   value = azurerm_subnet.aks.name
 }
 
-output "acr_name" {
-  description = "연결된 공유 ACR 이름."
-  value       = data.azurerm_container_registry.shared.name
-}
+# output "acr_name" {
+#   description = "연결된 공유 ACR 이름."
+#   value       = data.azurerm_container_registry.shared.name
+# }
 
-output "acr_login_server" {
-  description = "ACR 로그인 서버."
-  value       = data.azurerm_container_registry.shared.login_server
-}
+# output "acr_login_server" {
+#   description = "ACR 로그인 서버."
+#   value       = data.azurerm_container_registry.shared.login_server
+# }

@@ -4,12 +4,16 @@ AKS 클러스터를 배포하고, 강사가 사전 생성한 **공유 ACR**에 �
 
 ## Resources
 
+`terraform apply` 로 생성되는 리소스: **4개**
+
 | Resource | Name / Description |
 | --- | --- |
 | VNet | `vnet-{prefix}` (10.50.0.0/16) |
 | Subnet | `snet-aks` (10.50.0.0/22) |
-| AKS Cluster | `aks-{prefix}` — Azure CNI Overlay, system + user node pool |
-| Role Assignment | AcrPull — AKS kubelet → shared ACR |
+| AKS Cluster | `aks-{prefix}` — Azure CNI Overlay, system node pool |
+| AKS Node Pool | `user` — user node pool |
+
+> **AcrPull 역할 할당**은 Terraform 코드에서 제외되어 있습니다. 강사가 `instructor-acr-role-assign.sh`로 별도 부여합니다.
 
 ## Prerequisites
 
