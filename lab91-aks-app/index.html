@@ -1,0 +1,2520 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AZ-104 Terraform Lab - onboarding docs">
+      
+      
+      
+        <link rel="canonical" href="https://noisonnoiton.github.io/az-104-labs/lab91-aks-app/">
+      
+      
+        <link rel="prev" href="../lab90-aks/">
+      
+      
+        <link rel="next" href="../lab92-aks-monitoring/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Lab 91 - AKS App Deploy - AZ-104 Labs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom-colors.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-91-aks-app-deploy-kustomize" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="AZ-104 Labs" class="md-header__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AZ-104 Labs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 91 - AKS App Deploy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../foundations/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../prerequisite/" class="md-tabs__link">
+          
+  
+  
+  Prerequisite
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../lab00-skeleton/" class="md-tabs__link">
+          
+  
+  
+  Terraform Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AZ-104 Labs" class="md-nav__button md-logo" aria-label="AZ-104 Labs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AZ-104 Labs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/noisonnoiton/az-104-labs" title="저장소로 이동" class="md-source" data-md-component="source" target="_blank" rel="noopener">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Introduction
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Curriculum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/01-iac-paradigms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC paradigms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02-terraform-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform intro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/03-terraform-auth-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth & syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/02b-terraform-hcl-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [참고] HCL block samples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations/04-kubernetes-essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [참고] Kubernetes essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisite
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prerequisite
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/01-azure-access-terraform-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Azure & Terraform auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/05-cloud-shell-vscode-web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [경로 A] Cloud Shell + VS Code Web
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/02-setup-windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [경로 B] Windows setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/03-setup-macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [경로 B] macOS setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/04-clone-repository/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [경로 B] Clone repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Terraform Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-skeleton/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skeleton (RG verify)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-virtual-networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 - Virtual Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-network-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 - Network Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-manage-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 - Manage Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-manage-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 - Manage VMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09a-paas-webapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09a - PaaS Web App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab90-aks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 90 - ACR + AKS Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 91 - AKS App Deploy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-services-namespace-awesome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Services (namespace: awesome)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-namespace-awesome-infra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure (namespace: awesome-infra)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        배포 구조 — Kustomize
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        매니페스트 저장소 Clone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) AKS 자격 증명 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ingress-ip-nipio-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) 매니페스트 준비 — Ingress IP 확인 및 nip.io host 설정
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2) 매니페스트 준비 — Ingress IP 확인 및 nip.io host 설정">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress-controller-external-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress Controller External IP 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingress-yaml-placeholder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress YAML의 placeholder 치환
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-mysql-rabbitmq-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) 인프라 배포 (MySQL, RabbitMQ, Redis)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) 애플리케이션 배포 (8개 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Pod 상태 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Ingress 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) 서비스 접근 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) 서비스 간 통신 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTel 계측 확인
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab92-aks-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 92 - AKS Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab99-aks-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Lab Cleanup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-services-namespace-awesome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Services (namespace: awesome)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-namespace-awesome-infra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure (namespace: awesome-infra)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        배포 구조 — Kustomize
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        매니페스트 저장소 Clone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) AKS 자격 증명 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ingress-ip-nipio-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) 매니페스트 준비 — Ingress IP 확인 및 nip.io host 설정
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2) 매니페스트 준비 — Ingress IP 확인 및 nip.io host 설정">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress-controller-external-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress Controller External IP 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingress-yaml-placeholder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress YAML의 placeholder 치환
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-mysql-rabbitmq-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) 인프라 배포 (MySQL, RabbitMQ, Redis)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) 애플리케이션 배포 (8개 서비스)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) Pod 상태 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Ingress 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) 서비스 접근 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) 서비스 간 통신 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-azure-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify - Azure Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTel 계측 확인
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-91-aks-app-deploy-kustomize">Lab 91 - AKS App Deploy (Kustomize)<a class="headerlink" href="#lab-91-aks-app-deploy-kustomize" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">목표</p>
+<p><a href="../lab90-aks/">Lab 90</a>에서 배포한 AKS 클러스터 위에 <strong>쇼핑몰 마이크로서비스</strong>(8개 앱 + 3개 인프라)를 <strong>Kustomize</strong>로 배포하고, 서비스 간 통신과 외부 접근을 검증합니다.</p>
+<p>핵심 체험:</p>
+<ol>
+<li><strong>Kustomize overlay</strong> — base manifest + cluster-specific overlay 구조 이해</li>
+<li><strong>Microservice 구조</strong> — API Gateway, BFF, 도메인 서비스, 메시지 큐 패턴</li>
+<li><strong>Kubernetes Service &amp; Ingress</strong> — LoadBalancer / Ingress를 통한 외부 노출</li>
+<li><strong>OpenTelemetry</strong> — 각 서비스에 OTel Java Agent가 자동 계측(traces, metrics, logs)</li>
+</ol>
+</div>
+<hr />
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjEwMzNweCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgc3R5bGU9IndpZHRoOjExMzlweDtoZWlnaHQ6MTAzM3B4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDExMzkgMTAzMyIgd2lkdGg9IjExMzlweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuNGJldGEyPz48ZGVmcy8+PGc+PCEtLWNsdXN0ZXIgYWtzLS0+PGcgY2xhc3M9ImNsdXN0ZXIiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcyIgZGF0YS1zb3VyY2UtbGluZT0iMjYiIGlkPSJlbnQwMDAzIj48cmVjdCBmaWxsPSIjRUZGNkZGIiBoZWlnaHQ9IjY2My42NyIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMTExOCIgeD0iNyIgeT0iMTA1LjEzOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjkzLjEwNTUiIHg9IjUxOS40NDczIiB5PSIxMjAuMTM0MiI+QUtTIENsdXN0ZXI8L3RleHQ+PC9nPjwhLS1jbHVzdGVyIG5zX2FwcC0tPjxnIGNsYXNzPSJjbHVzdGVyIiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfYXBwIiBkYXRhLXNvdXJjZS1saW5lPSIyOCIgaWQ9ImVudDAwMDQiPjxyZWN0IGZpbGw9IiNEQkVBRkUiIGhlaWdodD0iNDI4LjA4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI4MTAiIHg9IjI4MyIgeT0iMTU2LjEzOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE3My40NzU2IiB4PSI2MDEuMjYyMiIgeT0iMTcxLjEzNDIiPm5hbWVzcGFjZTogYXdlc29tZTwvdGV4dD48L2c+PCEtLWNsdXN0ZXIgbnNfaW5mcmEtLT48ZyBjbGFzcz0iY2x1c3RlciIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYWtzLm5zX2luZnJhIiBkYXRhLXNvdXJjZS1saW5lPSI0NSIgaWQ9ImVudDAwMTMiPjxyZWN0IGZpbGw9IiNEMUZBRTUiIGhlaWdodD0iMTAzLjU5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI0MjciIHg9IjQxMSIgeT0iNjQxLjIxOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjIxNi40OTQxIiB4PSI1MTYuMjUyOSIgeT0iNjU2LjIxNDIiPm5hbWVzcGFjZTogYXdlc29tZS1pbmZyYTwvdGV4dD48L2c+PCEtLWNsdXN0ZXIgbnNfb3RlbC0tPjxnIGNsYXNzPSJjbHVzdGVyIiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfb3RlbCIgZGF0YS1zb3VyY2UtbGluZT0iNTEiIGlkPSJlbnQwMDE3Ij48cmVjdCBmaWxsPSIjRkVGM0M3IiBoZWlnaHQ9IjEwMy41OSIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjIwIiB4PSIzMSIgeT0iMzM2LjAyOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjIwNC41MDM5IiB4PSIzOC43NDgiIHk9IjM1MS4wMjQyIj5uYW1lc3BhY2U6IG90ZWwtY29sbGVjdG9yPC90ZXh0PjwvZz48IS0tZW50aXR5IGJmZi0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcy5uc19hcHAuYmZmIiBkYXRhLXNvdXJjZS1saW5lPSIzMCIgaWQ9ImVudDAwMDUiPjxyZWN0IGZpbGw9IiNFOUQ1RkYiIGhlaWdodD0iNjguODkwNiIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iMjMwLjI1MjkiIHg9IjM0MC44NyIgeT0iMTk5LjEzOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNzAwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjIyLjIwMzEiIHg9IjM1MC44NyIgeT0iMjIyLjEzNDIiPmJmZjwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5My4xMjYiIHg9IjM1MC44NyIgeT0iMjM4LjQzMSI+KFVJL0Zyb250ZW5kKTwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyMTAuMjUyOSIgeD0iMzUwLjg3IiB5PSIyNTQuNzI3OSI+SW5ncmVzczogYXdlc29tZS4mbHQ7SVAmZ3Q7Lm5pcC5pbzwvdGV4dD48L2c+PCEtLWVudGl0eSBhcGlndy0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcy5uc19hcHAuYXBpZ3ciIGRhdGEtc291cmNlLWxpbmU9IjMyIiBpZD0iZW50MDAwNiI+PHJlY3QgZmlsbD0iI0M0QjVGRCIgaGVpZ2h0PSI2OC44OTA2IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIzMTYuNTQzIiB4PSI0ODkuNzMiIHk9IjM2Mi44NzkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5MS40MzA3IiB4PSI0OTkuNzMiIHk9IjM4NS44NzQyIj5hcGlnYXRld2F5PC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE2Ni44Mzc5IiB4PSI0OTkuNzMiIHk9IjQwMi4xNzEiPihTcHJpbmcgQ2xvdWQgR2F0ZXdheSk8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjk2LjU0MyIgeD0iNDk5LjczIiB5PSI0MTguNDY3OSI+SW5ncmVzczogYXdlc29tZS1hcGlnYXRld2F5LiZsdDtJUCZndDsubmlwLmlvPC90ZXh0PjwvZz48IS0tZW50aXR5IGFjY291bnQtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfYXBwLmFjY291bnQiIGRhdGEtc291cmNlLWxpbmU9IjM1IiBpZD0iZW50MDAwNyI+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI3NS43NzQ0IiB4PSI1NzkuMTEiIHk9IjUxNS43NjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI1NS43NzQ0IiB4PSI1ODkuMTEiIHk9IjUzOC43NjQyIj5hY2NvdW50PC90ZXh0PjwvZz48IS0tZW50aXR5IGNhcnQtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfYXBwLmNhcnQiIGRhdGEtc291cmNlLWxpbmU9IjM2IiBpZD0iZW50MDAwOCI+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI0Ny41MjE1IiB4PSI3MDUuMjQiIHk9IjUxNS43NjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNy41MjE1IiB4PSI3MTUuMjQiIHk9IjUzOC43NjQyIj5jYXJ0PC90ZXh0PjwvZz48IS0tZW50aXR5IG9yZGVyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYWtzLm5zX2FwcC5vcmRlciIgZGF0YS1zb3VyY2UtbGluZT0iMzciIGlkPSJlbnQwMDA5Ij48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjU3LjU3NzEiIHg9IjgwMy4yMSIgeT0iNTE1Ljc2OSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM3LjU3NzEiIHg9IjgxMy4yMSIgeT0iNTM4Ljc2NDIiPm9yZGVyPC90ZXh0PjwvZz48IS0tZW50aXR5IHBheW1lbnQtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfYXBwLnBheW1lbnQiIGRhdGEtc291cmNlLWxpbmU9IjM4IiBpZD0iZW50MDAxMCI+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI4Mi4zNjQzIiB4PSIzMjIuODIiIHk9IjUxNS43NjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2Mi4zNjQzIiB4PSIzMzIuODIiIHk9IjUzOC43NjQyIj5wYXltZW50PC90ZXh0PjwvZz48IS0tZW50aXR5IHByb2R1Y3QtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfYXBwLnByb2R1Y3QiIGRhdGEtc291cmNlLWxpbmU9IjM5IiBpZD0iZW50MDAxMSI+PHJlY3QgZmlsbD0iI0JGREJGRSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSI3NC4xNTQzIiB4PSI0NTQuOTIiIHk9IjUxNS43NjkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI1NC4xNTQzIiB4PSI0NjQuOTIiIHk9IjUzOC43NjQyIj5wcm9kdWN0PC90ZXh0PjwvZz48IS0tZW50aXR5IGNvbnN1bWVyLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYWtzLm5zX2FwcC5jb25zdW1lciIgZGF0YS1zb3VyY2UtbGluZT0iNDIiIGlkPSJlbnQwMDEyIj48cmVjdCBmaWxsPSIjQkZEQkZFIiBoZWlnaHQ9IjUyLjU5MzgiIHJ4PSI0IiByeT0iNCIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoyOyIgd2lkdGg9IjE1OC4zNzMiIHg9IjkxMC44MSIgeT0iNTA3LjYxOSIvPjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEzOC4zNzMiIHg9IjkyMC44MSIgeT0iNTMwLjYxNDIiPnJhYmJpdG1xLWNvbnN1bWVyPC90ZXh0Pjx0ZXh0IGZpbGw9IiMxRTNBNUYiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEzNi43MzkzIiB4PSI5MjAuODEiIHk9IjU0Ni45MTEiPihTYWdhIG9yY2hlc3RyYXRvcik8L3RleHQ+PC9nPjwhLS1lbnRpdHkgbXlzcWwtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfaW5mcmEubXlzcWwiIGRhdGEtc291cmNlLWxpbmU9IjQ2IiBpZD0iZW50MDAxNCI+PHJlY3QgZmlsbD0iI0ZERTY4QSIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxMDguNjYyMSIgeD0iNTYxLjY3IiB5PSI2NzYuMjE5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNDguMDcwMyIgeD0iNTcxLjY3IiB5PSI2OTkuMjE0MiI+TXlTUUw8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODguNjYyMSIgeD0iNTcxLjY3IiB5PSI3MTUuNTExIj4oU3RhdGVmdWxTZXQpPC90ZXh0PjwvZz48IS0tZW50aXR5IHJlZGlzLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYWtzLm5zX2luZnJhLnJlZGlzIiBkYXRhLXNvdXJjZS1saW5lPSI0NyIgaWQ9ImVudDAwMTUiPjxyZWN0IGZpbGw9IiNGREU2OEEiIGhlaWdodD0iNTIuNTkzOCIgcng9IjQiIHJ5PSI0IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjI7IiB3aWR0aD0iODQuMzM5OCIgeD0iNDI2LjgzIiB5PSI2NzYuMjE5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzguNDExMSIgeD0iNDM2LjgzIiB5PSI2OTkuMjE0MiI+UmVkaXM8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjQuMzM5OCIgeD0iNDM2LjgzIiB5PSI3MTUuNTExIj4oU2Vzc2lvbik8L3RleHQ+PC9nPjwhLS1lbnRpdHkgcmFiYml0bXEtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJha3MubnNfaW5mcmEucmFiYml0bXEiIGRhdGEtc291cmNlLWxpbmU9IjQ4IiBpZD0iZW50MDAxNiI+PHJlY3QgZmlsbD0iI0ZERTY4QSIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxMDEuMjUyIiB4PSI3MjAuMzciIHk9IjY3Ni4yMTkiLz48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2OC41NTc2IiB4PSI3MzAuMzciIHk9IjY5OS4yMTQyIj5SYWJiaXRNUTwvdGV4dD48dGV4dCBmaWxsPSIjMUUzQTVGIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4MS4yNTIiIHg9IjczMC4zNyIgeT0iNzE1LjUxMSI+KEV2ZW50IEJ1cyk8L3RleHQ+PC9nPjwhLS1lbnRpdHkgb3RlbC0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtcXVhbGlmaWVkLW5hbWU9ImFrcy5uc19vdGVsLm90ZWwiIGRhdGEtc291cmNlLWxpbmU9IjUyIiBpZD0iZW50MDAxOCI+PHJlY3QgZmlsbD0iI0ZFRjNDNyIgaGVpZ2h0PSI1Mi41OTM4IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MjsiIHdpZHRoPSIxMTguNzY1NiIgeD0iMTAyLjYyIiB5PSIzNzEuMDI5Ii8+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iOTguNzY1NiIgeD0iMTEyLjYyIiB5PSIzOTQuMDI0MiI+T1RlbCBDb2xsZWN0b3I8L3RleHQ+PHRleHQgZmlsbD0iIzFFM0E1RiIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNzYuMTc5NyIgeD0iMTEyLjYyIiB5PSI0MTAuMzIxIj4ob3RlbC1hcHBzKTwvdGV4dD48L2c+PCEtLWVudGl0eSBpbmV0LS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iaW5ldCIgZGF0YS1zb3VyY2UtbGluZT0iMjQiIGlkPSJlbnQwMDAyIj48cGF0aCBkPSJNNTMwLjg1MTgsMTQuNzE5NyBDNTMzLjk0NzUsOS42ODU2IDUzNy44NzYxLDkuNDIwNCA1NDEuNjgzNSwxMy45MTAzIEM1NDQuNzkxNSw3LjczODQgNTQ5LjEzNTgsNy44MzkxIDU1My4zNzc1LDEyLjcwOTggQzU1Ni4yOTM1LDcuMzg3MiA1NjAuNTYxMyw2LjkwOTcgNTY0LjE0MTMsMTIuMDI1MSBDNTY3Ljg4OTgsNy4xMDA3IDU3MS43NDY3LDYgNTc1LjczNCwxMS43NjYxIEM1ODAuNzc3Miw2LjUwMjcgNTg1LjAwODIsNi42NTE0IDU4Ny44NTA3LDEzLjg5NzcgQzU5MS45MDgzLDguNzMwMiA1OTYuNTY2MSw5LjAwNDcgNjAwLjI1MjUsMTQuMzM2MiBDNjA3LjU5MDQsMTcuMTc1NiA2MDkuMzI3NywyNC41MzE3IDYwMy4wMTI5LDI5LjgwNzEgQzYwOC44MTc1LDM2LjIwODcgNjA4LjY2Myw0MS4yOTI0IDYwMC42NjcsNDUuNjUwNiBDNTk4LjcxMjgsNTEuODExMiA1OTMuMTc5LDUyLjIxOTIgNTg5LjQzMDIsNDcuNTA0OSBDNTg2LjQ5MDQsNTUuNzc4MSA1ODIuMDIzMSw1Ni44MjAyIDU3NS44OTkyLDUwLjQ0NjQgQzU3NC45NjY4LDU2LjE2MjcgNTcwLjI3MzQsNTguMzQ1NiA1NjUuMzg1NCw1NS4wNzMyIEM1NjAuNzg3Myw1OS4yNzEzIDU1NS41MDQzLDU4LjczMTUgNTUzLjU0MjEsNTIuMTcxNCBDNTQ3LjAyMjMsNTcuMDA2OSA1NDMuNzk3Miw1NC4zNzI4IDU0MS41ODk5LDQ3LjY5NDYgQzUzNy4zODE2LDUyLjE1MDIgNTMyLjMxNDMsNTEuNjgxOCA1MjkuNjQyNyw0NS45MDExIEM1MTkuOTg0Nyw0NC45Mjg0IDUxNi43NjM4LDM3LjcwNDkgNTIzLjM1OTksMzAuMjE5OSBDNTE3LjI0MjksMjEuMjM3NiA1MjAuMzM1NywxNS42NjI1IDUzMC44NTE4LDE0LjcxOTciIGZpbGw9IiNGMUY1RjkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjU1LjgzNTkiIHg9IjUzNi4wOCIgeT0iMzMuODM0MiI+SW50ZXJuZXQ8L3RleHQ+PC9nPjwhLS1saW5rIGluZXQgdG8gYmZmLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDIiIGRhdGEtZW50aXR5LTI9ImVudDAwMDUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI1NyIgaWQ9ImxuazE5Ij48cGF0aCBkPSJNNTUyLjAzLDUyLjQzOSBDNTMzLjA4LDg3Ljk4OSA0OTguODkyMSwxNTIuMTI0MiA0NzYuNzYyMSwxOTMuNjQ0MiIgZmlsbD0ibm9uZSIgaWQ9ImluZXQtdG8tYmZmIiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzAwNzhENCIgcG9pbnRzPSI0NzMuOTQsMTk4LjkzOSw0ODEuNzAzMSwxOTIuODc4Miw0NzYuMjkxOCwxOTQuNTI2Nyw0NzQuNjQzMywxODkuMTE1Myw0NzMuOTQsMTk4LjkzOSIgc3R5bGU9InN0cm9rZTojMDA3OEQ0O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQ3LjIxMzkiIHg9IjU0MSIgeT0iODUuMjA1OSI+SW5ncmVzczwvdGV4dD48L2c+PCEtLWxpbmsgaW5ldCB0byBhcGlndy0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDAyIiBkYXRhLWVudGl0eS0yPSJlbnQwMDA2IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNTgiIGlkPSJsbmsyMCI+PHBhdGggZD0iTTU4My44LDUyLjUzOSBDNTkyLjYsNjIuNTY5IDYwMSw3Mi4xMzkgNjAxLDcyLjEzOSBDNjAxLDcyLjEzOSA2MzAuMjA5NywyNzMuNTgxMSA2NDIuMjM5NywzNTYuNjExMSIgZmlsbD0ibm9uZSIgaWQ9ImluZXQtdG8tYXBpZ3ciIHN0eWxlPSJzdHJva2U6IzAwNzhENDtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMDA3OEQ0IiBwb2ludHM9IjY0My4xLDM2Mi41NDksNjQ1Ljc2ODIsMzUzLjA2ODUsNjQyLjM4MywzNTcuNjAwNyw2MzcuODUwOCwzNTQuMjE1Niw2NDMuMSwzNjIuNTQ5IiBzdHlsZT0ic3Ryb2tlOiMwMDc4RDQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNDcuMjEzOSIgeD0iNjMwIiB5PSIyMzguMTQ1OSI+SW5ncmVzczwvdGV4dD48L2c+PCEtLWxpbmsgYmZmIHRvIGFwaWd3LS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDUiIGRhdGEtZW50aXR5LTI9ImVudDAwMDYiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI2MSIgaWQ9ImxuazIxIj48cGF0aCBkPSJNNDk2LjI1LDI2OC40ODkgQzUyOS4wMiwyOTYuMDg5IDU3MC40NjEzLDMzMS4wMDMzIDYwMy4yMTEzLDM1OC41OTMzIiBmaWxsPSJub25lIiBpZD0iYmZmLXRvLWFwaWd3IiBzdHlsZT0ic3Ryb2tlOiM3QzNBRUQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzdDM0FFRCIgcG9pbnRzPSI2MDcuOCwzNjIuNDU5LDYwMy40OTQxLDM1My42MDEzLDYwMy45NzYxLDM1OS4yMzc2LDU5OC4zMzk4LDM1OS43MTk2LDYwNy44LDM2Mi40NTkiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgYXBpZ3cgdG8gYWNjb3VudC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA2IiBkYXRhLWVudGl0eS0yPSJlbnQwMDA3IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNjMiIGlkPSJsbmsyMiI+PHBhdGggZD0iTTY0MC4yNiw0MzEuOTM5IEM2MzQuMTYsNDU4LjQxOSA2MjcuMjQ0Nyw0ODguNDExNyA2MjIuMzk0Nyw1MDkuNTAxNyIgZmlsbD0ibm9uZSIgaWQ9ImFwaWd3LXRvLWFjY291bnQiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjN0MzQUVEIiBwb2ludHM9IjYyMS4wNSw1MTUuMzQ5LDYyNi45NjUzLDUwNy40NzQ1LDYyMi4xNzA2LDUxMC40NzYyLDYxOS4xNjg4LDUwNS42ODE1LDYyMS4wNSw1MTUuMzQ5IiBzdHlsZT0ic3Ryb2tlOiM3QzNBRUQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIGFwaWd3IHRvIGNhcnQtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNiIgZGF0YS1lbnRpdHktMj0iZW50MDAwOCIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjY0IiBpZD0ibG5rMjMiPjxwYXRoIGQ9Ik02NjguMjMsNDMxLjkzOSBDNjg0LjE2LDQ1OC40MTkgNzAyLjYzNDgsNDg5LjExOSA3MTUuMzM0OCw1MTAuMjA5IiBmaWxsPSJub25lIiBpZD0iYXBpZ3ctdG8tY2FydCIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM3QzNBRUQiIHBvaW50cz0iNzE4LjQzLDUxNS4zNDksNzE3LjIxMzgsNTA1LjU3NTYsNzE1Ljg1MDcsNTExLjA2NTcsNzEwLjM2MDUsNTA5LjcwMjUsNzE4LjQzLDUxNS4zNDkiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgYXBpZ3cgdG8gb3JkZXItLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNiIgZGF0YS1lbnRpdHktMj0iZW50MDAwOSIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjY1IiBpZD0ibG5rMjQiPjxwYXRoIGQ9Ik02OTMuOTYsNDMxLjkzOSBDNzMwLjE1LDQ1OC40MTkgNzc0LjMwNzQsNDkwLjcxNjUgODAzLjEzNzQsNTExLjgwNjUiIGZpbGw9Im5vbmUiIGlkPSJhcGlndy10by1vcmRlciIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM3QzNBRUQiIHBvaW50cz0iODA3Ljk4LDUxNS4zNDksODAzLjA3NzgsNTA2LjgwNjksODAzLjk0NDUsNTEyLjM5Nyw3OTguMzU0NCw1MTMuMjYzNyw4MDcuOTgsNTE1LjM0OSIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBhcGlndyB0byBwYXltZW50LS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDYiIGRhdGEtZW50aXR5LTI9ImVudDAwMTAiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI2NiIgaWQ9ImxuazI1Ij48cGF0aCBkPSJNNTc2LjcsNDMyLjExOSBDNTIwLjg0LDQ1OC41ODkgNDUwLjc5Miw0OTEuNzg5NyA0MDYuMzkyLDUxMi44Mjk3IiBmaWxsPSJub25lIiBpZD0iYXBpZ3ctdG8tcGF5bWVudCIgc3R5bGU9InN0cm9rZTojN0MzQUVEO3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiM3QzNBRUQiIHBvaW50cz0iNDAwLjk3LDUxNS4zOTksNDEwLjgxNTksNTE1LjE1OTcsNDA1LjQ4ODQsNTEzLjI1NzksNDA3LjM5MDEsNTA3LjkzMDMsNDAwLjk3LDUxNS4zOTkiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgYXBpZ3cgdG8gcHJvZHVjdC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA2IiBkYXRhLWVudGl0eS0yPSJlbnQwMDExIiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNjciIGlkPSJsbmsyNiI+PHBhdGggZD0iTTYwOS4wNCw0MzEuOTM5IEM1NzguMzUsNDU4LjQxOSA1NDEuMzUzMyw0OTAuMzQwMSA1MTYuOTAzMyw1MTEuNDMwMSIgZmlsbD0ibm9uZSIgaWQ9ImFwaWd3LXRvLXByb2R1Y3QiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjN0MzQUVEIiBwb2ludHM9IjUxMi4zNiw1MTUuMzQ5LDUyMS43ODc2LDUxMi40OTk1LDUxNi4xNDYxLDUxMi4wODMyLDUxNi41NjIzLDUwNi40NDE3LDUxMi4zNiw1MTUuMzQ5IiBzdHlsZT0ic3Ryb2tlOiM3QzNBRUQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1yZXZlcnNlIGxpbmsgYXBpZ3cgdG8gY29uc3VtZXItLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNiIgZGF0YS1lbnRpdHktMj0iZW50MDAxMiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjcwIiBpZD0ibG5rMjgiPjxwYXRoIGQ9Ik03MzkuNDQzMyw0MzQuMzE2MSBDNzk4LjYwMzMsNDU3LjU5NjEgODcwLjQ0LDQ4NS44NjkgOTI0LjYxLDUwNy4xODkiIGZpbGw9Im5vbmUiIGlkPSJhcGlndy1iYWNrdG8tY29uc3VtZXIiIHN0eWxlPSJzdHJva2U6IzdDM0FFRDtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjN0MzQUVEIiBwb2ludHM9IjczMy44Niw0MzIuMTE5LDc0MC43NzAyLDQzOS4xMzY4LDczOC41MTI3LDQzMy45NDk5LDc0My42OTk2LDQzMS42OTI1LDczMy44Niw0MzIuMTE5IiBzdHlsZT0ic3Ryb2tlOiM3QzNBRUQ7c3Ryb2tlLXdpZHRoOjE7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzAuOTU3NSIgeD0iODgxLjEzNyIgeT0iNDY4LjY4NTkiPnNhZ2E8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTMuMjMxNCIgeD0iODcwIiB5PSI0ODMuODE4OCI+Y2FsbGJhY2s8L3RleHQ+PC9nPjwhLS1saW5rIGFjY291bnQgdG8gbXlzcWwtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNyIgZGF0YS1lbnRpdHktMj0iZW50MDAxNCIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjczIiBpZD0ibG5rMjkiPjxwYXRoIGQ9Ik02MTMuNjgsNTUyLjI4OSBDNjA5LjU0LDU3My45NTkgNjAzLDYwOC4yMTkgNjAzLDYwOC4yMTkgQzYwMyw2MDguMjE5IDYwMyw2MjUuMjE5IDYwMyw2MjUuMjE5IEM2MDMsNjI1LjIxOSA2MDYuODgyOSw2NDcuOTk0MiA2MTAuNjYyOSw2NzAuMTk0MiIgZmlsbD0ibm9uZSIgaWQ9ImFjY291bnQtdG8tbXlzcWwiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMDU5NjY5IiBwb2ludHM9IjYxMS42Nyw2NzYuMTA5LDYxNC4xMDI2LDY2Ni41NjUzLDYxMC44MzA3LDY3MS4xOCw2MDYuMjE2MSw2NjcuOTA4Miw2MTEuNjcsNjc2LjEwOSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBjYXJ0IHRvIG15c3FsLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDgiIGRhdGEtZW50aXR5LTI9ImVudDAwMTQiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI3NCIgaWQ9ImxuazMwIj48cGF0aCBkPSJNNzI1LjM0LDU1Mi4zMjkgQzcxOS44Miw1NzguNTY5IDcxMCw2MjUuMjE5IDcxMCw2MjUuMjE5IEM3MTAsNjI1LjIxOSA2OTUsNjMzLjIxOSA2OTUsNjMzLjIxOSBDNjk1LDYzMy4yMTkgNjcyLjQxODcsNjUyLjczNDcgNjQ5Ljk1ODcsNjcyLjE1NDciIGZpbGw9Im5vbmUiIGlkPSJjYXJ0LXRvLW15c3FsIiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzA1OTY2OSIgcG9pbnRzPSI2NDUuNDIsNjc2LjA3OSw2NTQuODQ0Miw2NzMuMjE4Myw2NDkuMjAyMiw2NzIuODA4OCw2NDkuNjExOCw2NjcuMTY2Nyw2NDUuNDIsNjc2LjA3OSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBvcmRlciB0byBteXNxbC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA5IiBkYXRhLWVudGl0eS0yPSJlbnQwMDE0IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNzUiIGlkPSJsbmszMSI+PHBhdGggZD0iTTgzMS4wNCw1NTIuMzI5IEM4MjkuNTgsNTc4LjU2OSA4MjcsNjI1LjIxOSA4MjcsNjI1LjIxOSBDODI3LDYyNS4yMTkgNjk1LDYzMy4yMTkgNjk1LDYzMy4yMTkgQzY5NSw2MzMuMjE5IDY3Mi40MTg3LDY1Mi43MzQ3IDY0OS45NTg3LDY3Mi4xNTQ3IiBmaWxsPSJub25lIiBpZD0ib3JkZXItdG8tbXlzcWwiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMDU5NjY5IiBwb2ludHM9IjY0NS40Miw2NzYuMDc5LDY1NC44NDQyLDY3My4yMTgzLDY0OS4yMDIyLDY3Mi44MDg4LDY0OS42MTE4LDY2Ny4xNjY3LDY0NS40Miw2NzYuMDc5IiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIHBheW1lbnQgdG8gbXlzcWwtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAxMCIgZGF0YS1lbnRpdHktMj0iZW50MDAxNCIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9Ijc2IiBpZD0ibG5rMzIiPjxwYXRoIGQ9Ik0zNjQuOTYsNTUyLjMyOSBDMzY2LjQyLDU3OC41NjkgMzY5LDYyNS4yMTkgMzY5LDYyNS4yMTkgQzM2OSw2MjUuMjE5IDUzNiw2MzMuMjE5IDUzNiw2MzMuMjE5IEM1MzYsNjMzLjIxOSA1NTguOTA3NCw2NTIuNzYyNiA1ODEuNjQ3NCw2NzIuMTgyNiIgZmlsbD0ibm9uZSIgaWQ9InBheW1lbnQtdG8tbXlzcWwiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMDU5NjY5IiBwb2ludHM9IjU4Ni4yMSw2NzYuMDc5LDU4MS45NjM3LDY2Ny4xOTI2LDU4Mi40MDc4LDY3Mi44MzIsNTc2Ljc2ODQsNjczLjI3NjEsNTg2LjIxLDY3Ni4wNzkiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgcHJvZHVjdCB0byBteXNxbC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDExIiBkYXRhLWVudGl0eS0yPSJlbnQwMDE0IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNzciIGlkPSJsbmszMyI+PHBhdGggZD0iTTQ5MC41OCw1NTIuMjg5IEM0ODguOCw1NzMuOTU5IDQ4Niw2MDguMjE5IDQ4Niw2MDguMjE5IEM0ODYsNjA4LjIxOSA0ODYsNjI1LjIxOSA0ODYsNjI1LjIxOSBDNDg2LDYyNS4yMTkgNTM2LDYzMy4yMTkgNTM2LDYzMy4yMTkgQzUzNiw2MzMuMjE5IDU1OC45MDc0LDY1Mi43NjI2IDU4MS42NDc0LDY3Mi4xODI2IiBmaWxsPSJub25lIiBpZD0icHJvZHVjdC10by1teXNxbCIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMwNTk2NjkiIHBvaW50cz0iNTg2LjIxLDY3Ni4wNzksNTgxLjk2MzcsNjY3LjE5MjYsNTgyLjQwNzgsNjcyLjgzMiw1NzYuNzY4NCw2NzMuMjc2MSw1ODYuMjEsNjc2LjA3OSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBhY2NvdW50IHRvIHJlZGlzLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDciIGRhdGEtZW50aXR5LTI9ImVudDAwMTUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI4MCIgaWQ9ImxuazM0Ij48cGF0aCBkPSJNNjExLjAyLDU1Mi4zMjkgQzYwMi4wMSw1NzguNTY5IDU4Niw2MjUuMjE5IDU4Niw2MjUuMjE5IEM1ODYsNjI1LjIxOSA1MzcsNjMzLjIxOSA1MzcsNjMzLjIxOSBDNTM3LDYzMy4yMTkgNTE3Ljg4MjgsNjUyLjQwNjYgNDk4LjU1MjgsNjcxLjgyNjYiIGZpbGw9Im5vbmUiIGlkPSJhY2NvdW50LXRvLXJlZGlzIiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzA1OTY2OSIgcG9pbnRzPSI0OTQuMzIsNjc2LjA3OSw1MDMuNTA0Miw2NzIuNTIyMiw0OTcuODQ3Myw2NzIuNTM1Myw0OTcuODM0Miw2NjYuODc4NSw0OTQuMzIsNjc2LjA3OSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBjYXJ0IHRvIHJlZGlzLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDgiIGRhdGEtZW50aXR5LTI9ImVudDAwMTUiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI4MSIgaWQ9ImxuazM1Ij48cGF0aCBkPSJNNzIzLjk5LDU1Mi4zMjkgQzcxNi40Myw1NzguNTY5IDcwMyw2MjUuMjE5IDcwMyw2MjUuMjE5IEM3MDMsNjI1LjIxOSA1MzcsNjMzLjIxOSA1MzcsNjMzLjIxOSBDNTM3LDYzMy4yMTkgNTE3Ljg4MjgsNjUyLjQwNjYgNDk4LjU1MjgsNjcxLjgyNjYiIGZpbGw9Im5vbmUiIGlkPSJjYXJ0LXRvLXJlZGlzIiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzA1OTY2OSIgcG9pbnRzPSI0OTQuMzIsNjc2LjA3OSw1MDMuNTA0Miw2NzIuNTIyMiw0OTcuODQ3Myw2NzIuNTM1Myw0OTcuODM0Miw2NjYuODc4NSw0OTQuMzIsNjc2LjA3OSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBvcmRlciB0byByZWRpcy0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDA5IiBkYXRhLWVudGl0eS0yPSJlbnQwMDE1IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iODIiIGlkPSJsbmszNiI+PHBhdGggZD0iTTgyNy45NSw1NTIuMzI5IEM4MjEuODUsNTc4LjU2OSA4MTEsNjI1LjIxOSA4MTEsNjI1LjIxOSBDODExLDYyNS4yMTkgNTM3LDYzMy4yMTkgNTM3LDYzMy4yMTkgQzUzNyw2MzMuMjE5IDUxNy44ODI4LDY1Mi40MDY2IDQ5OC41NTI4LDY3MS44MjY2IiBmaWxsPSJub25lIiBpZD0ib3JkZXItdG8tcmVkaXMiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTtzdHJva2UtZGFzaGFycmF5OjcsNzsiLz48cG9seWdvbiBmaWxsPSIjMDU5NjY5IiBwb2ludHM9IjQ5NC4zMiw2NzYuMDc5LDUwMy41MDQyLDY3Mi41MjIyLDQ5Ny44NDczLDY3Mi41MzUzLDQ5Ny44MzQyLDY2Ni44Nzg1LDQ5NC4zMiw2NzYuMDc5IiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7Ii8+PC9nPjwhLS1saW5rIHBheW1lbnQgdG8gcmVkaXMtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAxMCIgZGF0YS1lbnRpdHktMj0iZW50MDAxNSIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjgzIiBpZD0ibG5rMzciPjxwYXRoIGQ9Ik0zNjMuNTMsNTUyLjI4OSBDMzYyLjkzLDU3My45NTkgMzYyLDYwOC4yMTkgMzYyLDYwOC4yMTkgQzM2Miw2MDguMjE5IDM2Miw2MjUuMjE5IDM2Miw2MjUuMjE5IEMzNjIsNjI1LjIxOSAzOTcuMTA1NCw2NTAuMjQ0NyA0MjguMTg1NCw2NzIuNDE0NyIgZmlsbD0ibm9uZSIgaWQ9InBheW1lbnQtdG8tcmVkaXMiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTtzdHJva2UtZGFzaGFycmF5OjcsNzsiLz48cG9seWdvbiBmaWxsPSIjMDU5NjY5IiBwb2ludHM9IjQzMy4wNyw2NzUuODk5LDQyOC4wNjU5LDY2Ny40MTYyLDQyOC45OTk1LDY3Mi45OTU1LDQyMy40MjAyLDY3My45MjksNDMzLjA3LDY3NS44OTkiIHN0eWxlPSJzdHJva2U6IzA1OTY2OTtzdHJva2Utd2lkdGg6MTsiLz48L2c+PCEtLWxpbmsgcHJvZHVjdCB0byByZWRpcy0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDExIiBkYXRhLWVudGl0eS0yPSJlbnQwMDE1IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iODQiIGlkPSJsbmszOCI+PHBhdGggZD0iTTQ4OC45Miw1NTIuMjg5IEM0ODUuMDcsNTczLjk1OSA0NzksNjA4LjIxOSA0NzksNjA4LjIxOSBDNDc5LDYwOC4yMTkgNDc1LjMyOTQsNjQyLjQzMzIgNDcyLjM2OTQsNjcwLjA1MzIiIGZpbGw9Im5vbmUiIGlkPSJwcm9kdWN0LXRvLXJlZGlzIiBzdHlsZT0ic3Ryb2tlOiMwNTk2Njk7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LDc7Ii8+PHBvbHlnb24gZmlsbD0iIzA1OTY2OSIgcG9pbnRzPSI0NzEuNzMsNjc2LjAxOSw0NzYuNjY2Myw2NjcuNDk2NSw0NzIuMjYyOCw2NzEuMDQ3NSw0NjguNzExOCw2NjYuNjQ0MSw0NzEuNzMsNjc2LjAxOSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBiZmYgdG8gcmVkaXMtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwNSIgZGF0YS1lbnRpdHktMj0iZW50MDAxNSIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9Ijg1IiBpZD0ibG5rMzkiPjxwYXRoIGQ9Ik00MzcuMDksMjY4LjMzOSBDMzk2LjE1LDM0MS4zODkgMzAzLDUwNy42MTkgMzAzLDUwNy42MTkgQzMwMyw1MDcuNjE5IDMwMyw2MDAuMjE5IDMwMyw2MDAuMjE5IEMzMDMsNjAwLjIxOSAzNzIuODE4NSw2NDIuODEzMyA0MjEuOTg4NSw2NzIuODIzMyIgZmlsbD0ibm9uZSIgaWQ9ImJmZi10by1yZWRpcyIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxO3N0cm9rZS1kYXNoYXJyYXk6Nyw3OyIvPjxwb2x5Z29uIGZpbGw9IiMwNTk2NjkiIHBvaW50cz0iNDI3LjExLDY3NS45NDksNDIxLjUxMTcsNjY3Ljg0Niw0MjIuODQyMSw2NzMuMzQ0Miw0MTcuMzQzOSw2NzQuNjc0Nyw0MjcuMTEsNjc1Ljk0OSIgc3R5bGU9InN0cm9rZTojMDU5NjY5O3N0cm9rZS13aWR0aDoxOyIvPjwvZz48IS0tbGluayBhY2NvdW50IHRvIHJhYmJpdG1xLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDciIGRhdGEtZW50aXR5LTI9ImVudDAwMTYiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI4OCIgaWQ9ImxuazQwIj48cGF0aCBkPSJNNjMwLjUsNTUyLjMyOSBDNjUwLjg0LDU3OC41NjkgNjg3LDYyNS4yMTkgNjg3LDYyNS4yMTkgQzY4Nyw2MjUuMjE5IDcxNC4xNDg3LDY0OS44NzQ4IDczOC41ODg3LDY3Mi4wNzQ4IiBmaWxsPSJub25lIiBpZD0iYWNjb3VudC10by1yYWJiaXRtcSIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiNEOTc3MDYiIHBvaW50cz0iNzQzLjAzLDY3Ni4xMDksNzM5LjA1NzYsNjY3LjA5NjksNzM5LjMyODksNjcyLjc0NzIsNzMzLjY3ODYsNjczLjAxODYsNzQzLjAzLDY3Ni4xMDkiIHN0eWxlPSJzdHJva2U6I0Q5NzcwNjtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0Ni45NzkiIHg9IjY4OCIgeT0iNjIxLjI4NTkiPnB1Ymxpc2g8L3RleHQ+PC9nPjwhLS1saW5rIGNhcnQgdG8gcmFiYml0bXEtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwOCIgZGF0YS1lbnRpdHktMj0iZW50MDAxNiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9Ijg5IiBpZD0ibG5rNDEiPjxwYXRoIGQ9Ik03MzMuNDIsNTUyLjQyOSBDNzQwLjg1LDU4MS45MTkgNzU0LjQzMzIsNjM1Ljc5MTEgNzYzLjA2MzIsNjcwLjAyMTEiIGZpbGw9Im5vbmUiIGlkPSJjYXJ0LXRvLXJhYmJpdG1xIiBzdHlsZT0ic3Ryb2tlOiNEOTc3MDY7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iI0Q5NzcwNiIgcG9pbnRzPSI3NjQuNTMsNjc1LjgzOSw3NjYuMjA4NCw2NjYuMTM0Myw3NjMuMzA3Nyw2NzAuOTkwOCw3NTguNDUxMiw2NjguMDksNzY0LjUzLDY3NS44MzkiIHN0eWxlPSJzdHJva2U6I0Q5NzcwNjtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0Ni45NzkiIHg9Ijc1MiIgeT0iNjIxLjI4NTkiPnB1Ymxpc2g8L3RleHQ+PC9nPjwhLS1saW5rIG9yZGVyIHRvIHJhYmJpdG1xLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDkiIGRhdGEtZW50aXR5LTI9ImVudDAwMTYiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI5MCIgaWQ9ImxuazQyIj48cGF0aCBkPSJNODMyLjQ3LDU1Mi4yODkgQzgzMy4wNyw1NzMuOTU5IDgzNCw2MDguMjE5IDgzNCw2MDguMjE5IEM4MzQsNjA4LjIxOSA4MzQsNjI1LjIxOSA4MzQsNjI1LjIxOSBDODM0LDYyNS4yMTkgODE0LjExODksNjQ5LjI4MTMgNzk1Ljc5ODksNjcxLjQ4MTMiIGZpbGw9Im5vbmUiIGlkPSJvcmRlci10by1yYWJiaXRtcSIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiNEOTc3MDYiIHBvaW50cz0iNzkxLjk4LDY3Ni4xMDksODAwLjc5MzUsNjcxLjcxMzQsNzk1LjE2MjQsNjcyLjI1MjYsNzk0LjYyMzIsNjY2LjYyMTUsNzkxLjk4LDY3Ni4xMDkiIHN0eWxlPSJzdHJva2U6I0Q5NzcwNjtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0Ni45NzkiIHg9IjgzNSIgeT0iNjIxLjI4NTkiPnB1Ymxpc2g8L3RleHQ+PC9nPjwhLS1saW5rIHBheW1lbnQgdG8gcmFiYml0bXEtLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAxMCIgZGF0YS1lbnRpdHktMj0iZW50MDAxNiIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjkxIiBpZD0ibG5rNDMiPjxwYXRoIGQ9Ik0zODEuNjksNTUyLjQxOSBDNDAxLjI0LDU3MS43NTkgNDMwLDYwMC4yMTkgNDMwLDYwMC4yMTkgQzQzMCw2MDAuMjE5IDUxMyw2MjUuMjE5IDUxMyw2MjUuMjE5IEM1MTMsNjI1LjIxOSA2OTUsNjMzLjIxOSA2OTUsNjMzLjIxOSBDNjk1LDYzMy4yMTkgNzE2LjYyNzMsNjUyLjY0ODYgNzM4LjIzNzMsNjcyLjA2ODYiIGZpbGw9Im5vbmUiIGlkPSJwYXltZW50LXRvLXJhYmJpdG1xIiBzdHlsZT0ic3Ryb2tlOiNEOTc3MDY7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iI0Q5NzcwNiIgcG9pbnRzPSI3NDIuNyw2NzYuMDc5LDczOC42Nzk1LDY2Ny4wODgyLDczOC45ODEsNjcyLjczNyw3MzMuMzMyMiw2NzMuMDM4NSw3NDIuNyw2NzYuMDc5IiBzdHlsZT0ic3Ryb2tlOiNEOTc3MDY7c3Ryb2tlLXdpZHRoOjE7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNDYuOTc5IiB4PSI1MTQiIHk9IjYyMS4yODU5Ij5wdWJsaXNoPC90ZXh0PjwvZz48IS0tbGluayBwcm9kdWN0IHRvIHJhYmJpdG1xLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMTEiIGRhdGEtZW50aXR5LTI9ImVudDAwMTYiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI5MiIgaWQ9ImxuazQ0Ij48cGF0aCBkPSJNNTA4LjYxLDU1Mi40MTkgQzUyNi45OCw1NzEuNzU5IDU1NCw2MDAuMjE5IDU1NCw2MDAuMjE5IEM1NTQsNjAwLjIxOSA2MTUsNjI1LjIxOSA2MTUsNjI1LjIxOSBDNjE1LDYyNS4yMTkgNjk1LDYzMy4yMTkgNjk1LDYzMy4yMTkgQzY5NSw2MzMuMjE5IDcxNi42MjczLDY1Mi42NDg2IDczOC4yMzczLDY3Mi4wNjg2IiBmaWxsPSJub25lIiBpZD0icHJvZHVjdC10by1yYWJiaXRtcSIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiNEOTc3MDYiIHBvaW50cz0iNzQyLjcsNjc2LjA3OSw3MzguNjc5NSw2NjcuMDg4Miw3MzguOTgxLDY3Mi43MzcsNzMzLjMzMjIsNjczLjAzODUsNzQyLjcsNjc2LjA3OSIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQ2Ljk3OSIgeD0iNjE2IiB5PSI2MjEuMjg1OSI+cHVibGlzaDwvdGV4dD48L2c+PCEtLXJldmVyc2UgbGluayBjb25zdW1lciB0byByYWJiaXRtcS0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDEyIiBkYXRhLWVudGl0eS0yPSJlbnQwMDE2IiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iOTMiIGlkPSJsbms0NiI+PHBhdGggZD0iTTk1OC4zOCw1NjQuNjYwNCBDOTMwLDU5MS4zNjA0IDg5NCw2MjUuMjE5IDg5NCw2MjUuMjE5IEM4OTQsNjI1LjIxOSA4NDguMDMsNjUzLjcyOSA4MTIuMyw2NzUuODk5IiBmaWxsPSJub25lIiBpZD0iY29uc3VtZXItYmFja3RvLXJhYmJpdG1xIiBzdHlsZT0ic3Ryb2tlOiNEOTc3MDY7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iI0Q5NzcwNiIgcG9pbnRzPSI5NjIuNzUsNTYwLjU0OSw5NTMuNDU0MSw1NjMuODAyNyw5NTkuMTA4Myw1NjMuOTc1Miw5NTguOTM1OSw1NjkuNjI5NCw5NjIuNzUsNTYwLjU0OSIgc3R5bGU9InN0cm9rZTojRDk3NzA2O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjU5LjAxNDIiIHg9IjkxMSIgeT0iNjIxLjI4NTkiPmNvbnN1bWU8L3RleHQ+PC9nPjwhLS1saW5rIG5zX2FwcCB0byBvdGVsLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImVudDAwMDQiIGRhdGEtZW50aXR5LTI9ImVudDAwMTgiIGRhdGEtbGluay10eXBlPSJkZXBlbmRlbmN5IiBkYXRhLXNvdXJjZS1saW5lPSI5NiIgaWQ9ImxuazQ3Ij48cGF0aCBkPSJNMjgyLjk3NDQsMjQwLjE0OTYgQzI4MS40NTc0LDI0MS4yMDI2IDI3OS43NjU3LDI0Mi4zNzcgMjc3LjkzNTIsMjQzLjY0NzggQzI3MC42MTI4LDI0OC43MzA5IDI2MS4wNjgxLDI1NS4zNTY1IDI1MS41OTYzLDI2MS45MzE1IEMyMzIuNjUyNSwyNzUuMDgxNSAyMTQsMjg4LjAyOSAyMTQsMjg4LjAyOSBDMjE0LDI4OC4wMjkgMTkyLjI5NzgsMzMzLjIzMDYgMTc2LjkxNzgsMzY1LjI1MDYiIGZpbGw9Im5vbmUiIGlkPSJuc19hcHAtdG8tb3RlbCIgc3R5bGU9InN0cm9rZTojMEVBNUU5O3N0cm9rZS13aWR0aDoxO3N0cm9rZS1kYXNoYXJyYXk6Nyw3OyIvPjxwb2x5Z29uIGZpbGw9IiMwRUE1RTkiIHBvaW50cz0iMTc0LjMyLDM3MC42NTksMTgxLjgyMjQsMzY0LjI3ODIsMTc2LjQ4NDgsMzY2LjE1MiwxNzQuNjExMSwzNjAuODE0NSwxNzQuMzIsMzcwLjY1OSIgc3R5bGU9InN0cm9rZTojMEVBNUU5O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjMzLjI1NTQiIHg9IjIxOS45ODYxIiB5PSIzMDEuMDk1OSI+T1RMUDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0My4yMjc1IiB4PSIyMTUiIHk9IjMxNi4yMjg4Ij4oNDMxOCk8L3RleHQ+PC9nPjxnIGNsYXNzPSJsZWdlbmQiIGRhdGEtc291cmNlLWxpbmU9Ijk4Ij48cmVjdCBmaWxsPSIjREREREREIiBoZWlnaHQ9IjIyNS44NTk0IiByeD0iNCIgcnk9IjQiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIyNjIuMTUyNSIgeD0iODU3Ljg0NzUiIHk9Ijc4OC44MDkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS43NTk5IiB4PSI4NjcuNzIxNiIgeT0iODA4LjgwNDIiPiYjNDkzNTM7JiM0OTM0NTs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjkuMjczNyIgeD0iOTAzLjIyOTUiIHk9IjgwOC44MDQyIj4mIzQ3NTMyOyYjNDk1NDg7JiM0OTgyODsgJiM1MDk3NjsmIzU0ODA1OzwvdGV4dD48cmVjdCBmaWxsPSIjRTlENUZGIiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNS41MDc5IiB4PSI4NjIuODQ3NSIgeT0iODEyLjEwNTkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg2Mi44NDc1IiB5PSI4MjUuMTAxIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTA0LjE5MzQiIHg9IjkwMi44MDU3IiB5PSI4MjUuMTAxIj5CRkYgKEZyb250ZW5kKTwvdGV4dD48cmVjdCBmaWxsPSIjQzRCNUZEIiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNS41MDc5IiB4PSI4NjIuODQ3NSIgeT0iODI4LjQwMjgiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg2Mi44NDc1IiB5PSI4NDEuMzk3OSI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE5My40MzY1IiB4PSI5MDIuODA1NyIgeT0iODQxLjM5NzkiPkFQSSBHYXRld2F5IChTcHJpbmcgQ2xvdWQpPC90ZXh0PjxyZWN0IGZpbGw9IiNCRkRCRkUiIGhlaWdodD0iMTYuMjk2OSIgc3R5bGU9InN0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxOyIgd2lkdGg9IjM1LjUwNzkiIHg9Ijg2Mi44NDc1IiB5PSI4NDQuNjk5NyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODYyLjg0NzUiIHk9Ijg1Ny42OTQ4Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjA3Ljc0NDEiIHg9IjkwMi44MDU3IiB5PSI4NTcuNjk0OCI+RG9tYWluIFNlcnZpY2UgKFNwcmluZyBCb290KTwvdGV4dD48cmVjdCBmaWxsPSIjRkRFNjhBIiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNS41MDc5IiB4PSI4NjIuODQ3NSIgeT0iODYwLjk5NjUiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg2Mi44NDc1IiB5PSI4NzMuOTkxNyI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE3NS4wMjA1IiB4PSI5MDIuODA1NyIgeT0iODczLjk5MTciPkluZnJhIChNeVNRTCwgTVEsIFJlZGlzKTwvdGV4dD48cmVjdCBmaWxsPSIjRkVGM0M3IiBoZWlnaHQ9IjE2LjI5NjkiIHN0eWxlPSJzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MTsiIHdpZHRoPSIzNS41MDc5IiB4PSI4NjIuODQ3NSIgeT0iODc3LjI5MzQiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg2Mi44NDc1IiB5PSI4OTAuMjg4NSI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijk4Ljc2NTYiIHg9IjkwMi44MDU3IiB5PSI4OTAuMjg4NSI+T1RlbCBDb2xsZWN0b3I8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTIuODc5OSIgeD0iODY3LjcyMTYiIHk9IjkwNi41ODU0Ij4mIzQ5NDQwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNS43NTk5IiB4PSI5MDMuMjI5NSIgeT0iOTA2LjU4NTQiPiYjNTEwMzI7JiM0ODEyMDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI4NjIuODQ3NSIgeT0iOTIyLjg4MjMiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDA3OEQ0IiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI4NjcuMjk3NyIgeT0iOTIyLjg4MjMiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODg0LjE1NTIiIHk9IjkyMi44ODIzIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODEuMDU1OCIgeD0iOTAyLjgwNTciIHk9IjkyMi44ODIzIj4mIzUwODA4OyYjNDg1MTI7IEluZ3Jlc3M8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI4NjIuODQ3NSIgeT0iOTM5LjE3OTIiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjN0MzQUVEIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI4NjcuMjk3NyIgeT0iOTM5LjE3OTIiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODg0LjE1NTIiIHk9IjkzOS4xNzkyIj4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTQ3LjcwNTYiIHg9IjkwMi44MDU3IiB5PSI5MzkuMTc5MiI+JiM0OTQzNjsmIzQ4NzA4OyYjNDk4Mjg7ICYjNDY5NzI7JiM1MDg2NDsmIzU0MDIxOyAvIEFQSSAmIzU0ODQwOyYjNTI2MzY7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODYyLjg0NzUiIHk9Ijk1NS40NzYiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjRDk3NzA2IiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI4NjcuMjk3NyIgeT0iOTU1LjQ3NiI+JiM5NDczOyYjOTQ3Mzs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI4ODQuMTU1MiIgeT0iOTU1LjQ3NiI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE1NS4zMTI1IiB4PSI5MDIuODA1NyIgeT0iOTU1LjQ3NiI+TVEgcHVibGlzaCAvIGNvbnN1bWU8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNC40NTAyIiB4PSI4NjIuODQ3NSIgeT0iOTcxLjc3MjkiPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDU5NjY5IiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI4NjcuMjk3NyIgeT0iOTcxLjc3MjkiPiYjOTQ3MzsmIzk0NzM7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODg0LjE1NTIiIHk9Ijk3MS43NzI5Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODMuODI5MSIgeD0iOTAyLjgwNTciIHk9Ijk3MS43NzI5Ij5EQiAoTXlTUUwpPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjQuNDUwMiIgeD0iODYyLjg0NzUiIHk9Ijk4OC4wNjk4Ij4mIzE2MDs8L3RleHQ+PHRleHQgZmlsbD0iIzA1OTY2OSIgZm9udC1mYW1pbHk9IlNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTYuODU3NCIgeD0iODY3LjI5NzciIHk9Ijk4OC4wNjk4Ij4mIzk0NzY7JiM5NDc2OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg4NC4xNTUyIiB5PSI5ODguMDY5OCI+JiMxNjA7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJTYW5zLVNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEwNy4yMDEyIiB4PSI5MDIuODA1NyIgeT0iOTg4LjA2OTgiPlJlZGlzIChTZXNzaW9uKTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg2Mi44NDc1IiB5PSIxMDA0LjM2NjciPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMEVBNUU5IiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNi44NTc0IiB4PSI4NjcuMjk3NyIgeT0iMTAwNC4zNjY3Ij4mIzk0NzY7JiM5NDc2OzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI0LjQ1MDIiIHg9Ijg4NC4xNTUyIiB5PSIxMDA0LjM2NjciPiYjMTYwOzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iU2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMDQuNjYzNCIgeD0iOTAyLjgwNTciIHk9IjEwMDQuMzY2NyI+T1RMUCAmIzUzNTg4OyYjNDcxMTI7JiM0NzcwMDsmIzUzOTQ0OyYjNDc1MzI7PC90ZXh0PjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI4NjIuODQ3NSIgeDI9IjExMTUiIHkxPSI3OTUuODA5IiB5Mj0iNzk1LjgwOSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI4NjIuODQ3NSIgeDI9IjExMTUiIHkxPSI4MTIuMTA1OSIgeTI9IjgxMi4xMDU5Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iMTExNSIgeTE9IjgyOC40MDI4IiB5Mj0iODI4LjQwMjgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iODYyLjg0NzUiIHgyPSIxMTE1IiB5MT0iODQ0LjY5OTciIHkyPSI4NDQuNjk5NyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI4NjIuODQ3NSIgeDI9IjExMTUiIHkxPSI4NjAuOTk2NSIgeTI9Ijg2MC45OTY1Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iMTExNSIgeTE9Ijg3Ny4yOTM0IiB5Mj0iODc3LjI5MzQiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iODYyLjg0NzUiIHgyPSIxMTE1IiB5MT0iODkzLjU5MDMiIHkyPSI4OTMuNTkwMyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI4NjIuODQ3NSIgeDI9IjExMTUiIHkxPSI5MDkuODg3MiIgeTI9IjkwOS44ODcyIi8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iMTExNSIgeTE9IjkyNi4xODQiIHkyPSI5MjYuMTg0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iMTExNSIgeTE9Ijk0Mi40ODA5IiB5Mj0iOTQyLjQ4MDkiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iODYyLjg0NzUiIHgyPSIxMTE1IiB5MT0iOTU4Ljc3NzgiIHkyPSI5NTguNzc3OCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MTsiIHgxPSI4NjIuODQ3NSIgeDI9IjExMTUiIHkxPSI5NzUuMDc0NyIgeTI9Ijk3NS4wNzQ3Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iMTExNSIgeTE9Ijk5MS4zNzE1IiB5Mj0iOTkxLjM3MTUiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iODYyLjg0NzUiIHgyPSIxMTE1IiB5MT0iMTAwNy42Njg0IiB5Mj0iMTAwNy42Njg0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg2Mi44NDc1IiB4Mj0iODYyLjg0NzUiIHkxPSI3OTUuODA5IiB5Mj0iMTAwNy42Njg0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9Ijg5OC4zNTU1IiB4Mj0iODk4LjM1NTUiIHkxPSI3OTUuODA5IiB5Mj0iMTAwNy42Njg0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxOyIgeDE9IjExMTUiIHgyPSIxMTE1IiB5MT0iNzk1LjgwOSIgeTI9IjEwMDcuNjY4NCIvPjwvZz48P3BsYW50dW1sLXNyYyBYTFJUUW5qNzQ3LV9sczhnNW9mM3Y4X1F5ZVRHMTlCa0JlWndNcXh4SzlVbUVnc2Ftd1V6b3p1ZlpoMDMyTjUyNl85S043MkIwdHVlWEtBWFZHZWt6QV85Zy1KX2VKa3hVd1VKOVNONjN3VVB0eXBpcEZuY1RpRFpibU00YW91cVFPbHFsQ1pzTVJIM2tYSmdYOE12RWtMa29tV0phRVNvNmxLMzJlN2x6VjU3SWlWejdjaXdGY1VLbXFQQXBsbWMzTWEwLVFLcWNCMVo1QXVrNlNPTk5yUXQ3alNGaEdEdTI5YXZveFJOUjNpWmYzbHI5LU16RlAxSWlzQUxSS2pCUXBsc0dMYkFiLXNvYlRWSXRLRGhJczlqb3J3ZmhnRXFfY3FMeTAtYjVUa2lBMF9JTjRqanFyaFJBQUZxcU5VR09Ba2hiUm5qZWhIWXN1ZEtzWkpwd2NHb0xFbVhZTFJQRkoxNTRiQXdqQkktT1F2Y1o3SkFyOGE4UXRpS0plc0FwdmtLTHR0RnZ3M2pqRW9tdXBoN1o4T1hWNnJXQm5IY1JqYlFBVVRqdXVMWEU5eFZRcUFjblk4Z0lYcmJXOEkwTk80dlV6ZEVzdms2Q0dnS0FKUEF2TV9nS0ZMd2VPME41bmliWUlWNzhJSDVGeHJobUtKeG11MHVqMDNhWDhQLWJvUTZCN24yV1czWXJhb09EYmVqbjF3bnhFRlFlaXQ1LUliaHBYLW42Y2pwYUxGWVNBNU9zb2lqQzNUT1M3dGZNMVcyNWxra0duQXVSSEJINHpCTlZraTFUcmJSUDhITFVBSEtLbUJhSGVPSmlMMXIwZ0JYWFg3dlJIZnIxNjVGcXQ2OXVtV2tnekJnUnEwa2ZKNEV1R2cwN25EUXNLZ2ZiYnlKLWUzcWtySDdxRC1KNkV1dFV1eDZnNi01VUo1TTk0dVEzSlZnRmlxdkZXanhOU2duSUFIREg2SWRHeUU4YXlaZHktZ2U2WjdEcFRJLXZycE11WUpUVkljMFAwWjd3eFJUaC16bE9WWDhMQnhMeS1lcUtlNnhfVjJmMXNobXFXTzdqRWM2UTIxUXZfZkNXSmFBZnU1YmVqbHgwY3l6bXU5TFVnNnNxMk04Wkp3TmNIekhKdkpBeW1KMHYtZEtLMEY5OFhiQlJGVEdnQWduYUpZMHoyOGNHSHowY1FBVFkyc1lWbU12TjB3aXZwWVluOERGUnR5NkpMMUs2NzlTU3pfaDlWNTNxcHpYa1A4U1dLQUNjdTVIcjFzWFQyR3FuSTBacWlrVjhVTkZOOFVnZThXSF9qUWhBc05CN0ZEZDZDaGpmNVBuVnZPUWNKekI5c2FfSXdhUEZyRWpvMXVkRHE3bWt3YmNHd0l4R3BvbEdQcFpVUGJqV1hydnhtTWYwZ0I5NE9qanViMWMxTVU0WUl1QkRlUUc1S01jSjNjQ3ptMnM5Qi12amhPUGRyUG9zdjFSTzhQRWhPMFBvZFp3UHdkcnVDekd3dEZCRUhCamJiRWFabXJENGRQZVNfcHEydWNSWFA4UUQ3Tm9BTjlyd1ljQS1DSkpMRmdxS3JIOGxvYllkUzNzRldJelhrVTY3U1lJUmVGb1lRQVJjLWxoSXNqbnppZDQ1c0F4ZjBGdDBmRHN0OGpDelVQLXhBWEh6czhKcUdXaW9QY0dqWDFfbmxOUEZUcFEweDVhUTlUNk4zM1V3UEZuMWtrQjZJamliVkVNaEIzU0lXTGZBclJNd2lob25oblhVQkdqaGNKV1JoaUo2TVNGT1Zad2YtN2hMbzItMWRfeUROcHhWbFprVG5YVU5UelVfVzlkbmJiSEZ0ZkFTMFJ1NUNlY1R4aElnZVNJUWlqeGpWV3dYaDVCTVlGTHlta0hmanliQmVFd01hdTlrRUJ4YVNRZ0huYllRX0F3b1NnQnZPNVdvR0Q1ekhXZGRydzg2cl9HZzFNUGRMelpNaUNGYnVFX1JyMDRIR1NWS21Nektxa1ZCYnc5Xy1BWWJBQU51UXl0V3V5bGFyTVREYjR4UDhoOS1UTld0dENpc2szM1Z5RlZfaGJ6X21PTVBKNWtCcy02N3dfNmRBWFVKcGY5aU55bnhscHVXVU5LSjFnQVZRTGdDcHlUVll4LUt0MnI5ZkJSVGpuNnFjUklIWkJseml0NXVGaDdtUHlOai16azE0czQ4Tjk4S1ViXz8+PC9nPjwvc3ZnPg==" class="uml" alt="uml diagram" title="" /></p>
+<hr />
+<h2 id="service-overview">Service Overview<a class="headerlink" href="#service-overview" title="Permanent link">&para;</a></h2>
+<h3 id="application-services-namespace-awesome">Application Services (namespace: <code>awesome</code>)<a class="headerlink" href="#application-services-namespace-awesome" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>서비스</th>
+<th>역할</th>
+<th>MySQL</th>
+<th>Redis</th>
+<th>RabbitMQ</th>
+<th>서비스 호출</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>bff</strong></td>
+<td>Frontend UI — 클라이언트용 API 집계</td>
+<td>—</td>
+<td>✅ session</td>
+<td>—</td>
+<td>apigateway 경유 (5개 서비스)</td>
+</tr>
+<tr>
+<td><strong>apigateway</strong></td>
+<td>Spring Cloud Gateway — API 라우팅</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>→ account, cart, order, payment, product</td>
+</tr>
+<tr>
+<td><strong>account</strong></td>
+<td>사용자 계정 CRUD</td>
+<td>✅ <code>accounts</code></td>
+<td>✅ session</td>
+<td>✅ publish (<code>accountTopic</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>cart</strong></td>
+<td>장바구니</td>
+<td>✅ <code>carts</code></td>
+<td>✅ session</td>
+<td>✅ publish (<code>cartTopic</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>order</strong></td>
+<td>주문 처리</td>
+<td>✅ <code>order</code></td>
+<td>✅ session</td>
+<td>✅ publish (<code>orderTopic</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>payment</strong></td>
+<td>결제 처리</td>
+<td>✅ <code>payments</code></td>
+<td>✅ session</td>
+<td>✅ publish (<code>paymentTopic</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>product</strong></td>
+<td>상품 카탈로그</td>
+<td>✅ <code>products</code></td>
+<td>✅ session</td>
+<td>✅ publish (<code>productTopic</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>rabbitmq-consumer</strong></td>
+<td>Saga orchestrator — 비동기 이벤트 처리</td>
+<td>—</td>
+<td>—</td>
+<td>✅ consume (all topics)</td>
+<td>apigateway 경유 (saga callback)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="infrastructure-namespace-awesome-infra">Infrastructure (namespace: <code>awesome-infra</code>)<a class="headerlink" href="#infrastructure-namespace-awesome-infra" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>서비스</th>
+<th>타입</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MySQL</strong></td>
+<td>StatefulSet</td>
+<td>주 데이터베이스 (account, cart, order, payment, product 각각 별도 DB)</td>
+</tr>
+<tr>
+<td><strong>RabbitMQ</strong></td>
+<td>Deployment</td>
+<td>이벤트 기반 Saga — 도메인 이벤트 pub/sub</td>
+</tr>
+<tr>
+<td><strong>Redis</strong></td>
+<td>Deployment</td>
+<td>HTTP Session 저장소 (Spring Session, 모든 서비스 공용)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kustomize">배포 구조 — Kustomize<a class="headerlink" href="#kustomize" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>gitops-manifests/
+├── base/                          # 공통 템플릿
+│   ├── awesome/                   # Deployment + Service 템플릿
+│   └── awesome-infra/             # MySQL, RabbitMQ, Redis
+└── clusters/
+    └── az104-aks/      # 클러스터별 overlay
+        ├── awesome/               # 8개 서비스 (image, env, config patch)
+        │   ├── account/
+        │   ├── apigateway/        # + ingress.yaml
+        │   ├── bff/
+        │   ├── cart/
+        │   ├── order/
+        │   ├── payment/
+        │   ├── product/
+        │   └── rabbitmq-consumer/
+        └── awesome-infra/         # MySQL password patch 등
+</code></pre></div>
+<p><strong>핵심 개념:</strong></p>
+<ul>
+<li><code>base/awesome/deployment.yaml</code> — 공통 Deployment 스켈레톤 (image: <code>awesome</code>, port: 8080)</li>
+<li>각 overlay에서 <code>nameSuffix</code>, <code>images</code>, <code>patches</code>, <code>configMapGenerator</code>로 서비스별 설정 주입</li>
+<li><strong>OTel Java Agent</strong>가 각 서비스에 환경변수로 설정되어 자동 계측</li>
+</ul>
+<hr />
+<h2 id="prerequisite">Prerequisite<a class="headerlink" href="#prerequisite" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AKS 클러스터</td>
+<td><a href="../lab90-aks/">Lab 90</a> 완료, <code>kubectl get nodes</code> 정상</td>
+</tr>
+<tr>
+<td>Ingress Controller</td>
+<td>Web App Routing 활성화 확인 — <code>kubectl get ingressclass</code> 에서 <code>webapprouting.kubernetes.azure.com</code> 존재</td>
+</tr>
+<tr>
+<td>ACR</td>
+<td>공유 ACR에 서비스 이미지가 push 되어 있어야 함 (강사 사전 준비)</td>
+</tr>
+<tr>
+<td>kubectl</td>
+<td>AKS 자격 증명 설정 완료 (<code>az aks get-credentials</code>)</td>
+</tr>
+<tr>
+<td>매니페스트</td>
+<td><code>gitops-manifests</code> 저장소 clone</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Azure Cloud Shell 사용 가능</p>
+<p>이 Lab의 모든 단계(<code>kubectl</code>, <code>git</code>, <code>sed</code>, <code>curl</code>)는 <strong>Azure Cloud Shell</strong>에서 실행 가능합니다.<br />
+Cloud Shell에는 <code>kubectl</code>, <code>git</code>, <code>sed</code>, <code>curl</code>이 모두 사전 설치되어 있습니다.<br />
+단, <code>kubeconfig</code>가 설정되어 있어야 하므로 먼저 <code>az aks get-credentials</code>를 실행하세요.</p>
+</div>
+<h3 id="clone">매니페스트 저장소 Clone<a class="headerlink" href="#clone" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/noisonnoiton-shop/gitops-manifests.git
+<span class="nb">cd</span><span class="w"> </span>gitops-manifests
+</code></pre></div>
+<hr />
+<h2 id="step-by-step">Step-by-Step<a class="headerlink" href="#step-by-step" title="Permanent link">&para;</a></h2>
+<h3 id="1-aks">1) AKS 자격 증명 확인<a class="headerlink" href="#1-aks" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">bash (로컬 터미널)</label><label for="__tabbed_1_2">Azure Cloud Shell</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># Lab 90 Terraform 환경에서 실행 시</span>
+<span class="nv">RG</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span>../lab90-aks<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>resource_group_name<span class="k">)</span>
+<span class="nv">AKS_NAME</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span>../lab90-aks<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>aks_cluster_name<span class="k">)</span>
+
+az<span class="w"> </span>aks<span class="w"> </span>get-credentials<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RG</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AKS_NAME</span><span class="s2">&quot;</span><span class="w"> </span>--overwrite-existing
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># Cloud Shell에서는 RG/AKS 이름을 직접 입력</span>
+<span class="nv">RG</span><span class="o">=</span><span class="s2">&quot;&lt;본인 RG 이름&gt;&quot;</span><span class="w">           </span><span class="c1"># 예: rg-krc-dev-lab90-01</span>
+<span class="nv">AKS_NAME</span><span class="o">=</span><span class="s2">&quot;&lt;AKS 클러스터 이름&gt;&quot;</span><span class="w"> </span><span class="c1"># 예: aks-az104-aks</span>
+
+az<span class="w"> </span>aks<span class="w"> </span>get-credentials<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RG</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AKS_NAME</span><span class="s2">&quot;</span><span class="w"> </span>--overwrite-existing
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="2-ingress-ip-nipio-host">2) 매니페스트 준비 — Ingress IP 확인 및 nip.io host 설정<a class="headerlink" href="#2-ingress-ip-nipio-host" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">nip.io란?</p>
+<p><strong><a href="https://nip.io" target="_blank" rel="noopener">nip.io</a></strong>는 <strong>무료 wildcard DNS</strong> 서비스입니다.<br />
+<code>&lt;anything&gt;.&lt;IP&gt;.nip.io</code>로 요청하면 자동으로 <code>&lt;IP&gt;</code>로 resolve됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>호스트</th>
+<th>해석되는 IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>awesome-apigateway.1.2.3.4.nip.io</code></td>
+<td><code>1.2.3.4</code></td>
+</tr>
+<tr>
+<td><code>awesome.1.2.3.4.nip.io</code></td>
+<td><code>1.2.3.4</code></td>
+</tr>
+</tbody>
+</table>
+<p>별도 DNS 레코드 등록 없이 <strong>Ingress host-based routing</strong>을 즉시 사용할 수 있어 실습 환경에 적합합니다.</p>
+</div>
+<p>Ingress manifest에 <code>INGRESS_IP</code> placeholder가 들어 있으므로, <strong>apply 전에</strong> 실제 IP로 치환해야 합니다.</p>
+<h4 id="ingress-controller-external-ip">Ingress Controller External IP 확인<a class="headerlink" href="#ingress-controller-external-ip" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Web App Routing이 프로비저닝한 Service의 External IP 확인</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>app-routing-system
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>NAME    TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)
+nginx   LoadBalancer   172.16.x.x   20.39.x.x     80:3xxxx/TCP,443:3xxxx/TCP
+</code></pre></div>
+</details>
+<h4 id="ingress-yaml-placeholder">Ingress YAML의 placeholder 치환<a class="headerlink" href="#ingress-yaml-placeholder" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">bash</label><label for="__tabbed_2_2">cmd (Windows / PowerShell)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># 방법 A: 자동 감지</span>
+<span class="nv">INGRESS_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>app-routing-system<span class="w"> </span>nginx<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+
+<span class="c1"># 방법 B: 수동 지정 (Cloud Shell 등에서 직접 입력)</span>
+<span class="c1"># INGRESS_IP=&quot;20.39.x.x&quot;</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Ingress IP: </span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># ingress.yaml 파일의 INGRESS_IP placeholder를 실제 IP로 치환</span>
+<span class="nb">cd</span><span class="w"> </span>clusters/az104-aks
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/INGRESS_IP/</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span>awesome/apigateway/ingress.yaml
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;s/INGRESS_IP/</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">/g&quot;</span><span class="w"> </span>awesome/bff/ingress.yaml
+
+<span class="c1"># 치환 결과 확인</span>
+grep<span class="w"> </span><span class="s2">&quot;host:&quot;</span><span class="w"> </span>awesome/apigateway/ingress.yaml<span class="w"> </span>awesome/bff/ingress.yaml
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c"># Ingress IP 확인</span>
+<span class="nv">$INGRESS_IP</span> <span class="p">=</span> <span class="n">kubectl</span> <span class="n">get</span> <span class="n">svc</span> <span class="n">-n</span> <span class="n">app-routing-system</span> <span class="n">nginx</span> <span class="n">-o</span> <span class="n">jsonpath</span><span class="p">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
+
+<span class="c"># 또는 수동 지정</span>
+<span class="c"># $INGRESS_IP = &quot;20.39.x.x&quot;</span>
+
+<span class="nb">Write-Host</span> <span class="s2">&quot;Ingress IP: $INGRESS_IP&quot;</span>
+
+<span class="nb">cd </span><span class="n">clusters</span><span class="p">/</span><span class="n">az104-aks</span>
+<span class="p">(</span><span class="nb">Get-Content</span> <span class="n">awesome</span><span class="p">/</span><span class="n">apigateway</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span><span class="p">)</span> <span class="o">-replace</span> <span class="s1">&#39;INGRESS_IP&#39;</span><span class="p">,</span> <span class="nv">$INGRESS_IP</span> <span class="p">|</span> <span class="nb">Set-Content</span> <span class="n">awesome</span><span class="p">/</span><span class="n">apigateway</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span>
+<span class="p">(</span><span class="nb">Get-Content</span> <span class="n">awesome</span><span class="p">/</span><span class="n">bff</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span><span class="p">)</span> <span class="o">-replace</span> <span class="s1">&#39;INGRESS_IP&#39;</span><span class="p">,</span> <span class="nv">$INGRESS_IP</span> <span class="p">|</span> <span class="nb">Set-Content</span> <span class="n">awesome</span><span class="p">/</span><span class="n">bff</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span>
+
+<span class="nb">Select-String</span> <span class="s2">&quot;host:&quot;</span> <span class="n">awesome</span><span class="p">/</span><span class="n">apigateway</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span><span class="p">,</span> <span class="n">awesome</span><span class="p">/</span><span class="n">bff</span><span class="p">/</span><span class="n">ingress</span><span class="p">.</span><span class="n">yaml</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<details class="example">
+<summary>치환 결과</summary>
+<div class="highlight"><pre><span></span><code>awesome/apigateway/ingress.yaml:  - host: awesome-apigateway.20.39.x.x.nip.io
+awesome/bff/ingress.yaml:  - host: awesome.20.39.x.x.nip.io
+</code></pre></div>
+</details>
+<div class="admonition warning">
+<p class="admonition-title">macOS sed</p>
+<p>macOS의 <code>sed -i</code>는 백업 확장자가 필요합니다. 에러가 나면 <code>sed -i '' "s/..."</code> 형식을 사용하세요.<br />
+<strong>Azure Cloud Shell</strong> (Linux)에서는 <code>sed -i "s/..."</code> 그대로 동작합니다.</p>
+</div>
+<h3 id="3-mysql-rabbitmq-redis">3) 인프라 배포 (MySQL, RabbitMQ, Redis)<a class="headerlink" href="#3-mysql-rabbitmq-redis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./awesome-infra/
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 배포 확인</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-n<span class="w"> </span>awesome-infra
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>NAME                            READY   STATUS    RESTARTS   AGE
+pod/mysql-0                     1/1     Running   0          60s
+pod/rabbitmq-xxxxx              1/1     Running   0          60s
+pod/redis-xxxxx                 1/1     Running   0          60s
+
+NAME               TYPE        CLUSTER-IP     PORT(S)
+service/mysql      ClusterIP   10.0.x.x       3306/TCP
+service/rabbitmq   ClusterIP   10.0.x.x       5672/TCP,15672/TCP
+service/redis      ClusterIP   10.0.x.x       6379/TCP
+</code></pre></div>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">MySQL 초기화 대기</p>
+<p>MySQL StatefulSet은 초기화에 <strong>30~60초</strong> 소요됩니다. <code>Running</code> + <code>READY 1/1</code> 상태를 확인한 후 앱을 배포하세요.</p>
+</div>
+<h3 id="4-8">4) 애플리케이션 배포 (8개 서비스)<a class="headerlink" href="#4-8" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./awesome/
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 배포 확인</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-n<span class="w"> </span>awesome
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>NAME                                         READY   STATUS    RESTARTS   AGE
+pod/awesome-account-xxxxx                    1/1     Running   0          45s
+pod/awesome-apigateway-xxxxx                 1/1     Running   0          45s
+pod/awesome-bff-xxxxx                        1/1     Running   0          45s
+pod/awesome-cart-xxxxx                       1/1     Running   0          45s
+pod/awesome-order-xxxxx                      1/1     Running   0          45s
+pod/awesome-payment-xxxxx                    1/1     Running   0          45s
+pod/awesome-product-xxxxx                    1/1     Running   0          45s
+pod/awesome-rabbitmq-consumer-xxxxx          1/1     Running   0          45s
+</code></pre></div>
+</details>
+<h3 id="5-pod">5) Pod 상태 확인<a class="headerlink" href="#5-pod" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 모든 Pod이 Running인지 확인</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>awesome<span class="w"> </span>-w
+
+<span class="c1"># 특정 Pod 로그 확인 (문제 발생 시)</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>awesome<span class="w"> </span>deployment/awesome-apigateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+</code></pre></div>
+<h3 id="6-ingress">6) Ingress 확인<a class="headerlink" href="#6-ingress" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>awesome
+</code></pre></div>
+<details class="example">
+<summary>예상 출력</summary>
+<div class="highlight"><pre><span></span><code>NAME                  CLASS                                HOSTS                                      ADDRESS        PORTS
+awesome-apigateway    webapprouting.kubernetes.azure.com   awesome-apigateway.20.39.x.x.nip.io        20.39.x.x     80
+awesome-bff           webapprouting.kubernetes.azure.com   awesome.20.39.x.x.nip.io                 20.39.x.x     80
+</code></pre></div>
+</details>
+<div class="admonition info">
+<p class="admonition-title">Web App Routing</p>
+<p>이 Lab에서는 AKS의 <strong>Web App Routing</strong> add-on (<code>webapprouting.kubernetes.azure.com</code>)을 사용합니다. Ingress Controller가 자동으로 Azure Load Balancer를 프로비저닝합니다.</p>
+</div>
+<h3 id="7">7) 서비스 접근 테스트<a class="headerlink" href="#7" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">bash</label><label for="__tabbed_3_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># apigateway health check</span>
+curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://awesome-apigateway.</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">.nip.io/actuator/health&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl -s <span class="s2">&quot;http://awesome-apigateway.</span><span class="nv">%INGRESS_IP%</span><span class="s2">.nip.io/actuator/health&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<details class="example">
+<summary>예상 결과</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;UP&quot;</span><span class="p">}</span>
+</code></pre></div>
+</details>
+<h3 id="8">8) 서비스 간 통신 확인<a class="headerlink" href="#8" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">bash</label><label for="__tabbed_4_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># apigateway를 통해 product 서비스 호출</span>
+curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://awesome-apigateway.</span><span class="si">${</span><span class="nv">INGRESS_IP</span><span class="si">}</span><span class="s2">.nip.io/api/products&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">200</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl -s <span class="s2">&quot;http://awesome-apigateway.</span><span class="nv">%INGRESS_IP%</span><span class="s2">.nip.io/api/products&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># account 서비스 health (Pod 내부 통신 확인)</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>awesome<span class="w"> </span>deployment/awesome-apigateway<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>http://awesome-account:8080/actuator/health
+</code></pre></div>
+<hr />
+<h2 id="verify-azure-portal">Verify - Azure Portal<a class="headerlink" href="#verify-azure-portal" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>AKS 클러스터</strong> → <strong>Workloads</strong> → namespace <code>awesome</code>, <code>awesome-infra</code>에서 Deployment/StatefulSet 상태 확인</li>
+<li><strong>AKS 클러스터</strong> → <strong>Services and ingresses</strong> → Ingress <code>awesome-apigateway</code> 확인, External IP 확인</li>
+<li><strong>AKS 클러스터</strong> → <strong>Workloads</strong> → 각 Pod의 <strong>Logs</strong> 탭에서 Spring Boot 시작 로그 확인</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">추가 확인 (Portal)</p>
+<ul>
+<li><strong>AKS</strong> → <strong>Workloads</strong> → <code>awesome-infra</code> namespace의 <code>mysql</code> StatefulSet이 1/1 Ready인지 확인</li>
+<li><strong>AKS</strong> → <strong>Services and ingresses</strong> → 서비스 목록에서 모든 ClusterIP 서비스가 Endpoint를 가지는지 확인</li>
+<li><strong>Load Balancer</strong> (MC_ 리소스 그룹) → Ingress에 의해 생성된 LB Frontend IP 확인</li>
+</ul>
+</div>
+<hr />
+<h2 id="otel">OTel 계측 확인<a class="headerlink" href="#otel" title="Permanent link">&para;</a></h2>
+<p>각 서비스에는 <strong>OpenTelemetry Java Agent</strong>가 <code>-javaagent</code> 옵션으로 설정되어 있습니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">bash / Cloud Shell</label><label for="__tabbed_5_2">cmd (Windows)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>awesome<span class="w"> </span>awesome-apigateway<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.containers[0].env}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A1<span class="w"> </span>OTEL
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>kubectl get deployment -n awesome awesome-apigateway -o jsonpath=<span class="s2">&quot;{.spec.template.spec.containers[0].env}&quot;</span> <span class="p">|</span> python -m json.tool <span class="p">|</span> findstr OTEL
+</code></pre></div>
+</div>
+</div>
+</div>
+<table>
+<thead>
+<tr>
+<th>환경변수</th>
+<th>값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OTEL_EXPORTER_OTLP_ENDPOINT</code></td>
+<td><code>http://otel-apps.otel-collector:4318</code></td>
+<td>OTel Collector 주소</td>
+</tr>
+<tr>
+<td><code>OTEL_SERVICE_NAME</code></td>
+<td><code>awesome-{service}</code></td>
+<td>서비스 식별자</td>
+</tr>
+<tr>
+<td><code>OTEL_INSTRUMENTATION_MICROMETER_ENABLED</code></td>
+<td><code>true</code></td>
+<td>Micrometer 메트릭 수집</td>
+</tr>
+<tr>
+<td><code>OTEL_INSTRUMENTATION_LOGBACK_ENABLED</code></td>
+<td><code>true</code></td>
+<td>로그 자동 수집</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">OTel Collector 필요</p>
+<p>앱이 정상 동작하려면 <code>otel-collector</code> namespace에 <strong>OTel Collector</strong>가 배포되어 있어야 합니다. 배포되지 않아도 앱은 동작하지만, 텔레메트리 전송 시 connection refused 에러 로그가 발생합니다.<br />
+→ <a href="../lab92-aks-monitoring/">Lab 92 - AKS Monitoring</a>에서 OTel Collector + Azure Monitor 연동을 설정합니다.</p>
+</div>
+<hr />
+<h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">아직 삭제하지 마세요</p>
+<p>이 Lab에서 배포한 앱과 인프라는 <strong>Lab 92 (Monitoring)</strong> 에서 그대로 사용합니다.<br />
+모든 AKS Lab을 완료한 뒤 <strong><a href="../lab99-aks-cleanup/">Custom Lab Cleanup</a></strong> 에서 한꺼번에 삭제합니다.</p>
+</div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod <code>ImagePullBackOff</code></td>
+<td>ACR 이미지 없음 또는 pull 권한 부족</td>
+<td><code>az acr repository list</code>, AKS-ACR role assignment 확인</td>
+</tr>
+<tr>
+<td>Pod <code>CrashLoopBackOff</code></td>
+<td>설정 오류 (DB 연결 등)</td>
+<td><code>kubectl logs</code> 확인, ConfigMap 내용 점검</td>
+</tr>
+<tr>
+<td>MySQL Pod <code>Pending</code></td>
+<td>PVC 프로비저닝 실패</td>
+<td>StorageClass 확인, <code>kubectl describe pvc</code></td>
+</tr>
+<tr>
+<td>Ingress IP 미할당</td>
+<td>Web App Routing add-on 미활성화</td>
+<td><code>az aks show</code>로 add-on 상태 확인</td>
+</tr>
+<tr>
+<td>서비스 간 통신 실패</td>
+<td>네임스페이스 간 DNS 미설정</td>
+<td>FQDN 사용: <code>mysql.awesome-infra.svc.cluster.local</code></td>
+</tr>
+<tr>
+<td>OTel 전송 에러 (connection refused)</td>
+<td>OTel Collector 미배포</td>
+<td>Lab 92에서 배포 예정, 앱 동작에는 영향 없음</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../lab90-aks/" class="md-footer__link md-footer__link--prev" aria-label="이전: Lab 90 - ACR + AKS Deployment">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                Lab 90 - ACR + AKS Deployment
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab92-aks-monitoring/" class="md-footer__link md-footer__link--next" aria-label="다음: Lab 92 - AKS Monitoring">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                Lab 92 - AKS Monitoring
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "header.autohide", "content.code.copy", "content.tooltips", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

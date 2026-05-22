@@ -1,0 +1,28 @@
+/* Custom colors for AZ-104 Labs
+   Primary: dark charcoal (#1f2937)  — header, sidebar, active nav
+   Accent:  red (#e53935)            — links, hover, buttons
+   Ref: https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#custom-colors
+*/
+
+/* ── Light mode ──────────────────────────────────────── */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:              #1f2937;
+  --md-primary-fg-color--light:       #374151;
+  --md-primary-fg-color--dark:        #111827;
+  --md-primary-bg-color:              #ffffff;
+  --md-primary-bg-color--light:       rgba(255,255,255,0.7);
+
+  --md-accent-fg-color:               #e53935;
+  --md-accent-fg-color--transparent:  rgba(229,57,53,0.1);
+  --md-accent-bg-color:               #ffffff;
+  --md-accent-bg-color--light:        rgba(255,255,255,0.7);
+}
+
+/* ── Dark mode (slate) ───────────────────────────────── */
+[data-md-color-scheme="slate"] {
+  /* hue 0 = red-tinted dark base */
+  --md-hue:                           5;
+
+  --md-accent-fg-color:               #ef5350;
+  --md-accent-fg-color--transparent:  rgba(239,83,80,0.1);
+}
